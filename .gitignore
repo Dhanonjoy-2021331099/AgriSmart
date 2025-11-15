@@ -1,0 +1,25 @@
+# Node modules
+node_modules/
+
+# Next.js build folder
+.next/
+
+# Environment variables
+.env
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Local OS files
+.DS_Store
+
+# Build output
+out/
+build/
+
+# Temporary files
+*.log
+*.tmp
