@@ -18,17 +18,17 @@ export default function Home(){
             margin: '0 0 20px 0',
             textShadow: '2px 2px 4px rgba(0,0,0,0.2)'
           }}>
-            Smart Agri
+            Agri Smart
           </h1>
           <p style={{ 
             fontSize: '24px', 
             margin: '0 0 40px 0',
             opacity: 0.95
           }}>
-            Modern Farming Solutions - Soil Monitoring, Smart Irrigation & Crop Management
+            আধুনিক কৃষি সমাধান - মাটি পর্যবেক্ষণ, স্মার্ট সেচ ও ফসল ব্যবস্থাপনা
           </p>
           <div style={{ display: 'flex', gap: '15px', justifyContent: 'center', flexWrap: 'wrap' }}>
-            <Link href="/signup" style={{
+            <Link href="/register" style={{
               padding: '16px 32px',
               background: 'white',
               color: '#667eea',
@@ -43,7 +43,7 @@ export default function Home(){
             onMouseEnter={(e) => e.target.style.transform = 'translateY(-3px)'}
             onMouseLeave={(e) => e.target.style.transform = 'translateY(0)'}
             >
-              Get Started
+              শুরু করুন
             </Link>
             <Link href="/login" style={{
               padding: '16px 32px',
@@ -66,7 +66,7 @@ export default function Home(){
               e.target.style.color = 'white';
             }}
             >
-              Sign In
+              লগইন করুন
             </Link>
           </div>
         </div>
@@ -81,7 +81,7 @@ export default function Home(){
             marginBottom: '50px',
             color: '#333'
           }}>
-            Why Choose Smart Agri?
+            কেন Agri Smart বেছে নিবেন?
           </h2>
           <div style={{
             display: 'grid',
@@ -105,9 +105,9 @@ export default function Home(){
             }}
             >
               <div style={{ fontSize: '48px', marginBottom: '15px' }}>📊</div>
-              <h3 style={{ margin: '0 0 15px 0', color: '#667eea' }}>Real-time Monitoring</h3>
+              <h3 style={{ margin: '0 0 15px 0', color: '#667eea' }}>রিয়েল-টাইম মনিটরিং</h3>
               <p style={{ color: '#666', lineHeight: '1.6' }}>
-                Monitor soil moisture, temperature, and pH levels in real-time with advanced sensor technology
+                উন্নত সেন্সর প্রযুক্তি দিয়ে মাটির আর্দ্রতা, তাপমাত্রা এবং pH মাত্রা রিয়েল-টাইমে পর্যবেক্ষণ করুন
               </p>
             </div>
 
@@ -128,9 +128,9 @@ export default function Home(){
             }}
             >
               <div style={{ fontSize: '48px', marginBottom: '15px' }}>💧</div>
-              <h3 style={{ margin: '0 0 15px 0', color: '#667eea' }}>Smart Irrigation</h3>
+              <h3 style={{ margin: '0 0 15px 0', color: '#667eea' }}>স্মার্ট সেচ</h3>
               <p style={{ color: '#666', lineHeight: '1.6' }}>
-                Automated irrigation systems that optimize water usage based on soil conditions
+                স্বয়ংক্রিয় সেচ ব্যবস্থা যা মাটির অবস্থার উপর ভিত্তি করে পানির ব্যবহার অপ্টিমাইজ করে
               </p>
             </div>
 
@@ -151,9 +151,9 @@ export default function Home(){
             }}
             >
               <div style={{ fontSize: '48px', marginBottom: '15px' }}>🌾</div>
-              <h3 style={{ margin: '0 0 15px 0', color: '#667eea' }}>Crop Management</h3>
+              <h3 style={{ margin: '0 0 15px 0', color: '#667eea' }}>ফসল ব্যবস্থাপনা</h3>
               <p style={{ color: '#666', lineHeight: '1.6' }}>
-                Get expert recommendations for crop selection, planting, and harvesting
+                ফসল নির্বাচন, বপন এবং ফসল তোলার জন্য বিশেষজ্ঞ পরামর্শ পান
               </p>
             </div>
           </div>
@@ -169,7 +169,7 @@ export default function Home(){
             marginBottom: '50px',
             color: '#333'
           }}>
-            Farming Articles & Insights
+            কৃষি নিবন্ধ ও তথ্য
           </h2>
 
           <div style={{
@@ -206,17 +206,17 @@ export default function Home(){
               </div>
               <div style={{ padding: '25px' }}>
                 <h3 style={{ margin: '0 0 15px 0', color: '#333', fontSize: '24px' }}>
-                  Modern Rice Cultivation Techniques
+                  আধুনিক ধান চাষের কৌশল
                 </h3>
                 <p style={{ color: '#666', lineHeight: '1.6', margin: '0 0 15px 0' }}>
-                  Discover the latest methods in rice farming that increase yield by up to 30% while reducing water consumption. Learn about precision planting and smart irrigation systems.
+                  ধান চাষের সর্বশেষ পদ্ধতি আবিষ্কার করুন যা পানির ব্যবহার কমিয়ে ফলন ৩০% পর্যন্ত বৃদ্ধি করে। সুনির্দিষ্ট বপন এবং স্মার্ট সেচ ব্যবস্থা সম্পর্কে জানুন।
                 </p>
                 <Link href="/login" style={{
                   color: '#667eea',
                   fontWeight: '600',
                   textDecoration: 'none'
                 }}>
-                  Read More →
+                  আরও পড়ুন →
                 </Link>
               </div>
             </div>
@@ -249,17 +249,17 @@ export default function Home(){
               </div>
               <div style={{ padding: '25px' }}>
                 <h3 style={{ margin: '0 0 15px 0', color: '#333', fontSize: '24px' }}>
-                  Organic Vegetable Farming
+                  জৈব সবজি চাষ
                 </h3>
                 <p style={{ color: '#666', lineHeight: '1.6', margin: '0 0 15px 0' }}>
-                  Master organic farming practices for vegetables. Learn about natural fertilizers, pest control, and sustainable farming methods that protect the environment.
+                  সবজির জন্য জৈব চাষের অনুশীলন আয়ত্ত করুন। প্রাকৃতিক সার, কীটপতঙ্গ নিয়ন্ত্রণ এবং পরিবেশ রক্ষাকারী টেকসই চাষের পদ্ধতি সম্পর্কে জানুন।
                 </p>
                 <Link href="/login" style={{
                   color: '#667eea',
                   fontWeight: '600',
                   textDecoration: 'none'
                 }}>
-                  Read More →
+                  আরও পড়ুন →
                 </Link>
               </div>
             </div>
@@ -292,17 +292,17 @@ export default function Home(){
               </div>
               <div style={{ padding: '25px' }}>
                 <h3 style={{ margin: '0 0 15px 0', color: '#333', fontSize: '24px' }}>
-                  Corn Production Best Practices
+                  ভুট্টা উৎপাদনের সেরা অনুশীলন
                 </h3>
                 <p style={{ color: '#666', lineHeight: '1.6', margin: '0 0 15px 0' }}>
-                  Optimize your corn harvest with data-driven insights. Understand soil pH requirements, optimal planting times, and modern harvesting techniques.
+                  ডেটা-চালিত অন্তর্দৃষ্টি দিয়ে আপনার ভুট্টার ফসল অপ্টিমাইজ করুন। মাটির pH প্রয়োজনীয়তা, সর্বোত্তম বপন সময় এবং আধুনিক ফসল তোলার কৌশল বুঝুন।
                 </p>
                 <Link href="/login" style={{
                   color: '#667eea',
                   fontWeight: '600',
                   textDecoration: 'none'
                 }}>
-                  Read More →
+                  আরও পড়ুন →
                 </Link>
               </div>
             </div>
@@ -316,7 +316,7 @@ export default function Home(){
               marginBottom: '50px',
               color: '#333'
             }}>
-              Success Stories from Our Farmers
+              আমাদের কৃষকদের সাফল্যের গল্প
             </h2>
             <div style={{
               display: 'grid',
@@ -345,7 +345,7 @@ export default function Home(){
                 <h3 style={{ margin: '0 0 10px 0', color: '#333' }}>Rahul Kumar</h3>
                 <p style={{ color: '#667eea', fontWeight: '600', margin: '0 0 15px 0' }}>Rice Farmer, West Bengal</p>
                 <p style={{ color: '#666', lineHeight: '1.6', fontStyle: 'italic' }}>
-                  "Smart Agri helped me increase my rice yield by 35% and reduce water usage. The real-time monitoring is a game-changer!"
+                  "Agri Smart আমাকে ধানের ফলন ৩৫% বৃদ্ধি করতে এবং পানির ব্যবহার কমাতে সাহায্য করেছে। রিয়েল-টাইম মনিটরিং একটি গেম-চেঞ্জার!"
                 </p>
               </div>
 
@@ -371,7 +371,7 @@ export default function Home(){
                 <h3 style={{ margin: '0 0 10px 0', color: '#333' }}>Priya Sharma</h3>
                 <p style={{ color: '#667eea', fontWeight: '600', margin: '0 0 15px 0' }}>Vegetable Farmer, Punjab</p>
                 <p style={{ color: '#666', lineHeight: '1.6', fontStyle: 'italic' }}>
-                  "The soil analysis tools are amazing! I can now grow organic vegetables with perfect pH balance. Highly recommended!"
+                  "মাটি বিশ্লেষণ সরঞ্জামগুলি আশ্চর্যজনক! আমি এখন নিখুঁত pH ভারসাম্য সহ জৈব সবজি চাষ করতে পারি। অত্যন্ত সুপারিশকৃত!"
                 </p>
               </div>
 
@@ -397,7 +397,7 @@ export default function Home(){
                 <h3 style={{ margin: '0 0 10px 0', color: '#333' }}>Amit Patel</h3>
                 <p style={{ color: '#667eea', fontWeight: '600', margin: '0 0 15px 0' }}>Corn Farmer, Gujarat</p>
                 <p style={{ color: '#666', lineHeight: '1.6', fontStyle: 'italic' }}>
-                  "Smart irrigation saved me 40% on water costs. The dashboard makes farming so much easier and profitable!"
+                  "স্মার্ট সেচ আমাকে পানির খরচে ৪০% সাশ্রয় করেছে। ড্যাশবোর্ড চাষকে অনেক সহজ এবং লাভজনক করে তোলে!"
                 </p>
               </div>
             </div>
@@ -414,12 +414,12 @@ export default function Home(){
       }}>
         <div className="container" style={{ maxWidth: '800px', margin: '0 auto' }}>
           <h2 style={{ fontSize: '42px', margin: '0 0 20px 0' }}>
-            Ready to Transform Your Farming?
+            আপনার কৃষিকে রূপান্তর করতে প্রস্তুত?
           </h2>
           <p style={{ fontSize: '20px', margin: '0 0 40px 0', opacity: 0.95 }}>
-            Join thousands of farmers who are already using Smart Agri to improve their yields and reduce costs.
+            হাজার হাজার কৃষকের সাথে যোগ দিন যারা ইতিমধ্যে Agri Smart ব্যবহার করে তাদের ফলন বৃদ্ধি এবং খরচ কমানোর জন্য।
           </p>
-          <Link href="/signup" style={{
+          <Link href="/register" style={{
             padding: '18px 40px',
             background: 'white',
             color: '#667eea',
@@ -434,7 +434,7 @@ export default function Home(){
           onMouseEnter={(e) => e.target.style.transform = 'translateY(-3px) scale(1.05)'}
           onMouseLeave={(e) => e.target.style.transform = 'translateY(0) scale(1)'}
           >
-            Start Your Free Trial
+            বিনামূল্যে শুরু করুন
           </Link>
         </div>
       </section>
