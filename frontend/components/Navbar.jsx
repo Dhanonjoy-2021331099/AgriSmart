@@ -67,6 +67,7 @@ export default function Navbar() {
       aiDetection: 'এআই শনাক্তকরণ',
       advice: 'পরামর্শ',
       products: 'পণ্য',
+      addProduct: 'পণ্য যুক্ত করুন',
       profile: 'প্রোফাইল',
       login: 'লগইন',
       register: 'নিবন্ধন',
@@ -78,6 +79,7 @@ export default function Navbar() {
       aiDetection: 'AI Detection',
       advice: 'Advice',
       products: 'Products',
+      addProduct: 'Add Product',
       profile: 'Profile',
       login: 'Login',
       register: 'Register',
@@ -135,6 +137,12 @@ export default function Navbar() {
             className={`nav-link ${pathname === '/products' ? 'active' : ''}`}
           >
             {t.products}
+          </Link>
+          <Link 
+            href="/products/add" 
+            className={`nav-link ${pathname === '/products/add' ? 'active' : ''}`}
+          >
+            {t.addProduct}
           </Link>
           {isLoggedIn && (
             <Link 
@@ -228,6 +236,13 @@ export default function Navbar() {
             onClick={() => setIsMenuOpen(false)}
           >
             {t.products}
+          </Link>
+          <Link 
+            href="/products/add" 
+            className={`nav-link ${pathname === '/products/add' ? 'active' : ''}`}
+            onClick={() => setIsMenuOpen(false)}
+          >
+            {t.addProduct}
           </Link>
           {isLoggedIn && (
             <Link 
