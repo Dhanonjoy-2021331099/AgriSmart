@@ -7,6 +7,7 @@ require("dotenv").config();
 const authRoutes = require("./controllers/authController");
 const sensorRoutes = require("./controllers/sensorController");
 const contactRoutes = require("./controllers/contactController");
+const productRoutes = require("./controllers/productController");
 
 // MongoDB Connect Function
 const connectDB = async () => {
@@ -31,6 +32,7 @@ connectDB();
 app.use("/api/auth", authRoutes);
 app.use("/api/sensor", sensorRoutes);
 app.use("/api/contact", contactRoutes);
+app.use("/api/products", productRoutes);
 
 // Test Route
 app.get("/", (req, res) => {

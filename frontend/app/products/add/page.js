@@ -1,8 +1,9 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
 export default function AddProductPage() {
+  const apiBase = process.env.NEXT_PUBLIC_API || 'http://localhost:5000/api';
   const [formData, setFormData] = useState({
     name: '',
     image: '',
@@ -13,6 +14,26 @@ export default function AddProductPage() {
   });
   const [status, setStatus] = useState(null);
   const [addedProducts, setAddedProducts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    const loadProducts = async () => {
+      try {
+        const res = await fetch(`${apiBase}/products`);
+        if (!res.ok) {
+          throw new Error('পণ্যের তালিকা লোড করা যায়নি।');
+        }
+        const data = await res.json();
+        setAddedProducts(data);
+      } catch (error) {
+        setStatus({ type: 'error', message: error.message || 'কিছু ভুল হয়েছে।' });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    loadProducts();
+  }, [apiBase]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -22,30 +43,56 @@ export default function AddProductPage() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const isEmpty = Object.values(formData).some((value) => !value.trim());
     if (isEmpty) {
       setStatus({ type: 'error', message: 'সব ঘর পূরণ করুন।' });
       return;
     }
-    const newProduct = {
-      ...formData,
-      id: Date.now().toString(),
+    const payload = {
+      name: formData.name.trim(),
+      image: formData.image.trim(),
+      price: Number(formData.price),
+      origin: formData.origin.trim(),
+      rating: Number(formData.rating),
+      quantity: Number(formData.quantity),
     };
-    setAddedProducts((prev) => [newProduct, ...prev]);
-    setStatus({
-      type: 'success',
-      message: `${formData.name} সফলভাবে এক্সপোর্ট তালিকায় যুক্ত হয়েছে!`,
-    });
-    setFormData({
-      name: '',
-      image: '',
-      price: '',
-      origin: '',
-      rating: '',
-      quantity: '',
-    });
+
+    try {
+      setIsSubmitting(true);
+      const res = await fetch(`${apiBase}/products`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      const responseData = await res.json().catch(() => null);
+      if (!res.ok) {
+        throw new Error(responseData?.message || 'পণ্য যুক্ত করা যায়নি।');
+      }
+
+      setAddedProducts((prev) => [responseData, ...prev]);
+      setStatus({
+        type: 'success',
+        message: `${payload.name} সফলভাবে এক্সপোর্ট তালিকায় যুক্ত হয়েছে!`,
+      });
+      setFormData({
+        name: '',
+        image: '',
+        price: '',
+        origin: '',
+        rating: '',
+        quantity: '',
+      });
+    } catch (error) {
+      setStatus({
+        type: 'error',
+        message: error.message || 'পণ্য যুক্ত করা যায়নি।',
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -148,8 +195,9 @@ export default function AddProductPage() {
                 }}
                 onMouseEnter={(e) => (e.currentTarget.style.transform = 'translateY(-2px)')}
                 onMouseLeave={(e) => (e.currentTarget.style.transform = 'translateY(0)')}
+                disabled={isSubmitting}
               >
-                পণ্য যুক্ত করুন
+                {isSubmitting ? 'পণ্য যুক্ত হচ্ছে...' : 'পণ্য যুক্ত করুন'}
               </button>
               {status && (
                 <div
@@ -260,18 +308,21 @@ export default function AddProductPage() {
           </div>
         </div>
 
-        {addedProducts.length > 0 && (
+        {(isLoading || addedProducts.length > 0) && (
           <section style={{ marginTop: '60px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
               <h2 style={{ margin: 0, color: '#0f172a', fontSize: '30px' }}>যুক্ত করা পণ্য</h2>
               <span style={{ padding: '4px 12px', borderRadius: '999px', background: '#eef2ff', color: '#4338ca', fontWeight: 600 }}>
-                {addedProducts.length}
+                {isLoading ? '…' : addedProducts.length}
               </span>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '20px' }}>
-              {addedProducts.map((product) => (
+            {isLoading ? (
+              <p style={{ color: '#475569' }}>পণ্য লোড হচ্ছে...</p>
+            ) : (
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '20px' }}>
+                {addedProducts.map((product) => (
                 <div
-                  key={product.id}
+                  key={product._id || product.id}
                   style={{
                     background: 'white',
                     borderRadius: '20px',
@@ -320,8 +371,9 @@ export default function AddProductPage() {
                     <span>{product.quantity} টন</span>
                   </div>
                 </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </section>
         )}
       </div>
