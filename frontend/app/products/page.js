@@ -1,56 +1,30 @@
 'use client';
+import { useEffect, useState } from 'react';
 
 export default function Products() {
-  const products = [
-    {
-      id: 1,
-      name: 'স্মার্ট সেন্সর',
-      description: 'মাটির আর্দ্রতা, তাপমাত্রা এবং pH পরিমাপের জন্য',
-      price: '৫,০০০ টাকা',
-      image: '📡',
-      features: ['রিয়েল-টাইম মনিটরিং', 'ওয়াই-ফাই সংযোগ', 'মোবাইল অ্যাপ']
-    },
-    {
-      id: 2,
-      name: 'অটোমেটিক সেচ সিস্টেম',
-      description: 'স্বয়ংক্রিয় সেচ ব্যবস্থাপনা',
-      price: '১৫,০০০ টাকা',
-      image: '💧',
-      features: ['স্বয়ংক্রিয় নিয়ন্ত্রণ', 'পানি সাশ্রয়', 'মোবাইল কন্ট্রোল']
-    },
-    {
-      id: 3,
-      name: 'ড্রোন সার্ভিস',
-      description: 'ফসলের উপরিভাগ পর্যবেক্ষণ',
-      price: '১০,০০০ টাকা/বার',
-      image: '🚁',
-      features: ['এআই বিশ্লেষণ', 'HD ক্যামেরা', 'রিপোর্ট']
-    },
-    {
-      id: 4,
-      name: 'কৃষি উপকরণ প্যাকেজ',
-      description: 'সম্পূর্ণ কৃষি সরঞ্জাম সেট',
-      price: '২৫,০০০ টাকা',
-      image: '📦',
-      features: ['সেন্সর', 'সেচ সিস্টেম', 'সফটওয়্যার']
-    },
-    {
-      id: 5,
-      name: 'মোবাইল অ্যাপ',
-      description: 'কৃষি ব্যবস্থাপনার জন্য অ্যাপ',
-      price: 'মাসিক ৫০০ টাকা',
-      image: '📱',
-      features: ['ড্যাশবোর্ড', 'এলার্ট', 'রিপোর্ট']
-    },
-    {
-      id: 6,
-      name: 'কনসাল্টেশন সার্ভিস',
-      description: 'কৃষি বিশেষজ্ঞ পরামর্শ',
-      price: '২,০০০ টাকা/ঘণ্টা',
-      image: '👨‍🌾',
-      features: ['বিশেষজ্ঞ পরামর্শ', 'ফিল্ড ভিজিট', 'রিপোর্ট']
-    }
-  ];
+  const apiBase = process.env.NEXT_PUBLIC_API || 'http://localhost:5000/api';
+  const [products, setProducts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await fetch(`${apiBase}/products`);
+        if (!res.ok) {
+          throw new Error('পণ্য লোড করা যাচ্ছে না।');
+        }
+        const data = await res.json();
+        setProducts(data);
+      } catch (err) {
+        setError(err.message || 'কিছু ভুল হয়েছে।');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, [apiBase]);
 
   return (
     <div style={{ minHeight: '100vh', padding: '40px 20px', background: 'var(--bg, #f8f9fa)' }}>
@@ -78,10 +52,28 @@ export default function Products() {
           gap: '30px',
           marginTop: '40px'
         }}>
-          {products.map(product => (
-            <div 
-              key={product.id}
-              className="card" 
+          {isLoading && (
+            <p style={{ gridColumn: '1 / -1', textAlign: 'center', color: '#64748b' }}>
+              পণ্য লোড হচ্ছে...
+            </p>
+          )}
+
+          {error && !isLoading && (
+            <p style={{ gridColumn: '1 / -1', textAlign: 'center', color: '#b91c1c', fontWeight: 600 }}>
+              {error}
+            </p>
+          )}
+
+          {!isLoading && !error && products.length === 0 && (
+            <p style={{ gridColumn: '1 / -1', textAlign: 'center', color: '#475569' }}>
+              এখনও কোনো পণ্য যোগ করা হয়নি। অনুগ্রহ করে “পণ্য যুক্ত করুন” পাতায় গিয়ে নতুন পণ্য যোগ করুন।
+            </p>
+          )}
+
+          {!isLoading && !error && products.map(product => (
+            <div
+              key={product._id}
+              className="card"
               style={{
                 padding: '30px',
                 transition: 'all 0.3s',
@@ -89,7 +81,8 @@ export default function Products() {
                 boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
                 borderRadius: '15px',
                 display: 'flex',
-                flexDirection: 'column'
+                flexDirection: 'column',
+                gap: '16px'
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = 'translateY(-5px)';
@@ -101,74 +94,58 @@ export default function Products() {
               }}
             >
               <div style={{
-                fontSize: '64px',
-                textAlign: 'center',
-                marginBottom: '20px'
+                width: '100%',
+                height: '220px',
+                borderRadius: '15px',
+                background: '#f8fafc',
+                border: '1px dashed #cbd5f5',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                overflow: 'hidden'
               }}>
-                {product.image}
+                {product.image ? (
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
+                    onError={(e) => (e.currentTarget.style.display = 'none')}
+                  />
+                ) : (
+                  <span style={{ fontSize: '64px' }}>🛒</span>
+                )}
               </div>
-              
-              <h2 style={{ 
-                color: '#333', 
-                marginBottom: '10px',
-                fontSize: '24px',
-                textAlign: 'center'
-              }}>
-                {product.name}
-              </h2>
-              
-              <p style={{ 
-                color: '#666', 
-                marginBottom: '20px',
-                textAlign: 'center',
-                lineHeight: '1.6'
-              }}>
-                {product.description}
-              </p>
 
-              <div style={{ marginBottom: '20px', flexGrow: 1 }}>
-                <h4 style={{ color: '#667eea', marginBottom: '10px' }}>সুবিধা:</h4>
-                <ul style={{ 
-                  listStyle: 'none', 
-                  padding: 0,
-                  margin: 0
+              <div>
+                <h2 style={{
+                  color: '#333',
+                  marginBottom: '6px',
+                  fontSize: '24px',
                 }}>
-                  {product.features.map((feature, idx) => (
-                    <li key={idx} style={{ 
-                      color: '#666', 
-                      marginBottom: '8px',
-                      paddingLeft: '20px',
-                      position: 'relative'
-                    }}>
-                      <span style={{
-                        position: 'absolute',
-                        left: 0,
-                        color: '#22c55e'
-                      }}>✓</span>
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
+                  {product.name}
+                </h2>
+                <p style={{ color: '#64748b', margin: 0 }}>
+                  উৎপত্তি: {product.origin || '—'}
+                </p>
               </div>
 
               <div style={{
-                padding: '15px',
-                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                color: 'white',
-                borderRadius: '10px',
-                textAlign: 'center',
-                marginTop: 'auto'
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: '12px',
+                color: '#475569',
+                fontWeight: 600
               }}>
-                <div style={{ fontSize: '28px', fontWeight: '700' }}>
-                  {product.price}
-                </div>
+                <span>মূল্য: ${product.price}</span>
+                <span>রেটিং: {product.rating} ⭐</span>
+                <span>পরিমাণ: {product.quantity} টন</span>
               </div>
 
               <button
                 style={{
                   width: '100%',
                   padding: '12px',
-                  marginTop: '15px',
+                  marginTop: 'auto',
                   background: 'white',
                   color: '#667eea',
                   border: '2px solid #667eea',
@@ -187,7 +164,7 @@ export default function Products() {
                   e.target.style.color = '#667eea';
                 }}
               >
-                এখনই কিনুন
+                এখনই যোগাযোগ করুন
               </button>
             </div>
           ))}
