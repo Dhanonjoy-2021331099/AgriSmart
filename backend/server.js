@@ -9,7 +9,7 @@ const sensorRoutes = require("./controllers/sensorController");
 const contactRoutes = require("./controllers/contactController");
 const productRoutes = require("./controllers/productController");
 
-// MongoDB Connect Function
+// MongoDB Connect Function  
 const connectDB = async () => {
   try {
     const mongoURI = process.env.MONGO_URI || 'mongodb://localhost:27017/SmartAgri';

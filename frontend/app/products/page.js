@@ -15,7 +15,34 @@ export default function Products() {
           throw new Error('পণ্য লোড করা যাচ্ছে না।');
         }
         const data = await res.json();
-        setProducts(data);
+        const normalized = data.map((item) => {
+          const price =
+            item.price ??
+            item.price_usd ??
+            item.priceUsd ??
+            item.priceBDT ??
+            item.price_bdt ??
+            0;
+          const quantity =
+            item.quantity ??
+            item.quantity_ton ??
+            item.quantityTon ??
+            item.stock ??
+            0;
+          const rating =
+            item.rating ??
+            item.rating_value ??
+            item.ratingValue ??
+            0;
+
+          return {
+            ...item,
+            price,
+            quantity,
+            rating,
+          };
+        });
+        setProducts(normalized);
       } catch (err) {
         setError(err.message || 'কিছু ভুল হয়েছে।');
       } finally {
