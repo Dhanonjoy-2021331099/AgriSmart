@@ -134,24 +134,40 @@ app.get("/", (req, res) => {
 });
 
 // Global error handler for unhandled promise rejections
+// Important for serverless functions to prevent crashes
 process.on('unhandledRejection', (reason, promise) => {
   console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+  // Don't exit in serverless - let the function complete
+  if (process.env.VERCEL) {
+    console.error('Continuing despite unhandled rejection (serverless mode)');
+  }
 });
 
 process.on('uncaughtException', (error) => {
   console.error('Uncaught Exception:', error);
+  console.error('Stack:', error.stack);
+  // Don't exit in serverless - let the function complete
+  if (process.env.VERCEL) {
+    console.error('Continuing despite uncaught exception (serverless mode)');
+  }
 });
 
 // Error handling middleware (must be before 404 handler)
 app.use((err, req, res, next) => {
   console.error("Unhandled error:", err);
+  console.error("Error stack:", err.stack);
+  
   // Ensure response hasn't been sent and set JSON header
   if (!res.headersSent) {
     res.setHeader('Content-Type', 'application/json');
-    res.status(500).json({ 
+    res.status(err.status || 500).json({ 
       error: "Internal server error", 
-      message: process.env.NODE_ENV === "development" ? err.message : "Something went wrong" 
+      message: process.env.NODE_ENV === "development" ? err.message : "Something went wrong",
+      ...(process.env.NODE_ENV === "development" && { stack: err.stack })
     });
+  } else {
+    // If headers already sent, end the response
+    res.end();
   }
 });
 
@@ -166,6 +182,7 @@ app.use((req, res) => {
 });
 
 // ❗ For Vercel: export app directly (no app.listen())
+// Vercel automatically handles Express apps as serverless functions
 // For local development: start server on port 6001
 if (require.main === module) {
   // This means the file is being run directly, not imported
@@ -177,5 +194,6 @@ if (require.main === module) {
   });
 }
 
-// Export for both Vercel (serverless) and local development
+// Export Express app for both Vercel (serverless) and local development
+// Vercel's @vercel/node automatically handles Express apps
 module.exports = app;
