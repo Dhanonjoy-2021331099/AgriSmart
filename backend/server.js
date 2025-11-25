@@ -8,78 +8,96 @@ const authRoutes = require("./controllers/authController");
 const sensorRoutes = require("./controllers/sensorController");
 const contactRoutes = require("./controllers/contactController");
 const productRoutes = require("./controllers/productController");
-
-<<<<<<< HEAD
-// MongoDB Connect Function  
-const connectDB = async () => {
-  try {
-    const mongoURI = process.env.MONGO_URI || 'mongodb://localhost:27017/SmartAgri';
-    await mongoose.connect(mongoURI);
-    console.log("✅ MongoDB Connected to SmartAgri database");
-  } catch (error) {
-    console.error("❌ MongoDB Connection Error:", error);
-    process.exit(1);
-  }
-};
-=======
-// Import MongoDB connection (mongoose for Product model)
 const connectMongoose = require("./database/connect");
->>>>>>> 3a342950525c6f61523691db7b950d9e97727cfd
 
 const app = express();
+
+// CORS
 app.use(cors({
-  origin: ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:5173', 'http://localhost:5174'],
+  origin: "*",
   credentials: true
 }));
+
 app.use(express.json());
 
-// MongoDB Connection URI (for MongoClient - legacy)
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.mbp6mif.mongodb.net/?retryWrites=true&w=majority`;
+// =============== MongoDB (MongoClient) ==================
 
-// MongoDB Client (for legacy routes)
-const client = new MongoClient(uri, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  },
-});
-
-// Global reference
 let agrismartCollection;
+let mongoClientPromise;
+let mongooseConnected = false;
 
 async function connectMongoClient() {
   try {
-    await client.connect();
+    if (!mongoClientPromise) {
+      if (!process.env.DB_USER || !process.env.DB_PASS) {
+        throw new Error("DB_USER and DB_PASS environment variables are required");
+      }
 
-    const myDB = client.db("agrismartDB");
-    agrismartCollection = myDB.collection("agriProducts");
+      const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.mbp6mif.mongodb.net/?retryWrites=true&w=majority`;
 
-    console.log("🔥 Connected to MongoDB (MongoClient) successfully!");
+      const client = new MongoClient(uri, {
+        serverApi: {
+          version: ServerApiVersion.v1,
+          strict: true,
+          deprecationErrors: true,
+        },
+      });
+
+      mongoClientPromise = client.connect();
+    }
+
+    const client = await mongoClientPromise;
+    const db = client.db("agrismartDB");
+    agrismartCollection = db.collection("agriProducts");
+    return agrismartCollection;
   } catch (error) {
-    console.error("❌ MongoDB Connection Failed:", error);
+    console.error("MongoDB connection error:", error);
+    throw error;
   }
 }
 
-// Connect to MongoDB (mongoose for Product model)
-connectMongoose();
-
-// Connect to MongoDB (MongoClient for legacy routes)
-connectMongoClient();
+// Initialize connections (non-blocking for serverless)
+// Connections will be established on first request if needed
+(async () => {
+  try {
+    // Try to connect both but don't block if they fail
+    // Connections will be retried on first request
+    Promise.allSettled([
+      connectMongoClient().catch(err => console.error("MongoClient init error:", err.message)),
+      connectMongoose().then(() => { mongooseConnected = true; }).catch(err => console.error("Mongoose init error:", err.message))
+    ]).then(() => {
+      console.log("Initial connection attempts completed");
+    });
+  } catch (error) {
+    console.error("Initial connection error:", error.message);
+    // Don't throw - connections will be retried on first request
+  }
+})();
 
 // =============== API ROUTES ===============
 
 // GET all products
 app.get("/agriProducts", async (req, res) => {
-  const data = await agrismartCollection.find().toArray();
-  res.send(data);
+  try {
+    await connectMongoClient();
+    const data = await agrismartCollection.find().toArray();
+    res.send(data);
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    res.status(500).json({ error: "Failed to fetch products", message: error.message });
+  }
 });
 
-// Insert new product
+// Insert product
 app.post("/agriProducts", async (req, res) => {
-  const newProduct = req.body;
-  const result = await agrismartCollection.insertOne(newProduct);
-  res.send(result);
+  try {
+    await connectMongoClient();
+    const result = await agrismartCollection.insertOne(req.body);
+    res.send(result);
+  } catch (error) {
+    console.error("Error inserting product:", error);
+    res.status(500).json({ error: "Failed to insert product", message: error.message });
+  }
 });
 
 // Other routes
@@ -88,28 +106,24 @@ app.use("/api/sensor", sensorRoutes);
 app.use("/api/contact", contactRoutes);
 app.use("/api/products", productRoutes);
 
-// Test
+// Test route
 app.get("/", (req, res) => {
-  res.send("Smart Agri API is running");
+  res.send("Smart Agri API is running on Vercel!");
 });
 
-// Start Server
-const PORT = process.env.PORT || 6000;
-
-// Handle port already in use
-const server = app.listen(PORT, () => {
-  console.log(`🚀 Server started on port ${PORT}`);
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error("Unhandled error:", err);
+  res.status(500).json({ 
+    error: "Internal server error", 
+    message: process.env.NODE_ENV === "development" ? err.message : "Something went wrong" 
+  });
 });
 
-server.on('error', (err) => {
-  if (err.code === 'EADDRINUSE') {
-    console.error(`❌ Port ${PORT} is already in use.`);
-    console.log(`💡 Please either:`);
-    console.log(`   1. Stop the process using port ${PORT}`);
-    console.log(`   2. Or change PORT in .env file`);
-    console.log(`   3. Or run: netstat -ano | findstr :${PORT} to find the process`);
-    process.exit(1);
-  } else {
-    throw err;
-  }
+// 404 handler
+app.use((req, res) => {
+  res.status(404).json({ error: "Route not found" });
 });
+
+// ❗ NO app.listen() for Vercel - export app directly
+module.exports = app;
