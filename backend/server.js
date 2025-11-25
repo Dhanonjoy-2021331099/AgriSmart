@@ -81,7 +81,7 @@ app.get("/agriProducts", async (req, res) => {
   try {
     await connectMongoClient();
     const data = await agrismartCollection.find().toArray();
-    res.send(data);
+    res.json(data);
   } catch (error) {
     console.error("Error fetching products:", error);
     res.status(500).json({ error: "Failed to fetch products", message: error.message });
@@ -93,7 +93,7 @@ app.post("/agriProducts", async (req, res) => {
   try {
     await connectMongoClient();
     const result = await agrismartCollection.insertOne(req.body);
-    res.send(result);
+    res.json(result);
   } catch (error) {
     console.error("Error inserting product:", error);
     res.status(500).json({ error: "Failed to insert product", message: error.message });
@@ -108,7 +108,11 @@ app.use("/api/products", productRoutes);
 
 // Test route
 app.get("/", (req, res) => {
-  res.send("Smart Agri API is running on Vercel!");
+  res.json({ 
+    message: "Smart Agri API is running on Vercel!",
+    status: "ok",
+    timestamp: new Date().toISOString()
+  });
 });
 
 // Error handling middleware
