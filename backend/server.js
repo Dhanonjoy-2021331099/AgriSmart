@@ -20,6 +20,15 @@ app.use(cors({
 
 app.use(express.json());
 
+// Middleware to ensure JSON content type for all API responses
+app.use((req, res, next) => {
+  // Only set JSON for API routes, not for static files
+  if (!req.path.includes('.')) {
+    res.setHeader('Content-Type', 'application/json');
+  }
+  next();
+});
+
 // =============== MongoDB (MongoClient) ==================
 
 let agrismartCollection;
@@ -79,24 +88,32 @@ async function connectMongoClient() {
 // GET all products
 app.get("/agriProducts", async (req, res) => {
   try {
+    res.setHeader('Content-Type', 'application/json');
     await connectMongoClient();
     const data = await agrismartCollection.find().toArray();
     res.json(data);
   } catch (error) {
     console.error("Error fetching products:", error);
-    res.status(500).json({ error: "Failed to fetch products", message: error.message });
+    if (!res.headersSent) {
+      res.setHeader('Content-Type', 'application/json');
+      res.status(500).json({ error: "Failed to fetch products", message: error.message });
+    }
   }
 });
 
 // Insert product
 app.post("/agriProducts", async (req, res) => {
   try {
+    res.setHeader('Content-Type', 'application/json');
     await connectMongoClient();
     const result = await agrismartCollection.insertOne(req.body);
     res.json(result);
   } catch (error) {
     console.error("Error inserting product:", error);
-    res.status(500).json({ error: "Failed to insert product", message: error.message });
+    if (!res.headersSent) {
+      res.setHeader('Content-Type', 'application/json');
+      res.status(500).json({ error: "Failed to insert product", message: error.message });
+    }
   }
 });
 
@@ -108,6 +125,7 @@ app.use("/api/products", productRoutes);
 
 // Test route
 app.get("/", (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
   res.json({ 
     message: "Smart Agri API is running on Vercel!",
     status: "ok",
@@ -115,19 +133,49 @@ app.get("/", (req, res) => {
   });
 });
 
-// Error handling middleware
+// Global error handler for unhandled promise rejections
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
+process.on('uncaughtException', (error) => {
+  console.error('Uncaught Exception:', error);
+});
+
+// Error handling middleware (must be before 404 handler)
 app.use((err, req, res, next) => {
   console.error("Unhandled error:", err);
-  res.status(500).json({ 
-    error: "Internal server error", 
-    message: process.env.NODE_ENV === "development" ? err.message : "Something went wrong" 
+  // Ensure response hasn't been sent and set JSON header
+  if (!res.headersSent) {
+    res.setHeader('Content-Type', 'application/json');
+    res.status(500).json({ 
+      error: "Internal server error", 
+      message: process.env.NODE_ENV === "development" ? err.message : "Something went wrong" 
+    });
+  }
+});
+
+// 404 handler (must be last)
+app.use((req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  res.status(404).json({ 
+    error: "Route not found",
+    path: req.path,
+    method: req.method
   });
 });
 
-// 404 handler
-app.use((req, res) => {
-  res.status(404).json({ error: "Route not found" });
-});
+// ❗ For Vercel: export app directly (no app.listen())
+// For local development: start server on port 6001
+if (require.main === module) {
+  // This means the file is being run directly, not imported
+  const PORT = process.env.PORT || 6001;
+  app.listen(PORT, () => {
+    console.log(`✅ Smart Agri Backend Server running on http://localhost:${PORT}`);
+    console.log(`📡 API Base URL: http://localhost:${PORT}/api`);
+    console.log(`🌐 Test endpoint: http://localhost:${PORT}/`);
+  });
+}
 
-// ❗ NO app.listen() for Vercel - export app directly
+// Export for both Vercel (serverless) and local development
 module.exports = app;

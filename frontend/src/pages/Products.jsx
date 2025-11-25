@@ -10,6 +10,15 @@ export default function Products() {
     const fetchProducts = async () => {
       try {
         const res = await fetch(`${apiBase}/products`);
+        
+        // Check if response is JSON
+        const contentType = res.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+          const text = await res.text();
+          console.error('Non-JSON response:', text.substring(0, 200));
+          throw new Error('Server returned non-JSON response. Please check backend URL.');
+        }
+        
         if (!res.ok) {
           throw new Error(`পণ্য লোড করা যাচ্ছে না (${res.status})।`);
         }

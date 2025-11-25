@@ -27,7 +27,6 @@ const connectDB = async () => {
       dbName: 'agrismartDB',
       // Important for serverless: don't buffer commands
       bufferCommands: false,
-      bufferMaxEntries: 0,
     });
     
     cachedConnection = connection;
