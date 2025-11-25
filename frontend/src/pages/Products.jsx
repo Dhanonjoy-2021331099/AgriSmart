@@ -14,7 +14,7 @@ export default function Products() {
           throw new Error(`পণ্য লোড করা যাচ্ছে না (${res.status})।`);
         }
         const data = await res.json();
-<<<<<<< HEAD:frontend/app/products/page.js
+        // Normalize product data to handle different field names
         const normalized = data.map((item) => {
           const price =
             item.price ??
@@ -43,10 +43,7 @@ export default function Products() {
           };
         });
         setProducts(normalized);
-=======
-        setProducts(data);
         setError(null);
->>>>>>> 3a342950525c6f61523691db7b950d9e97727cfd:frontend/src/pages/Products.jsx
       } catch (err) {
         console.error('Failed to fetch products:', err);
         const errorMsg = err.message.includes('fetch') 
