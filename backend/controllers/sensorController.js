@@ -13,7 +13,8 @@ router.post('/data', auth, async (req, res) => {
     await data.save();
     res.json(data);
   } catch(err) {
-    console.error(err); res.status(500).send('Server error');
+    console.error(err); 
+    res.status(500).json({ error: 'Server error', message: err.message });
   }
 });
 
@@ -22,7 +23,10 @@ router.get('/latest', auth, async (req, res) => {
   try {
     const data = await SensorData.find({ user: req.user.id }).sort({ createdAt: -1 }).limit(50);
     res.json(data);
-  } catch(err) { console.error(err); res.status(500).send('Server error'); }
+  } catch(err) { 
+    console.error(err); 
+    res.status(500).json({ error: 'Server error', message: err.message }); 
+  }
 });
 
 // GET /api/sensor/all (admin)
@@ -31,7 +35,10 @@ router.get('/all', auth, async (req, res) => {
     if(req.user.role !== 'admin') return res.status(403).json({ msg:'Access denied' });
     const data = await SensorData.find().sort({ createdAt: -1 }).populate('user','name email');
     res.json(data);
-  } catch(err) { console.error(err); res.status(500).send('Server error'); }
+  } catch(err) { 
+    console.error(err); 
+    res.status(500).json({ error: 'Server error', message: err.message }); 
+  }
 });
 
 module.exports = router;

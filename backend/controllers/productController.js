@@ -7,6 +7,8 @@ const Product = require('../models/Product');
 // GET /api/products → return latest products first
 router.get('/', async (_req, res) => {
   try {
+    res.setHeader('Content-Type', 'application/json');
+    
     // Check if mongoose is connected
     if (mongoose.connection.readyState !== 1) {
       console.error('❌ Mongoose not connected. ReadyState:', mongoose.connection.readyState);
@@ -17,13 +19,18 @@ router.get('/', async (_req, res) => {
     res.json(products);
   } catch (error) {
     console.error('❌ Failed to fetch products:', error.message);
-    res.status(500).json({ message: 'পণ্য লোড করা যায়নি।' });
+    if (!res.headersSent) {
+      res.setHeader('Content-Type', 'application/json');
+      res.status(500).json({ message: 'পণ্য লোড করা যায়নি।' });
+    }
   }
 });
 
 // POST /api/products → create a new product entry
 router.post('/', async (req, res) => {
   try {
+    res.setHeader('Content-Type', 'application/json');
+    
     // Check if mongoose is connected
     if (mongoose.connection.readyState !== 1) {
       console.error('❌ Mongoose not connected. ReadyState:', mongoose.connection.readyState);
@@ -52,10 +59,13 @@ router.post('/', async (req, res) => {
   } catch (error) {
     console.error('❌ Failed to add product:', error.message);
     console.error('Full error:', error);
-    res.status(500).json({ 
-      message: 'পণ্য যুক্ত করা যায়নি।',
-      error: process.env.NODE_ENV === 'development' ? error.message : undefined
-    });
+    if (!res.headersSent) {
+      res.setHeader('Content-Type', 'application/json');
+      res.status(500).json({ 
+        message: 'পণ্য যুক্ত করা যায়নি।',
+        error: process.env.NODE_ENV === 'development' ? error.message : undefined
+      });
+    }
   }
 });
 

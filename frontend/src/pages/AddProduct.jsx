@@ -20,17 +20,34 @@ export default function AddProductPage() {
     const loadProducts = async () => {
       try {
         const res = await fetch(`${apiBase}/products`);
+        
+        // Check if response is JSON
+        const contentType = res.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+          const text = await res.text();
+          console.error('Non-JSON response:', text.substring(0, 200));
+          throw new Error('Server returned non-JSON response. Please check backend URL and ensure backend is running.');
+        }
+        
         if (!res.ok) {
-          throw new Error(`পণ্যের তালিকা লোড করা যায়নি (${res.status})।`);
+          const errorData = await res.json().catch(() => ({}));
+          throw new Error(errorData.message || `পণ্যের তালিকা লোড করা যায়নি (${res.status})।`);
         }
         const data = await res.json();
         setAddedProducts(data);
         setStatus(null); // Clear any previous errors
       } catch (error) {
         console.error('Failed to load products:', error);
-        const errorMsg = error.message.includes('fetch') 
-          ? 'ব্যাকএন্ড সার্ভার চালু আছে কিনা পরীক্ষা করুন।' 
-          : error.message || 'কিছু ভুল হয়েছে।';
+        let errorMsg = 'কিছু ভুল হয়েছে।';
+        
+        if (error.message.includes('fetch') || error.message.includes('Failed to fetch')) {
+          errorMsg = `ব্যাকএন্ড সার্ভার connect করতে পারছে না। API URL: ${apiBase}/products`;
+        } else if (error.message.includes('non-JSON')) {
+          errorMsg = error.message;
+        } else {
+          errorMsg = error.message || 'কিছু ভুল হয়েছে।';
+        }
+        
         setStatus({ type: 'error', message: errorMsg });
       } finally {
         setIsLoading(false);
@@ -66,15 +83,42 @@ export default function AddProductPage() {
     try {
       setIsSubmitting(true);
       setStatus(null); // Clear previous status
+      
       const res = await fetch(`${apiBase}/products`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
         body: JSON.stringify(payload),
       });
 
-      const responseData = await res.json().catch(() => null);
+      // Check if response is JSON
+      const contentType = res.headers.get('content-type') || '';
+      if (!contentType.includes('application/json')) {
+        const text = await res.text();
+        console.error('Non-JSON response received:');
+        console.error('Status:', res.status);
+        console.error('Content-Type:', contentType);
+        console.error('Response preview:', text.substring(0, 500));
+        
+        // Try to provide more helpful error message
+        let errorMsg = 'Server returned non-JSON response. ';
+        if (text.includes('<!DOCTYPE') || text.includes('<html')) {
+          errorMsg += 'Backend may be returning HTML error page. Check Vercel logs.';
+        } else if (res.status === 0 || !res.status) {
+          errorMsg += 'Cannot connect to backend. Check if backend is deployed and URL is correct.';
+        } else {
+          errorMsg += `Received status ${res.status}. Check backend logs.`;
+        }
+        errorMsg += ` API URL: ${apiBase}/products`;
+        throw new Error(errorMsg);
+      }
+
+      const responseData = await res.json();
+      
       if (!res.ok) {
-        throw new Error(responseData?.message || `পণ্য যুক্ত করা যায়নি (${res.status})।`);
+        throw new Error(responseData?.message || responseData?.error || `পণ্য যুক্ত করা যায়নি (${res.status})।`);
       }
 
       setAddedProducts((prev) => [responseData, ...prev]);
@@ -92,9 +136,16 @@ export default function AddProductPage() {
       });
     } catch (error) {
       console.error('Failed to add product:', error);
-      const errorMsg = error.message.includes('fetch') 
-        ? 'ব্যাকএন্ড সার্ভার চালু আছে কিনা পরীক্ষা করুন।' 
-        : error.message || 'পণ্য যুক্ত করা যায়নি।';
+      let errorMsg = 'পণ্য যুক্ত করা যায়নি।';
+      
+      if (error.message.includes('fetch') || error.message.includes('Failed to fetch')) {
+        errorMsg = `ব্যাকএন্ড সার্ভার connect করতে পারছে না। API URL: ${apiBase}/products`;
+      } else if (error.message.includes('non-JSON')) {
+        errorMsg = error.message;
+      } else {
+        errorMsg = error.message || 'পণ্য যুক্ত করা যায়নি।';
+      }
+      
       setStatus({
         type: 'error',
         message: errorMsg,

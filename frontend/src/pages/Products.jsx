@@ -10,11 +10,62 @@ export default function Products() {
     const fetchProducts = async () => {
       try {
         const res = await fetch(`${apiBase}/products`);
+        
+        // Check if response is JSON
+        const contentType = res.headers.get('content-type') || '';
+        if (!contentType.includes('application/json')) {
+          const text = await res.text();
+          console.error('Non-JSON response received:');
+          console.error('Status:', res.status);
+          console.error('Content-Type:', contentType);
+          console.error('Response preview:', text.substring(0, 500));
+          
+          // Try to provide more helpful error message
+          let errorMsg = 'Server returned non-JSON response. ';
+          if (text.includes('<!DOCTYPE') || text.includes('<html')) {
+            errorMsg += 'Backend may be returning HTML error page. Check Vercel logs.';
+          } else if (res.status === 0 || !res.status) {
+            errorMsg += 'Cannot connect to backend. Check if backend is deployed and URL is correct.';
+          } else {
+            errorMsg += `Received status ${res.status}. Check backend logs.`;
+          }
+          errorMsg += ` API URL: ${apiBase}/products`;
+          throw new Error(errorMsg);
+        }
+        
         if (!res.ok) {
           throw new Error(`পণ্য লোড করা যাচ্ছে না (${res.status})।`);
         }
         const data = await res.json();
-        setProducts(data);
+        // Normalize product data to handle different field names
+        const normalized = data.map((item) => {
+          const price =
+            item.price ??
+            item.price_usd ??
+            item.priceUsd ??
+            item.priceBDT ??
+            item.price_bdt ??
+            0;
+          const quantity =
+            item.quantity ??
+            item.quantity_ton ??
+            item.quantityTon ??
+            item.stock ??
+            0;
+          const rating =
+            item.rating ??
+            item.rating_value ??
+            item.ratingValue ??
+            0;
+
+          return {
+            ...item,
+            price,
+            quantity,
+            rating,
+          };
+        });
+        setProducts(normalized);
         setError(null);
       } catch (err) {
         console.error('Failed to fetch products:', err);
