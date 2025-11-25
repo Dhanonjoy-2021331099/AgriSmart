@@ -1,8 +1,21 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '../firebase/firebase.config';
 
 export default function Profile() {
-  const [user, setUser] = useState(null);
+  const defaultUser = {
+    name: '',
+    email: '',
+    phone: '',
+    address: '',
+    farmSize: '',
+    crops: [],
+    role: 'farmer',
+    photoURL: ''
+  };
+  const [user, setUser] = useState(defaultUser);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -13,18 +26,47 @@ export default function Profile() {
       return;
     }
 
-    // Simulate fetching user data
-    setTimeout(() => {
-      setUser({
-        name: 'রহমান আলী',
-        email: 'rahman@example.com',
-        phone: '+880 1712 345 678',
-        address: 'ঢাকা, বাংলাদেশ',
-        farmSize: '৫ একর',
-        crops: ['ধান', 'গম', 'ভুট্টা']
-      });
+    // Get user from localStorage first
+    const savedUser = localStorage.getItem('user');
+    if (savedUser) {
+      try {
+        const userData = JSON.parse(savedUser);
+        setUser(prev => ({
+          ...prev,
+          ...userData,
+          name: userData.name || prev.name || 'User',
+          email: userData.email || prev.email || '',
+          phone: userData.phone || prev.phone || '',
+          photoURL: userData.photoURL || prev.photoURL || '',
+          crops: Array.isArray(userData.crops) ? userData.crops : prev.crops,
+          role: userData.role || prev.role || 'farmer'
+        }));
+        setLoading(false);
+      } catch (err) {
+        console.error('Error parsing user data:', err);
+      }
+    } else {
       setLoading(false);
-    }, 1000);
+    }
+
+    // Also listen to Firebase auth state for real-time updates
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      if (firebaseUser) {
+        // Update user data from Firebase
+        setUser(prev => {
+          const safePrev = prev || {};
+          return {
+            ...safePrev,
+            name: firebaseUser.displayName || safePrev.name || 'User',
+            email: firebaseUser.email || safePrev.email || '',
+            photoURL: firebaseUser.photoURL || safePrev.photoURL || ''
+          };
+        });
+      }
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
   }, [navigate]);
 
   if (loading) {
@@ -63,17 +105,33 @@ export default function Profile() {
               width: '120px',
               height: '120px',
               borderRadius: '50%',
-              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+              background: user.photoURL ? 'transparent' : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
               margin: '0 auto 20px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: '60px'
+              fontSize: user.photoURL ? '0' : '60px',
+              overflow: 'hidden',
+              border: user.photoURL ? '3px solid #667eea' : 'none'
             }}>
-              👨‍🌾
+              {user.photoURL ? (
+                <img 
+                  src={user.photoURL} 
+                  alt={user.name}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover'
+                  }}
+                />
+              ) : (
+                '👨‍🌾'
+              )}
             </div>
             <h2 style={{ color: '#333', marginBottom: '10px' }}>{user.name}</h2>
-            <p style={{ color: '#666', marginBottom: '20px' }}>কৃষক</p>
+            <p style={{ color: '#666', marginBottom: '20px' }}>
+              {user.role === 'admin' ? 'অ্যাডমিন' : 'কৃষক'}
+            </p>
             <button
               style={{
                 padding: '10px 20px',
@@ -111,6 +169,47 @@ export default function Profile() {
                 color: '#333'
               }}>
                 {user.name}
+              </div>
+            </div>
+
+            <div style={{ marginBottom: '20px' }}>
+              <label style={{ 
+                display: 'block', 
+                color: '#667eea', 
+                fontWeight: '600',
+                marginBottom: '8px',
+                fontSize: '14px'
+              }}>
+                প্রোফাইল ছবি
+              </label>
+              <div style={{ 
+                padding: '12px',
+                background: '#f8f9fa',
+                borderRadius: '8px',
+                color: '#333',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '16px'
+              }}>
+                {user.photoURL ? (
+                  <img 
+                    src={user.photoURL} 
+                    alt={user.name}
+                    style={{
+                      width: '64px',
+                      height: '64px',
+                      borderRadius: '50%',
+                      objectFit: 'cover',
+                      border: '2px solid #667eea'
+                    }}
+                  />
+                ) : (
+                  <span style={{ fontSize: '32px' }}>👨‍🌾</span>
+                )}
+                <div>
+                  <div style={{ fontWeight: '600' }}>{user.name}</div>
+                  <div style={{ color: '#666', fontSize: '14px' }}>{user.email}</div>
+                </div>
               </div>
             </div>
 

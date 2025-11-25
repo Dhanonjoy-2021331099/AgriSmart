@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
+import { signOut as firebaseSignOut } from 'firebase/auth';
+import { auth } from '../firebase/firebase.config';
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -32,6 +34,12 @@ export default function Navbar() {
   }, []);
 
   useEffect(() => {
+    // Re-check auth state whenever route changes
+    const token = localStorage.getItem('token');
+    setIsLoggedIn(!!token);
+  }, [pathname]);
+
+  useEffect(() => {
     // Apply dark mode class to document
     if (isDarkMode) {
       document.documentElement.classList.add('dark');
@@ -52,8 +60,17 @@ export default function Navbar() {
     localStorage.setItem('language', newLang);
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try {
+      // Sign out from Firebase
+      await firebaseSignOut(auth);
+    } catch (error) {
+      console.error('Firebase sign out error:', error);
+    }
+    
+    // Clear local storage
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
     setIsLoggedIn(false);
     navigate('/');
   };

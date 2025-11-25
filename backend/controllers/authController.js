@@ -41,7 +41,8 @@ router.post('/register', async (req, res) => {
         name: user.name, 
         email: user.email, 
         phone: user.phone,
-        role: user.role 
+        role: user.role,
+        photoURL: user.photoURL || ''
       },
       msg: 'Registration successful'
     });
@@ -78,7 +79,8 @@ router.post('/login', async (req, res) => {
         name:user.name, 
         email:user.email, 
         phone:user.phone,
-        role:user.role 
+        role:user.role,
+        photoURL: user.photoURL || ''
       } 
     });
   } catch(err) {
@@ -91,7 +93,7 @@ router.post('/login', async (req, res) => {
 // POST /api/auth/google
 router.post('/google', async (req, res) => {
   try {
-    const { googleId, email, name, image } = req.body;
+    const { googleId, email, name, photoURL } = req.body;
     if(!googleId || !email) return res.status(400).json({ msg:'Google ID and email required' });
 
     // Check if user exists with Google ID
@@ -106,13 +108,15 @@ router.post('/google', async (req, res) => {
         user.googleId = googleId;
         user.googleEmail = email;
         if(!user.name || user.name === 'Pending Registration') user.name = name;
+        if(photoURL) user.photoURL = photoURL;
       } else {
         // Create new user
         user = new User({
-          name: name,
+          name: name || 'User',
           email: email,
           googleId: googleId,
           googleEmail: email,
+          photoURL: photoURL || '',
           password: '' // No password for Google users
         });
       }
@@ -120,6 +124,7 @@ router.post('/google', async (req, res) => {
       // Update user info
       if(name) user.name = name;
       user.googleEmail = email;
+      if(photoURL) user.photoURL = photoURL;
     }
 
     await user.save();
@@ -134,7 +139,8 @@ router.post('/google', async (req, res) => {
         name: user.name, 
         email: user.email, 
         phone: user.phone,
-        role: user.role 
+        role: user.role,
+        photoURL: user.photoURL
       } 
     });
   } catch(err) {

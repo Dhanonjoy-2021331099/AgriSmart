@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
+import { signInWithPopup, signOut } from 'firebase/auth';
+import { auth, googleProvider } from '../firebase/firebase.config';
 
 export default function Login(){
   const [form, setForm] = useState({email:'', password:''});
@@ -16,7 +18,8 @@ export default function Login(){
       const api = import.meta.env.VITE_API_BASE_URL || 'http://localhost:6001/api';
       const res = await axios.post(api + '/auth/login', form);
       localStorage.setItem('token', res.data.token);
-      navigate('/dashboard');
+      localStorage.setItem('user', JSON.stringify(res.data.user));
+      navigate('/');
     } catch(err){
       setMsg(err.response?.data?.msg || 'Login failed. Please try again.');
     } finally {
@@ -28,21 +31,30 @@ export default function Login(){
     setLoading(true);
     setMsg('');
     try {
-      // For demo, we'll use a mock Google sign-in
-      // In production, integrate with Google OAuth properly
-      const mockGoogleData = {
-        googleId: 'google_' + Date.now(),
-        email: form.email || 'user@gmail.com',
-        name: 'Google User'
-      };
+      // Sign in with Google using Firebase
+      const result = await signInWithPopup(auth, googleProvider);
+      const user = result.user;
       
+      // Send user data to backend
       const api = import.meta.env.VITE_API_BASE_URL || 'http://localhost:6001/api';
-      const res = await axios.post(api + '/auth/google', mockGoogleData);
+      const res = await axios.post(api + '/auth/google', {
+        googleId: user.uid,
+        email: user.email,
+        name: user.displayName || 'User',
+        photoURL: user.photoURL || ''
+      });
+      
+      // Store token and user data
       localStorage.setItem('token', res.data.token);
-      navigate('/dashboard');
+      localStorage.setItem('user', JSON.stringify(res.data.user));
+      navigate('/');
     } catch(err) {
-      setMsg('Google sign-in failed. Please use email/password or register first.');
-    } finally {
+      console.error('Google Sign-In Error:', err);
+      if (err.code === 'auth/popup-closed-by-user') {
+        setMsg('Google sign-in was cancelled.');
+      } else {
+        setMsg('Google sign-in failed. Please try again.');
+      }
       setLoading(false);
     }
   };
