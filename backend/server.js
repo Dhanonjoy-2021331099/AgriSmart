@@ -20,12 +20,33 @@ app.use(cors({
 
 app.use(express.json());
 
-// Middleware to ensure JSON content type for all API responses
+// Middleware to ensure JSON content type for ALL API responses
+// This is critical for Vercel to prevent HTML error pages
 app.use((req, res, next) => {
-  // Only set JSON for API routes, not for static files
+  // Override res methods to ensure JSON
+  const originalJson = res.json.bind(res);
+  const originalSend = res.send.bind(res);
+  
+  // Force JSON for all responses
+  res.json = function(data) {
+    this.setHeader('Content-Type', 'application/json');
+    return originalJson(data);
+  };
+  
+  res.send = function(data) {
+    this.setHeader('Content-Type', 'application/json');
+    // Convert string to JSON object
+    if (typeof data === 'string') {
+      return originalJson({ message: data });
+    }
+    return originalJson(data);
+  };
+  
+  // Set JSON header for all API routes
   if (!req.path.includes('.')) {
     res.setHeader('Content-Type', 'application/json');
   }
+  
   next();
 });
 
