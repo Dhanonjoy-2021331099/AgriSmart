@@ -22,3 +22,5 @@ build/
 # Temporary files
 *.log
 *.tmp
+.vercel
+.env*.local
