@@ -2,7 +2,6 @@ const express = require("express");
 const { MongoClient, ServerApiVersion } = require("mongodb");
 const cors = require("cors");
 const net = require("net");
-const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 const admin = require("firebase-admin");
@@ -10,11 +9,7 @@ const admin = require("firebase-admin");
 // ✅ Firebase Admin Initialization
 // Option 1: Using service account JSON file
 try {
- //onst serviceAccount = require("./agrismart.json");
-
-
-const decoded = Buffer.from(process.env.FIREBASE_PRIVATE_KEY, "base64").toString("utf-8");
-const serviceAccount = JSON.parse(decoded);
+  const serviceAccount = require("./agrismart.json");
 
   admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
