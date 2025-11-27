@@ -1,12 +1,18 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
+import { signInWithPopup } from 'firebase/auth';
+import { toast } from 'react-toastify';
+import { auth, googleProvider } from '../firebase/firebase.config';
+import { useAppSettings } from '../Contexts/AppSettingsContext';
 
 export default function Login(){
   const [form, setForm] = useState({email:'', password:''});
   const [msg, setMsg] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { getText } = useAppSettings();
+  const translate = (bn, en) => getText(bn, en);
 
   const submit = async (e) => {
     e.preventDefault();
@@ -16,33 +22,54 @@ export default function Login(){
       const api = import.meta.env.VITE_API_BASE_URL || 'http://localhost:6001/api';
       const res = await axios.post(api + '/auth/login', form);
       localStorage.setItem('token', res.data.token);
-      navigate('/dashboard');
+      localStorage.setItem('user', JSON.stringify(res.data.user));
+      toast.success(translate('সফলভাবে লগইন হয়েছে!', 'Logged in successfully!'));
+      navigate('/');
     } catch(err){
-      setMsg(err.response?.data?.msg || 'Login failed. Please try again.');
+      const fallbackErr = translate('লগইন ব্যর্থ হয়েছে। আবার চেষ্টা করুন।', 'Login failed. Please try again.');
+      setMsg(err.response?.data?.msg || fallbackErr);
     } finally {
       setLoading(false);
     }
   };
 
   const handleGoogleSignIn = async () => {
+    if (!auth || !googleProvider) {
+      setMsg(translate('গুগল সাইন-ইন অনুপলব্ধ। Firebase কনফিগার করুন।', 'Google sign-in is unavailable. Please configure Firebase credentials.'));
+      return;
+    }
     setLoading(true);
     setMsg('');
     try {
-      // For demo, we'll use a mock Google sign-in
-      // In production, integrate with Google OAuth properly
-      const mockGoogleData = {
-        googleId: 'google_' + Date.now(),
-        email: form.email || 'user@gmail.com',
-        name: 'Google User'
-      };
+      // Sign in with Google using Firebase
+      const result = await signInWithPopup(auth, googleProvider);
+      const user = result.user;
       
+      // Send user data to backend
       const api = import.meta.env.VITE_API_BASE_URL || 'http://localhost:6001/api';
-      const res = await axios.post(api + '/auth/google', mockGoogleData);
+      const res = await axios.post(api + '/auth/google', {
+        googleId: user.uid,
+        email: user.email,
+        name: user.displayName || 'User',
+        photoURL: user.photoURL || ''
+      });
+      
+      // Store token and user data
+      const mergedUser = {
+        ...res.data.user,
+        photoURL: res.data.user?.photoURL || user.photoURL || ''
+      };
       localStorage.setItem('token', res.data.token);
-      navigate('/dashboard');
+      localStorage.setItem('user', JSON.stringify(mergedUser));
+      toast.success(translate('সফলভাবে লগইন হয়েছে!', 'Logged in successfully!'));
+      navigate('/');
     } catch(err) {
-      setMsg('Google sign-in failed. Please use email/password or register first.');
-    } finally {
+      console.error('Google Sign-In Error:', err);
+      if (err.code === 'auth/popup-closed-by-user') {
+        setMsg(translate('গুগল সাইন-ইন বাতিল করা হয়েছে।', 'Google sign-in was cancelled.'));
+      } else {
+        setMsg(translate('গুগল সাইন-ইন ব্যর্থ হয়েছে। আবার চেষ্টা করুন।', 'Google sign-in failed. Please try again.'));
+      }
       setLoading(false);
     }
   };
@@ -74,9 +101,11 @@ export default function Login(){
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent'
           }}>
-            স্বাগতম
+            {translate('স্বাগতম', 'Welcome')}
           </h1>
-          <p style={{ color: '#666', margin: 0 }}>আপনার Agri Smart অ্যাকাউন্টে সাইন ইন করুন</p>
+          <p style={{ color: '#666', margin: 0 }}>
+            {translate('আপনার Agri Smart অ্যাকাউন্টে সাইন ইন করুন', 'Sign in to your Agri Smart account')}
+          </p>
         </div>
 
         <form onSubmit={submit}>
@@ -88,12 +117,12 @@ export default function Login(){
               fontWeight: '500',
               fontSize: '14px'
             }}>
-              ইমেইল ঠিকানা
+              {translate('ইমেইল ঠিকানা', 'Email address')}
             </label>
             <input 
               required 
               type="email" 
-              placeholder="আপনার ইমেইল লিখুন" 
+              placeholder={translate('আপনার ইমেইল লিখুন', 'Enter your email')}
               value={form.email} 
               onChange={e=>setForm({...form,email:e.target.value})} 
               style={{
@@ -118,12 +147,12 @@ export default function Login(){
               fontWeight: '500',
               fontSize: '14px'
             }}>
-              পাসওয়ার্ড
+              {translate('পাসওয়ার্ড', 'Password')}
             </label>
             <input 
               required 
               type="password" 
-              placeholder="আপনার পাসওয়ার্ড লিখুন" 
+              placeholder={translate('আপনার পাসওয়ার্ড লিখুন', 'Enter your password')}
               value={form.password} 
               onChange={e=>setForm({...form,password:e.target.value})} 
               style={{
@@ -160,7 +189,7 @@ export default function Login(){
             onMouseEnter={(e) => !loading && (e.target.style.transform = 'translateY(-2px)')}
             onMouseLeave={(e) => !loading && (e.target.style.transform = 'translateY(0)')}
           >
-            {loading ? 'সাইন ইন করা হচ্ছে...' : 'সাইন ইন করুন'}
+            {loading ? translate('সাইন ইন করা হচ্ছে...', 'Signing in...') : translate('সাইন ইন করুন', 'Sign in')}
           </button>
         </form>
 
@@ -171,7 +200,7 @@ export default function Login(){
           color: '#999'
         }}>
           <div style={{ flex: 1, height: '1px', background: '#e0e0e0' }}></div>
-          <span style={{ padding: '0 15px', fontSize: '14px' }}>OR</span>
+          <span style={{ padding: '0 15px', fontSize: '14px' }}>{translate('অথবা', 'OR')}</span>
           <div style={{ flex: 1, height: '1px', background: '#e0e0e0' }}></div>
         </div>
 
@@ -204,7 +233,7 @@ export default function Login(){
             <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
             <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
           </svg>
-          Google দিয়ে চালিয়ে যান
+          {translate('Google দিয়ে চালিয়ে যান', 'Continue with Google')}
         </button>
 
         {msg && (
@@ -223,13 +252,13 @@ export default function Login(){
 
         <div style={{ textAlign: 'center', marginTop: '20px' }}>
           <p style={{ color: '#666', margin: 0 }}>
-            অ্যাকাউন্ট নেই?{' '}
+            {translate('অ্যাকাউন্ট নেই?', "Don't have an account?")}{' '}
             <Link to="/register" style={{ 
               color: '#667eea', 
               fontWeight: '600',
               textDecoration: 'none'
             }}>
-              এখনই নিবন্ধন করুন
+              {translate('এখনই নিবন্ধন করুন', 'Register now')}
             </Link>
           </p>
         </div>

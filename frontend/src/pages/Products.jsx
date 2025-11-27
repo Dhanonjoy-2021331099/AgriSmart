@@ -1,17 +1,19 @@
 import { useEffect, useState } from 'react';
+import { useAppSettings } from '../Contexts/AppSettingsContext';
 
 export default function Products() {
   const apiBase = import.meta.env.VITE_API_BASE_URL || 'http://localhost:6001/api';
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { getText } = useAppSettings();
+  const t = (bn, en) => getText(bn, en);
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const res = await fetch(`${apiBase}/products`);
         
-        // Check if response is JSON
         const contentType = res.headers.get('content-type') || '';
         if (!contentType.includes('application/json')) {
           const text = await res.text();
@@ -20,24 +22,22 @@ export default function Products() {
           console.error('Content-Type:', contentType);
           console.error('Response preview:', text.substring(0, 500));
           
-          // Try to provide more helpful error message
-          let errorMsg = 'Server returned non-JSON response. ';
+          let errorMsg = t('সার্ভার JSON নয় এমন রেসপন্স দিয়েছে। ', 'Server returned non-JSON response. ');
           if (text.includes('<!DOCTYPE') || text.includes('<html')) {
-            errorMsg += 'Backend may be returning HTML error page. Check Vercel logs.';
+            errorMsg += t('ব্যাকএন্ড হয়তো HTML error দিচ্ছে। Vercel লগ দেখুন।', 'Backend may be returning an HTML error page. Check server logs.');
           } else if (res.status === 0 || !res.status) {
-            errorMsg += 'Cannot connect to backend. Check if backend is deployed and URL is correct.';
+            errorMsg += t('ব্যাকএন্ডে সংযোগ করা যাচ্ছে না।', 'Cannot reach the backend.');
           } else {
-            errorMsg += `Received status ${res.status}. Check backend logs.`;
+            errorMsg += t(` স্ট্যাটাস ${res.status} পাওয়া গেছে। লগ পরীক্ষা করুন।`, ` Received status ${res.status}. Check backend logs.`);
           }
-          errorMsg += ` API URL: ${apiBase}/products`;
+          errorMsg += t(` API URL: ${apiBase}/products`, ` API URL: ${apiBase}/products`);
           throw new Error(errorMsg);
         }
         
         if (!res.ok) {
-          throw new Error(`পণ্য লোড করা যাচ্ছে না (${res.status})।`);
+          throw new Error(t(`পণ্য লোড করা যাচ্ছে না (${res.status})।`, `Unable to load products (${res.status}).`));
         }
         const data = await res.json();
-        // Normalize product data to handle different field names
         const normalized = data.map((item) => {
           const price =
             item.price ??
@@ -70,8 +70,8 @@ export default function Products() {
       } catch (err) {
         console.error('Failed to fetch products:', err);
         const errorMsg = err.message.includes('fetch') 
-          ? 'ব্যাকএন্ড সার্ভার চালু আছে কিনা পরীক্ষা করুন।' 
-          : err.message || 'কিছু ভুল হয়েছে।';
+          ? t('ব্যাকএন্ড সার্ভার চালু আছে কিনা পরীক্ষা করুন।', 'Please make sure the backend server is running.')
+          : err.message || t('কিছু ভুল হয়েছে।', 'Something went wrong.');
         setError(errorMsg);
       } finally {
         setIsLoading(false);
@@ -79,7 +79,7 @@ export default function Products() {
     };
 
     fetchProducts();
-  }, [apiBase]);
+  }, [apiBase, t]);
 
   return (
     <div style={{ minHeight: '100vh', padding: '40px 20px', background: 'var(--bg, #f8f9fa)' }}>
@@ -90,7 +90,7 @@ export default function Products() {
           color: '#333',
           textAlign: 'center'
         }}>
-          আমাদের পণ্য
+          {t('আমাদের পণ্য', 'Our Products')}
         </h1>
         <p style={{ 
           textAlign: 'center', 
@@ -98,7 +98,7 @@ export default function Products() {
           marginBottom: '50px',
           fontSize: '18px'
         }}>
-          আধুনিক কৃষির জন্য প্রয়োজনীয় সব সরঞ্জাম
+          {t('আধুনিক কৃষির জন্য প্রয়োজনীয় সব সরঞ্জাম', 'All the essentials for modern farming')}
         </p>
 
         <div style={{
@@ -109,7 +109,7 @@ export default function Products() {
         }}>
           {isLoading && (
             <p style={{ gridColumn: '1 / -1', textAlign: 'center', color: '#64748b' }}>
-              পণ্য লোড হচ্ছে...
+              {t('পণ্য লোড হচ্ছে...', 'Loading products...')}
             </p>
           )}
 
@@ -121,7 +121,7 @@ export default function Products() {
 
           {!isLoading && !error && products.length === 0 && (
             <p style={{ gridColumn: '1 / -1', textAlign: 'center', color: '#475569' }}>
-              এখনও কোনো পণ্য যোগ করা হয়নি। অনুগ্রহ করে “পণ্য যুক্ত করুন” পাতায় গিয়ে নতুন পণ্য যোগ করুন।
+              {t('এখনও কোনো পণ্য যোগ করা হয়নি। অনুগ্রহ করে “পণ্য যুক্ত করুন” পাতায় গিয়ে নতুন পণ্য যোগ করুন।', 'No products have been added yet. Please use "Add Product" to create one.')}
             </p>
           )}
 

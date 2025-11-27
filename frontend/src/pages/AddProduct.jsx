@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useAppSettings } from '../Contexts/AppSettingsContext';
 
 export default function AddProductPage() {
   const apiBase = import.meta.env.VITE_API_BASE_URL || 'http://localhost:6001/api';
@@ -15,6 +16,8 @@ export default function AddProductPage() {
   const [addedProducts, setAddedProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { getText } = useAppSettings();
+  const t = (bn, en) => getText(bn, en);
 
   useEffect(() => {
     const loadProducts = async () => {

@@ -1,60 +1,40 @@
 import { useState, useEffect } from 'react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
+import { signOut as firebaseSignOut } from 'firebase/auth';
+import { toast } from 'react-toastify';
+import { auth } from '../firebase/firebase.config';
+import { useAppSettings } from '../Contexts/AppSettingsContext';
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
-  const [language, setLanguage] = useState('bangla');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
   const { pathname } = useLocation();
+  const { language, theme, toggleLanguage, toggleTheme, getText } = useAppSettings();
 
   useEffect(() => {
-    // Check if user is logged in
     const token = localStorage.getItem('token');
     setIsLoggedIn(!!token);
-
-    // Check for saved theme preference
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark') {
-      setIsDarkMode(true);
-      document.documentElement.classList.add('dark');
-    }
-
-    // Check for saved language preference
-    const savedLang = localStorage.getItem('language');
-    if (savedLang && (savedLang === 'bangla' || savedLang === 'english')) {
-      setLanguage(savedLang);
-    } else {
-      // Ensure default is set
-      setLanguage('bangla');
-    }
   }, []);
 
   useEffect(() => {
-    // Apply dark mode class to document
-    if (isDarkMode) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
+    const token = localStorage.getItem('token');
+    setIsLoggedIn(!!token);
+  }, [pathname]);
+
+  const handleLogout = async () => {
+    if (auth) {
+      try {
+        await firebaseSignOut(auth);
+      } catch (error) {
+        console.error('Firebase sign out error:', error);
+      }
     }
-  }, [isDarkMode]);
 
-  const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode);
-  };
-
-  const toggleLanguage = () => {
-    const newLang = language === 'bangla' ? 'english' : 'bangla';
-    setLanguage(newLang);
-    localStorage.setItem('language', newLang);
-  };
-
-  const handleLogout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
     setIsLoggedIn(false);
+    toast.success(getText('সফলভাবে লগআউট করা হয়েছে।', 'Successfully logged out.'));
     navigate('/');
   };
 
@@ -86,19 +66,18 @@ export default function Navbar() {
     }
   };
 
-  // Ensure language is valid, default to 'bangla' if not
   const validLanguage = (language === 'bangla' || language === 'english') ? language : 'bangla';
   const t = translations[validLanguage] || translations.bangla;
 
   const headerStyle = {
-    background: isDarkMode ? '#0f0f0f' : '#1a1a1a',
+    background: theme === 'dark' ? '#0f0f0f' : '#1a1a1a',
     color: '#ffffff',
     boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
     position: 'sticky',
     top: 0,
     zIndex: 1000,
     transition: 'all 0.3s ease',
-    borderBottom: isDarkMode ? '1px solid rgba(255, 255, 255, 0.1)' : 'none'
+    borderBottom: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.1)' : 'none'
   };
 
   return (
@@ -147,11 +126,11 @@ export default function Navbar() {
 
           {/* Dark Mode Toggle */}
           <button 
-            onClick={toggleDarkMode}
+            onClick={toggleTheme}
             className="navbar-btn theme-btn"
             aria-label="Toggle Dark Mode"
           >
-            {isDarkMode ? '☀️' : '🌙'}
+            {theme === 'dark' ? '☀️' : '🌙'}
           </button>
 
           {/* Auth Buttons */}
@@ -187,7 +166,7 @@ export default function Navbar() {
       {/* Mobile Navigation */}
       {isMenuOpen && (
         <nav className="navbar-nav mobile-nav" style={{
-          background: isDarkMode ? '#0f0f0f' : '#1a1a1a'
+          background: theme === 'dark' ? '#0f0f0f' : '#1a1a1a'
         }}>
           <NavLink 
             to="/" 

@@ -13,6 +13,7 @@ import Signup from '../pages/Signup';
 import Profile from '../pages/Profile';
 import MainLayout from '../layouts/MainLayout';
 import AppProviders from '../providers/AppProviders';
+import ProtectedClient from '../components/ProtectedClient';
 
 function NotFound() {
   return (
@@ -32,10 +33,38 @@ const router = createBrowserRouter([
     ),
     children: [
       { path: '/', element: <Home /> },
-      { path: '/advice', element: <Advice /> },
-      { path: '/ai-detection', element: <AIDetection /> },
-      { path: '/products', element: <Products /> },
-      { path: '/products/add', element: <AddProduct /> },
+      {
+        path: '/advice',
+        element: (
+          <ProtectedClient>
+            <Advice />
+          </ProtectedClient>
+        ),
+      },
+      {
+        path: '/ai-detection',
+        element: (
+          <ProtectedClient>
+            <AIDetection />
+          </ProtectedClient>
+        ),
+      },
+      {
+        path: '/products',
+        element: (
+          <ProtectedClient>
+            <Products />
+          </ProtectedClient>
+        ),
+      },
+      {
+        path: '/products/add',
+        element: (
+          <ProtectedClient>
+            <AddProduct />
+          </ProtectedClient>
+        ),
+      },
       { path: '/dashboard', element: <Dashboard /> },
       { path: '/admin', element: <Admin /> },
       { path: '/tools', element: <Tools /> },
