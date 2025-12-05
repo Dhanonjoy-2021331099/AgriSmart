@@ -4,9 +4,17 @@ import { toast } from "react-toastify";
 import { useAppSettings } from "../Contexts/AppSettingsContext";
 
 export default function Home() {
-  const { getText } = useAppSettings();
+  const { getText, theme } = useAppSettings();
   const t = (bn, en) => getText(bn, en);
   const [selectedService, setSelectedService] = useState(null);
+  
+  // Theme-aware colors
+  const isDark = theme === 'dark';
+  const bgColor = isDark ? '#0f172a' : '#ffffff';
+  const cardBg = isDark ? '#1e293b' : '#ffffff';
+  const textColor = isDark ? '#f8fafc' : '#0f172a';
+  const textSecondary = isDark ? '#cbd5e1' : '#475569';
+  const textMuted = isDark ? '#94a3b8' : '#64748b';
 
   // Review system state
   const [reviews, setReviews] = useState([]);
@@ -219,7 +227,7 @@ export default function Home() {
   }, [testimonials.length]);
 
   return (
-    <div style={{ minHeight: "100vh", background: "#fff" }}>
+    <div style={{ minHeight: "100vh", background: bgColor, color: textColor }}>
       {/* Service Modal */}
       {selectedService && (
         <div
@@ -237,17 +245,17 @@ export default function Home() {
         >
           <div
             style={{
-              background: "white",
+              background: cardBg,
               padding: "32px",
               borderRadius: "16px",
               boxShadow: "0 20px 50px rgba(0,0,0,0.3)",
               maxWidth: "500px",
               width: "100%",
-              color: "#374151",
+              color: textColor,
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div style={{ fontSize: "48px", marginBottom: "16px" }}>
+            <div style={{ fontSize: "48px", marginBottom: "16px", color: textColor }}>
               {selectedService.icon}
             </div>
             <h2
@@ -255,7 +263,7 @@ export default function Home() {
                 fontSize: "28px",
                 fontWeight: "700",
                 marginBottom: "12px",
-                color: "#1f2937",
+                color: textColor,
               }}
             >
               {selectedService.title}
@@ -264,7 +272,7 @@ export default function Home() {
               style={{
                 marginBottom: "16px",
                 lineHeight: "1.6",
-                color: "#4b5563",
+                color: textSecondary,
               }}
             >
               {selectedService.details}
@@ -513,7 +521,7 @@ export default function Home() {
               key={idx}
               style={{
                 padding: "24px",
-                background: "white",
+                background: cardBg,
                 borderRadius: "16px",
                 boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
                 transition: "all 0.3s",
@@ -535,14 +543,14 @@ export default function Home() {
                 style={{
                   fontWeight: "600",
                   marginBottom: "8px",
-                  color: "#1f2937",
+                  color: textColor,
                 }}
               >
                 {s.title}
               </h4>
               <p
                 style={{
-                  color: "#6b7280",
+                  color: textSecondary,
                   fontSize: "14px",
                   marginBottom: "16px",
                 }}

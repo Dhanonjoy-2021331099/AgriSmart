@@ -33,6 +33,7 @@ import {
   ShoppingCart,
 } from "lucide-react";
 import { useAuth } from "../Contexts/AuthProvider";
+import { useAppSettings } from "../Contexts/AppSettingsContext";
 
 const cardHover = { whileHover: { y: -2, scale: 1.01 } };
 
@@ -62,6 +63,8 @@ export default function Profile() {
   const apiBase =
     import.meta.env.VITE_API_BASE_URL || "http://localhost:6001/api";
   const { user, userId, token, updateProfile } = useAuth();
+  const { theme } = useAppSettings();
+  const isDark = theme === 'dark';
 
   const [stats, setStats] = useState({
     totalOrders: 0,
@@ -276,7 +279,11 @@ export default function Profile() {
   const recentOrders = stats.recentOrders || [];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-slate-100 px-4 py-10">
+    <div className={`min-h-screen px-4 py-10 ${
+      isDark 
+        ? 'bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-slate-100' 
+        : 'bg-gradient-to-br from-slate-50 via-slate-100 to-slate-50 text-slate-900'
+    }`}>
       <div className="max-w-7xl mx-auto space-y-8">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>

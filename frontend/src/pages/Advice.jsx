@@ -15,11 +15,15 @@ import {
   CheckCircle,
   Sparkles,
 } from "lucide-react";
+import { useAppSettings } from "../Contexts/AppSettingsContext";
 
 export default function Advice() {
+  const { theme } = useAppSettings();
   const [selectedCrop, setSelectedCrop] = useState("");
   const [selectedSeason, setSelectedSeason] = useState("");
   const [advice, setAdvice] = useState(null);
+  
+  const isDark = theme === 'dark';
 
   const crops = ["ধান", "গম", "ভুট্টা", "আলু", "টমেটো", "বেগুন", "পেঁয়াজ"];
   const seasons = ["রবি", "খরিফ", "জায়েদ"];
@@ -231,9 +235,16 @@ export default function Advice() {
 
     setAdvice(adviceData);
   };
-
+  
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div 
+      className={`min-h-screen py-12 px-4 sm:px-6 lg:px-8 ${
+        isDark 
+          ? 'bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950' 
+          : 'bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50'
+      }`}
+      style={{ color: isDark ? '#f8fafc' : '#0f172a' }}
+    >
       <motion.div
         className="max-w-7xl mx-auto"
         variants={containerVariants}
@@ -242,9 +253,13 @@ export default function Advice() {
       >
         {/* Header Section */}
         <motion.div className="text-center mb-16" variants={itemVariants}>
-          <div className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm px-6 py-3 rounded-full shadow-lg mb-6">
-            <Sparkles className="w-5 h-5 text-emerald-600" />
-            <span className="text-sm font-semibold text-emerald-700 uppercase tracking-wide">
+          <div className={`inline-flex items-center gap-2 backdrop-blur-sm px-6 py-3 rounded-full shadow-lg mb-6 ${
+            isDark ? 'bg-slate-800/80' : 'bg-white/80'
+          }`}>
+            <Sparkles className={`w-5 h-5 ${isDark ? 'text-emerald-400' : 'text-emerald-600'}`} />
+            <span className={`text-sm font-semibold uppercase tracking-wide ${
+              isDark ? 'text-emerald-300' : 'text-emerald-700'
+            }`}>
               বিশেষজ্ঞ পরামর্শ
             </span>
           </div>
@@ -252,7 +267,7 @@ export default function Advice() {
           <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 bg-clip-text text-transparent mb-4">
             কৃষি পরামর্শ
           </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p className={`text-xl max-w-2xl mx-auto ${isDark ? 'text-slate-300' : 'text-gray-600'}`}>
             আপনার ফসলের জন্য বিশেষজ্ঞ পরামর্শ পান 🌾
           </p>
         </motion.div>
@@ -263,7 +278,11 @@ export default function Advice() {
           variants={itemVariants}
         >
           <motion.div
-            className="lg:col-span-1 bg-white/70 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-white/50"
+            className={`lg:col-span-1 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border ${
+              isDark 
+                ? 'bg-slate-800/70 border-slate-700/50' 
+                : 'bg-white/70 border-white/50'
+            }`}
             variants={cardVariants}
             whileHover="hover"
           >
@@ -271,21 +290,29 @@ export default function Advice() {
               <div className="p-3 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-xl">
                 <Leaf className="w-6 h-6 text-white" />
               </div>
-              <h2 className="text-2xl font-bold text-gray-800">
+              <h2 className={`text-2xl font-bold ${
+                isDark ? 'text-slate-100' : 'text-gray-800'
+              }`}>
                 পরামর্শ চাইতে
               </h2>
             </div>
 
             <div className="space-y-6">
               <div>
-                <label className="flex items-center gap-2 mb-3 text-sm font-semibold text-gray-700 uppercase tracking-wide">
-                  <Sprout className="w-4 h-4 text-emerald-600" />
+                <label className={`flex items-center gap-2 mb-3 text-sm font-semibold uppercase tracking-wide ${
+                  isDark ? 'text-slate-200' : 'text-gray-700'
+                }`}>
+                  <Sprout className={`w-4 h-4 ${isDark ? 'text-emerald-400' : 'text-emerald-600'}`} />
                   ফসল নির্বাচন করুন
                 </label>
                 <select
                   value={selectedCrop}
                   onChange={(e) => setSelectedCrop(e.target.value)}
-                  className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl text-gray-800 font-medium focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20 transition-all duration-300 hover:border-emerald-300"
+                  className={`w-full px-4 py-3 border-2 rounded-xl font-medium focus:ring-4 transition-all duration-300 ${
+                    isDark
+                      ? 'bg-slate-700 border-slate-600 text-slate-100 focus:border-emerald-400 focus:ring-emerald-400/20 hover:border-emerald-500'
+                      : 'bg-white border-gray-200 text-gray-800 focus:border-emerald-500 focus:ring-emerald-500/20 hover:border-emerald-300'
+                  }`}
                 >
                   <option value="">ফসল নির্বাচন করুন</option>
                   {crops.map((crop) => (
@@ -297,14 +324,20 @@ export default function Advice() {
               </div>
 
               <div>
-                <label className="flex items-center gap-2 mb-3 text-sm font-semibold text-gray-700 uppercase tracking-wide">
-                  <Calendar className="w-4 h-4 text-teal-600" />
+                <label className={`flex items-center gap-2 mb-3 text-sm font-semibold uppercase tracking-wide ${
+                  isDark ? 'text-slate-200' : 'text-gray-700'
+                }`}>
+                  <Calendar className={`w-4 h-4 ${isDark ? 'text-teal-400' : 'text-teal-600'}`} />
                   মৌসুম নির্বাচন করুন
                 </label>
                 <select
                   value={selectedSeason}
                   onChange={(e) => setSelectedSeason(e.target.value)}
-                  className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl text-gray-800 font-medium focus:border-teal-500 focus:ring-4 focus:ring-teal-500/20 transition-all duration-300 hover:border-teal-300"
+                  className={`w-full px-4 py-3 border-2 rounded-xl font-medium focus:ring-4 transition-all duration-300 ${
+                    isDark
+                      ? 'bg-slate-700 border-slate-600 text-slate-100 focus:border-teal-400 focus:ring-teal-400/20 hover:border-teal-500'
+                      : 'bg-white border-gray-200 text-gray-800 focus:border-teal-500 focus:ring-teal-500/20 hover:border-teal-300'
+                  }`}
                 >
                   <option value="">মৌসুম নির্বাচন করুন</option>
                   {seasons.map((season) => (
@@ -329,7 +362,11 @@ export default function Advice() {
 
           {/* Quick Tips Section */}
           <motion.div
-            className="lg:col-span-2 bg-white/70 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-white/50"
+            className={`lg:col-span-2 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border ${
+              isDark 
+                ? 'bg-slate-800/70 border-slate-700/50' 
+                : 'bg-white/70 border-white/50'
+            }`}
             variants={cardVariants}
             whileHover="hover"
           >
@@ -337,14 +374,20 @@ export default function Advice() {
               <div className="p-3 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-xl">
                 <TrendingUp className="w-6 h-6 text-white" />
               </div>
-              <h2 className="text-2xl font-bold text-gray-800">দ্রুত তথ্য</h2>
+              <h2 className={`text-2xl font-bold ${
+                isDark ? 'text-slate-100' : 'text-gray-800'
+              }`}>দ্রুত তথ্য</h2>
             </div>
 
             <div className="grid md:grid-cols-2 gap-4">
               {quickFacts.map((fact, index) => (
                 <motion.div
                   key={index}
-                  className="p-6 bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100"
+                  className={`p-6 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 border ${
+                    isDark
+                      ? 'bg-gradient-to-br from-slate-700 to-slate-800 border-slate-600'
+                      : 'bg-gradient-to-br from-white to-gray-50 border-gray-100'
+                  }`}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
@@ -353,10 +396,14 @@ export default function Advice() {
                   <div className="flex items-start gap-4">
                     <div className="text-4xl">{fact.icon}</div>
                     <div>
-                      <h3 className="font-bold text-gray-800 mb-2">
+                      <h3 className={`font-bold mb-2 ${
+                        isDark ? 'text-slate-100' : 'text-gray-800'
+                      }`}>
                         {fact.title}
                       </h3>
-                      <p className="text-gray-600 text-sm leading-relaxed">
+                      <p className={`text-sm leading-relaxed ${
+                        isDark ? 'text-slate-300' : 'text-gray-600'
+                      }`}>
                         {fact.content}
                       </p>
                     </div>
@@ -437,7 +484,11 @@ export default function Advice() {
                   return (
                     <motion.div
                       key={index}
-                      className="bg-white/70 backdrop-blur-xl rounded-2xl shadow-xl p-8 border border-white/50 hover:shadow-2xl transition-all duration-300"
+                      className={`backdrop-blur-xl rounded-2xl shadow-xl p-8 border hover:shadow-2xl transition-all duration-300 ${
+                        isDark
+                          ? 'bg-slate-800/70 border-slate-700/50'
+                          : 'bg-white/70 border-white/50'
+                      }`}
                       initial={{ opacity: 0, y: 30 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.1 }}
@@ -452,10 +503,16 @@ export default function Advice() {
                           <IconComponent className="w-6 h-6 text-white" />
                         </div>
                         <div>
-                          <h3 className="text-xl font-bold text-gray-800">
+                          <h3 className={`text-xl font-bold ${
+                            isDark ? 'text-slate-100' : 'text-gray-800'
+                          }`}>
                             {block.title}
                           </h3>
-                          <span className="inline-block mt-2 px-4 py-1 bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 text-sm font-semibold rounded-full">
+                          <span className={`inline-block mt-2 px-4 py-1 text-sm font-semibold rounded-full ${
+                            isDark
+                              ? 'bg-gradient-to-r from-slate-600 to-slate-700 text-slate-200'
+                              : 'bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700'
+                          }`}>
                             {block.badge}
                           </span>
                         </div>
@@ -465,7 +522,9 @@ export default function Advice() {
                         {block.items.map((item, i) => (
                           <motion.li
                             key={i}
-                            className="flex items-start gap-3 text-gray-700"
+                            className={`flex items-start gap-3 ${
+                              isDark ? 'text-slate-300' : 'text-gray-700'
+                            }`}
                             initial={{ opacity: 0, x: -20 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: index * 0.1 + i * 0.05 }}
@@ -485,7 +544,11 @@ export default function Advice() {
                 {advice.alerts.map((alert, index) => (
                   <motion.div
                     key={index}
-                    className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl shadow-lg p-8 border-2 border-amber-200"
+                    className={`rounded-2xl shadow-lg p-8 border-2 ${
+                      isDark
+                        ? 'bg-gradient-to-br from-amber-900/30 to-orange-900/30 border-amber-700/50'
+                        : 'bg-gradient-to-br from-amber-50 to-orange-50 border-amber-200'
+                    }`}
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: 0.5 + index * 0.1 }}
@@ -496,10 +559,14 @@ export default function Advice() {
                         <AlertCircle className="w-6 h-6 text-white" />
                       </div>
                       <div>
-                        <h3 className="text-lg font-bold text-amber-900 mb-3">
+                        <h3 className={`text-lg font-bold mb-3 ${
+                          isDark ? 'text-amber-200' : 'text-amber-900'
+                        }`}>
                           {alert.title}
                         </h3>
-                        <p className="text-amber-800 leading-relaxed">
+                        <p className={`leading-relaxed ${
+                          isDark ? 'text-amber-100' : 'text-amber-800'
+                        }`}>
                           {alert.content}
                         </p>
                       </div>
