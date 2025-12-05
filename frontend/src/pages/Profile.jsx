@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { motion } from "framer-motion";
+import { toast } from "react-toastify";
 import {
   Bar,
   BarChart,
@@ -183,13 +184,29 @@ export default function Profile() {
   };
 
   const handleProfileSave = async () => {
+    if (!userId || !token) {
+      toast.error("Please login to update profile");
+      return;
+    }
+    
     try {
       setSavingProfile(true);
-      await updateProfile(editForm);
-      setShowEdit(false);
-      fetchStats();
+      const updatedUser = await updateProfile(editForm);
+      
+      if (updatedUser) {
+        toast.success("Profile updated successfully!");
+        // Wait a bit for state to update, then close modal
+        setTimeout(() => {
+          setShowEdit(false);
+        }, 300);
+        fetchStats();
+      } else {
+        toast.error("Failed to update profile. Please try again.");
+      }
     } catch (error) {
       console.error("Profile update failed", error?.message || error);
+      const errorMessage = error?.response?.data?.message || error?.message || "Failed to update profile. Please try again.";
+      toast.error(errorMessage);
     } finally {
       setSavingProfile(false);
     }

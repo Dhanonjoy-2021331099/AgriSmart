@@ -43,8 +43,13 @@ export function AuthProvider({ children }) {
       setToken(nextToken);
     }
     if (nextUser) {
-      localStorage.setItem("user", JSON.stringify(nextUser));
-      setUser(nextUser);
+      // Normalize user object to ensure id field exists
+      const normalizedUser = {
+        ...nextUser,
+        id: nextUser.id || nextUser._id,
+      };
+      localStorage.setItem("user", JSON.stringify(normalizedUser));
+      setUser(normalizedUser);
     }
   };
 
