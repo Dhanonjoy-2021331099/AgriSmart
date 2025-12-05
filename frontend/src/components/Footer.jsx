@@ -34,11 +34,13 @@ export default function Footer() {
           <div className="footer-contact">
             <div className="footer-contact-item">
               <Phone size={18} />
-              <span>+880 1783-062908</span>
+              <span>01783-062908 <br /> 01903912471</span>
+            
             </div>
             <div className="footer-contact-item">
               <Mail size={18} />
-              <span>2021331099@student.sust.edu</span>
+              <span>2021331099@student.sust.edu <br />2021331051@student.sust.edu</span>
+              
             </div>
             <div className="footer-contact-item">
               <MapPin size={18} />
