@@ -5,6 +5,7 @@ import { signInWithPopup } from 'firebase/auth';
 import { toast } from 'react-toastify';
 import { auth, googleProvider } from '../firebase/firebase.config';
 import { useAppSettings } from '../Contexts/AppSettingsContext';
+import { useAuth } from '../Contexts/AuthProvider';
 
 export default function Register() {
   const [form, setForm] = useState({ name: '', email: '', password: '', phone: '' });
@@ -12,6 +13,7 @@ export default function Register() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { getText } = useAppSettings();
+  const { login } = useAuth();
   const translate = (bn, en) => getText(bn, en);
 
   const submit = async (e) => {
@@ -21,8 +23,8 @@ export default function Register() {
     try {
       const api = import.meta.env.VITE_API_BASE_URL || 'http://localhost:6001/api';
       const res = await axios.post(api + '/auth/register', form);
-      localStorage.setItem('token', res.data.token);
-      localStorage.setItem('user', JSON.stringify(res.data.user));
+      // Update AuthContext state immediately
+      login({ token: res.data.token, user: res.data.user });
       toast.success(translate('নিবন্ধন সফল হয়েছে!', 'Registration successful!'));
       navigate('/');
     } catch (err) {
@@ -58,8 +60,8 @@ export default function Register() {
         ...res.data.user,
         photoURL: res.data.user?.photoURL || user.photoURL || '',
       };
-      localStorage.setItem('token', res.data.token);
-      localStorage.setItem('user', JSON.stringify(mergedUser));
+      // Update AuthContext state immediately
+      login({ token: res.data.token, user: mergedUser });
       toast.success(translate('নিবন্ধন সফল হয়েছে!', 'Registration successful!'));
       navigate('/');
     } catch (err) {
