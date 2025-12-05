@@ -10,9 +10,10 @@ export default function Products() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
-  const { getText } = useAppSettings();
+  const { getText, theme } = useAppSettings();
   const t = (bn, en) => getText(bn, en);
   const { addToCart } = useCart();
+  const isDark = theme === 'dark';
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -119,7 +120,7 @@ export default function Products() {
           style={{
             fontSize: "42px",
             marginBottom: "10px",
-            color: "#333",
+            color: isDark ? "#f8fafc" : "#333",
             textAlign: "center",
           }}
         >
@@ -128,7 +129,7 @@ export default function Products() {
         <p
           style={{
             textAlign: "center",
-            color: "#666",
+            color: isDark ? "#cbd5e1" : "#666",
             marginBottom: "50px",
             fontSize: "18px",
           }}
@@ -246,14 +247,14 @@ export default function Products() {
                 <div>
                   <h2
                     style={{
-                      color: "#333",
+                      color: isDark ? "#f8fafc" : "#333",
                       marginBottom: "6px",
                       fontSize: "24px",
                     }}
                   >
                     {product.name}
                   </h2>
-                  <p style={{ color: "#64748b", margin: 0 }}>
+                  <p style={{ color: isDark ? "#94a3b8" : "#64748b", margin: 0 }}>
                     উৎপত্তি: {product.origin || "—"}
                   </p>
                 </div>
@@ -263,7 +264,7 @@ export default function Products() {
                     display: "flex",
                     flexWrap: "wrap",
                     gap: "12px",
-                    color: "#475569",
+                    color: isDark ? "#cbd5e1" : "#475569",
                     fontWeight: 600,
                   }}
                 >

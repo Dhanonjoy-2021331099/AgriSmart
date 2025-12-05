@@ -608,14 +608,14 @@ export default function Home() {
               fontSize: "32px",
               fontWeight: "600",
               marginBottom: "16px",
-              color: "#1f2937",
+              color: textColor,
             }}
           >
             {t("আমাদের খামার সম্পর্কে", "About Our Farm")}
           </h3>
           <p
             style={{
-              color: "#4b5563",
+              color: textSecondary,
               lineHeight: "1.7",
               marginBottom: "16px",
             }}
@@ -627,7 +627,7 @@ export default function Home() {
           </p>
           <ul
             style={{
-              color: "#4b5563",
+              color: textSecondary,
               lineHeight: "1.8",
               marginBottom: "24px",
             }}
@@ -694,13 +694,13 @@ export default function Home() {
               style={{
                 fontSize: "32px",
                 fontWeight: "600",
-                color: "#1f2937",
+                color: textColor,
                 marginBottom: "4px",
               }}
             >
               {t("বৈশিষ্ট্যযুক্ত পণ্য", "Featured Products")}
             </h3>
-            <p style={{ color: "#6b7280" }}>
+            <p style={{ color: textSecondary }}>
               {t(
                 "আমাদের সর্বশেষ ফসল থেকে তাজা নির্বাচন।",
                 "Fresh picks from our latest harvest."
@@ -711,16 +711,16 @@ export default function Home() {
             to="/products"
             style={{
               padding: "10px 20px",
-              border: "1px solid #d1d5db",
+              border: `1px solid ${isDark ? '#475569' : '#d1d5db'}`,
               borderRadius: "8px",
               textDecoration: "none",
-              color: "#374151",
+              color: textColor,
               fontSize: "14px",
               fontWeight: "500",
               transition: "all 0.3s",
             }}
             onMouseEnter={(e) => (e.target.style.borderColor = "#15803d")}
-            onMouseLeave={(e) => (e.target.style.borderColor = "#d1d5db")}
+            onMouseLeave={(e) => (e.target.style.borderColor = isDark ? '#475569' : '#d1d5db')}
           >
             {t("সব দেখুন", "View All")}
           </Link>
@@ -738,18 +738,18 @@ export default function Home() {
               key={i}
               style={{
                 borderRadius: "16px",
-                background: "white",
-                boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
+                background: cardBg,
+                boxShadow: isDark ? "0 1px 3px rgba(0,0,0,0.3)" : "0 1px 3px rgba(0,0,0,0.1)",
                 overflow: "hidden",
                 transition: "all 0.3s",
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.boxShadow =
-                  "0 10px 25px rgba(0,0,0,0.15)";
+                  isDark ? "0 10px 25px rgba(0,0,0,0.5)" : "0 10px 25px rgba(0,0,0,0.15)";
                 e.currentTarget.style.transform = "translateY(-4px)";
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.boxShadow = "0 1px 3px rgba(0,0,0,0.1)";
+                e.currentTarget.style.boxShadow = isDark ? "0 1px 3px rgba(0,0,0,0.3)" : "0 1px 3px rgba(0,0,0,0.1)";
                 e.currentTarget.style.transform = "translateY(0)";
               }}
             >
@@ -763,12 +763,12 @@ export default function Home() {
                   style={{
                     fontWeight: "600",
                     marginBottom: "8px",
-                    color: "#1f2937",
+                    color: textColor,
                   }}
                 >
                   {p.name}
                 </h4>
-                <p style={{ color: "#4b5563", marginBottom: "16px" }}>
+                <p style={{ color: textSecondary, marginBottom: "16px" }}>
                   {p.price}
                 </p>
                 <div
@@ -838,19 +838,19 @@ export default function Home() {
                 style={{
                   fontSize: "32px",
                   fontWeight: "600",
-                  color: "#1f2937",
+                  color: textColor,
                   marginBottom: "16px",
                 }}
               >
                 {t("কেন আমাদের বেছে নিবেন", "Why Choose Us")}
               </h3>
-              <p style={{ color: "#4b5563", marginBottom: "16px" }}>
+              <p style={{ color: textSecondary, marginBottom: "16px" }}>
                 {t(
                   "আমরা আধুনিক পরিবেশবান্ধব কৌশলগুলির সাথে ঐতিহ্যবাহী কৃষি জ্ঞান মিশ্রিত করি।",
                   "We blend traditional farming wisdom with modern eco-friendly techniques."
                 )}
               </p>
-              <ul style={{ color: "#374151", lineHeight: "1.8" }}>
+              <ul style={{ color: textSecondary, lineHeight: "1.8" }}>
                 <li>✔️ {t("১০০% জৈব পণ্য", "100% organic produce")}</li>
                 <li>
                   ✔️{" "}
@@ -874,9 +874,10 @@ export default function Home() {
               <div
                 style={{
                   padding: "16px",
-                  background: "white",
+                  background: cardBg,
                   borderRadius: "12px",
-                  boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
+                  boxShadow: isDark ? "0 1px 3px rgba(0,0,0,0.3)" : "0 1px 3px rgba(0,0,0,0.1)",
+                  color: textColor,
                 }}
               >
                 {t(
@@ -887,9 +888,10 @@ export default function Home() {
               <div
                 style={{
                   padding: "16px",
-                  background: "white",
+                  background: cardBg,
                   borderRadius: "12px",
-                  boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
+                  boxShadow: isDark ? "0 1px 3px rgba(0,0,0,0.3)" : "0 1px 3px rgba(0,0,0,0.1)",
+                  color: textColor,
                 }}
               >
                 {t(
@@ -915,7 +917,7 @@ export default function Home() {
           style={{
             fontSize: "32px",
             fontWeight: "600",
-            color: "#1f2937",
+            color: textColor,
             marginBottom: "24px",
           }}
         >
@@ -924,10 +926,10 @@ export default function Home() {
         <div style={{ position: "relative" }}>
           <div
             style={{
-              background: "white",
+              background: cardBg,
               borderRadius: "16px",
               padding: "32px",
-              boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
+              boxShadow: isDark ? "0 4px 6px rgba(0,0,0,0.3)" : "0 4px 6px rgba(0,0,0,0.1)",
               minHeight: "140px",
               display: "flex",
               alignItems: "center",
@@ -936,7 +938,7 @@ export default function Home() {
             <div>
               <p
                 style={{
-                  color: "#374151",
+                  color: textSecondary,
                   fontStyle: "italic",
                   fontSize: "18px",
                   marginBottom: "16px",
@@ -2161,7 +2163,9 @@ function StoryModal({ t, onClose }) {
               style={{
                 marginTop: "40px",
                 padding: "24px",
-                background: "linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)",
+                background: isDark 
+                  ? "linear-gradient(135deg, #065f46 0%, #047857 100%)"
+                  : "linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)",
                 borderRadius: "12px",
                 textAlign: "center",
                 borderLeft: "4px solid #15803d",
@@ -2169,7 +2173,7 @@ function StoryModal({ t, onClose }) {
             >
               <h3
                 style={{
-                  color: "#15803d",
+                  color: isDark ? "#6ee7b7" : "#15803d",
                   fontSize: "20px",
                   fontWeight: "600",
                   marginBottom: "12px",
@@ -2179,7 +2183,7 @@ function StoryModal({ t, onClose }) {
               </h3>
               <p
                 style={{
-                  color: "#4b7c59",
+                  color: isDark ? "#a7f3d0" : "#4b7c59",
                   margin: 0,
                   lineHeight: "1.6",
                 }}
@@ -2258,19 +2262,29 @@ function StoryModal({ t, onClose }) {
 }
 
 function Section({ t, title, enTitle, icon, content, small }) {
+  const { theme } = useAppSettings();
+  const isDark = theme === 'dark';
+  const bgColor = isDark 
+    ? (small ? '#1e293b' : '#334155')
+    : (small ? '#f9fafb' : '#f3f4f6');
+  const textColor = isDark ? '#f8fafc' : '#374151';
+  const headingColor = '#15803d';
+  
   return (
     <div
       style={{
         marginBottom: small ? "16px" : "32px",
         padding: small ? "16px" : "20px",
-        background: small ? "#f9fafb" : "#f3f4f6",
+        background: bgColor,
         borderRadius: "12px",
         borderLeft: "4px solid #15803d",
         transition: "all 0.3s ease",
       }}
       onMouseEnter={(e) => {
         e.currentTarget.style.transform = "translateX(4px)";
-        e.currentTarget.style.boxShadow = "0 4px 12px rgba(21, 128, 61, 0.1)";
+        e.currentTarget.style.boxShadow = isDark 
+          ? "0 4px 12px rgba(21, 128, 61, 0.3)"
+          : "0 4px 12px rgba(21, 128, 61, 0.1)";
       }}
       onMouseLeave={(e) => {
         e.currentTarget.style.transform = "translateX(0)";
@@ -2281,7 +2295,7 @@ function Section({ t, title, enTitle, icon, content, small }) {
         style={{
           fontSize: small ? "18px" : "22px",
           fontWeight: "600",
-          color: "#15803d",
+          color: headingColor,
           margin: "0 0 12px 0",
           display: "flex",
           alignItems: "center",
@@ -2294,7 +2308,7 @@ function Section({ t, title, enTitle, icon, content, small }) {
       <div
         style={{
           fontSize: small ? "14px" : "15px",
-          color: "#374151",
+          color: textColor,
           lineHeight: "1.7",
           margin: 0,
         }}

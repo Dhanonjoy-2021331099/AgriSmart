@@ -202,6 +202,30 @@ body {
   color: var(--text-primary) !important;
 }
 
+/* Ensure all text in dark mode is visible */
+[data-theme="dark"] {
+  --text-on-white: #0f172a;
+  --text-on-card: #f8fafc;
+}
+
+[data-theme="light"] {
+  --text-on-white: #0f172a;
+  --text-on-card: #0f172a;
+}
+
+/* Force text visibility in cards and containers */
+[data-theme="dark"] .card,
+[data-theme="dark"] [class*="card"],
+[data-theme="dark"] [class*="Card"] {
+  color: var(--text-on-card) !important;
+}
+
+[data-theme="dark"] .card *,
+[data-theme="dark"] [class*="card"] *,
+[data-theme="dark"] [class*="Card"] * {
+  color: var(--text-on-card) !important;
+}
+
 img {
   max-width: 100%;
   display: block;

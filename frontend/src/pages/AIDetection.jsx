@@ -9,8 +9,11 @@ import {
   TrendingUp,
   Sparkles,
 } from "lucide-react";
+import { useAppSettings } from "../Contexts/AppSettingsContext";
 
 export default function AIDetection() {
+  const { theme } = useAppSettings();
+  const isDark = theme === 'dark';
   const [selectedImage, setSelectedImage] = useState(null);
   const [croppedImage, setCroppedImage] = useState(null);
   const [cropRect, setCropRect] = useState(null);
@@ -211,7 +214,11 @@ export default function AIDetection() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50">
+    <div className={`min-h-screen ${
+      isDark 
+        ? 'bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950' 
+        : 'bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50'
+    }`}>
       {/* Hero Section */}
       <motion.section
         className="relative overflow-hidden"
@@ -268,12 +275,18 @@ export default function AIDetection() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-white/50">
+            <div className={`backdrop-blur-xl rounded-3xl shadow-2xl p-8 border ${
+              isDark 
+                ? 'bg-slate-800/80 border-slate-700/50' 
+                : 'bg-white/80 border-white/50'
+            }`}>
               <div className="flex items-center gap-3 mb-6">
                 <div className="p-3 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl">
                   <Camera className="w-6 h-6 text-white" />
                 </div>
-                <h2 className="text-2xl font-bold text-gray-800">
+                <h2 className={`text-2xl font-bold ${
+                  isDark ? 'text-slate-100' : 'text-gray-800'
+                }`}>
                   ছবি আপলোড করুন
                 </h2>
               </div>
@@ -310,11 +323,17 @@ export default function AIDetection() {
                   </div>
                 ) : (
                   <label className="flex flex-col items-center cursor-pointer">
-                    <Upload className="w-16 h-16 text-green-600 mb-4" />
-                    <p className="text-lg font-semibold text-gray-700 mb-2">
+                    <Upload className={`w-16 h-16 mb-4 ${
+                      isDark ? 'text-green-400' : 'text-green-600'
+                    }`} />
+                    <p className={`text-lg font-semibold mb-2 ${
+                      isDark ? 'text-slate-200' : 'text-gray-700'
+                    }`}>
                       ছবি নির্বাচন করুন
                     </p>
-                    <p className="text-sm text-gray-500 mb-4">
+                    <p className={`text-sm mb-4 ${
+                      isDark ? 'text-slate-400' : 'text-gray-500'
+                    }`}>
                       অথবা টেনে এনে ছাড়ুন
                     </p>
                     <input
@@ -379,12 +398,18 @@ export default function AIDetection() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
           >
-            <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-white/50">
+            <div className={`backdrop-blur-xl rounded-3xl shadow-2xl p-8 border ${
+              isDark 
+                ? 'bg-slate-800/80 border-slate-700/50' 
+                : 'bg-white/80 border-white/50'
+            }`}>
               <div className="flex items-center gap-3 mb-6">
                 <div className="p-3 bg-gradient-to-br from-teal-500 to-cyan-500 rounded-xl">
                   <Leaf className="w-6 h-6 text-white" />
                 </div>
-                <h2 className="text-2xl font-bold text-gray-800">
+                <h2 className={`text-2xl font-bold ${
+                  isDark ? 'text-slate-100' : 'text-gray-800'
+                }`}>
                   শনাক্তকরণ ফলাফল
                 </h2>
               </div>
@@ -397,13 +422,21 @@ export default function AIDetection() {
                   className="space-y-6"
                 >
                   {/* Disease Header */}
-                  <div className="bg-gradient-to-r from-red-50 to-orange-50 rounded-2xl p-6 border-2 border-red-200">
+                  <div className={`rounded-2xl p-6 border-2 ${
+                    isDark
+                      ? 'bg-gradient-to-r from-red-900/30 to-orange-900/30 border-red-700/50'
+                      : 'bg-gradient-to-r from-red-50 to-orange-50 border-red-200'
+                  }`}>
                     <div className="flex items-start justify-between mb-4">
                       <div>
-                        <h3 className="text-2xl font-bold text-red-900">
+                        <h3 className={`text-2xl font-bold ${
+                          isDark ? 'text-red-200' : 'text-red-900'
+                        }`}>
                           {result.disease}
                         </h3>
-                        <p className="text-sm text-red-700 italic mt-1">
+                        <p className={`text-sm italic mt-1 ${
+                          isDark ? 'text-red-300' : 'text-red-700'
+                        }`}>
                           {result.latinName}
                         </p>
                       </div>
@@ -413,20 +446,32 @@ export default function AIDetection() {
                     </div>
 
                     <div className="flex items-center gap-2 mb-3">
-                      <AlertCircle className="w-5 h-5 text-red-600" />
-                      <span className="font-semibold text-red-800">
+                      <AlertCircle className={`w-5 h-5 ${
+                        isDark ? 'text-red-400' : 'text-red-600'
+                      }`} />
+                      <span className={`font-semibold ${
+                        isDark ? 'text-red-200' : 'text-red-800'
+                      }`}>
                         তীব্রতা: {result.severity}
                       </span>
                     </div>
 
-                    <p className="text-red-900 leading-relaxed">
+                    <p className={`leading-relaxed ${
+                      isDark ? 'text-red-100' : 'text-red-900'
+                    }`}>
                       {result.summary}
                     </p>
                   </div>
 
                   {/* Causes */}
-                  <div className="bg-gradient-to-br from-amber-50 to-yellow-50 rounded-2xl p-6 border border-amber-200">
-                    <h4 className="text-lg font-bold text-amber-900 mb-4 flex items-center gap-2">
+                  <div className={`rounded-2xl p-6 border ${
+                    isDark
+                      ? 'bg-gradient-to-br from-amber-900/30 to-yellow-900/30 border-amber-700/50'
+                      : 'bg-gradient-to-br from-amber-50 to-yellow-50 border-amber-200'
+                  }`}>
+                    <h4 className={`text-lg font-bold mb-4 flex items-center gap-2 ${
+                      isDark ? 'text-amber-200' : 'text-amber-900'
+                    }`}>
                       <span className="text-2xl">🦠</span>
                       কারণসমূহ
                     </h4>
@@ -434,9 +479,13 @@ export default function AIDetection() {
                       {result.causes.map((cause, i) => (
                         <li
                           key={i}
-                          className="flex items-start gap-3 text-amber-800"
+                          className={`flex items-start gap-3 ${
+                            isDark ? 'text-amber-100' : 'text-amber-800'
+                          }`}
                         >
-                          <span className="text-amber-500 font-bold">•</span>
+                          <span className={`font-bold ${
+                            isDark ? 'text-amber-400' : 'text-amber-500'
+                          }`}>•</span>
                           <span className="leading-relaxed">{cause}</span>
                         </li>
                       ))}
@@ -444,16 +493,28 @@ export default function AIDetection() {
                   </div>
 
                   {/* Solutions */}
-                  <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-6 border border-green-200">
-                    <h4 className="text-lg font-bold text-green-900 mb-4 flex items-center gap-2">
-                      <CheckCircle className="w-5 h-5 text-green-600" />
+                  <div className={`rounded-2xl p-6 border ${
+                    isDark
+                      ? 'bg-gradient-to-br from-green-900/30 to-emerald-900/30 border-green-700/50'
+                      : 'bg-gradient-to-br from-green-50 to-emerald-50 border-green-200'
+                  }`}>
+                    <h4 className={`text-lg font-bold mb-4 flex items-center gap-2 ${
+                      isDark ? 'text-green-200' : 'text-green-900'
+                    }`}>
+                      <CheckCircle className={`w-5 h-5 ${
+                        isDark ? 'text-green-400' : 'text-green-600'
+                      }`} />
                       প্রতিকার
                     </h4>
                     <ul className="space-y-3">
                       {result.solutions.map((solution, i) => (
                         <li
                           key={i}
-                          className="flex items-start gap-3 text-green-800 bg-white/60 rounded-xl p-3"
+                          className={`flex items-start gap-3 rounded-xl p-3 ${
+                            isDark
+                              ? 'text-green-100 bg-slate-700/60'
+                              : 'text-green-800 bg-white/60'
+                          }`}
                         >
                           <span className="flex-shrink-0 w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center text-sm font-bold">
                             {i + 1}
@@ -468,12 +529,20 @@ export default function AIDetection() {
                   {result.blogSections?.map((section, idx) => (
                     <div
                       key={idx}
-                      className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-6 border border-blue-200"
+                      className={`rounded-2xl p-6 border ${
+                        isDark
+                          ? 'bg-gradient-to-br from-blue-900/30 to-cyan-900/30 border-blue-700/50'
+                          : 'bg-gradient-to-br from-blue-50 to-cyan-50 border-blue-200'
+                      }`}
                     >
-                      <h4 className="text-lg font-bold text-blue-900 mb-3">
+                      <h4 className={`text-lg font-bold mb-3 ${
+                        isDark ? 'text-blue-200' : 'text-blue-900'
+                      }`}>
                         {section.title}
                       </h4>
-                      <p className="text-blue-800 leading-relaxed">
+                      <p className={`leading-relaxed ${
+                        isDark ? 'text-blue-100' : 'text-blue-800'
+                      }`}>
                         {section.content}
                       </p>
                     </div>
@@ -481,13 +550,23 @@ export default function AIDetection() {
                 </motion.div>
               ) : (
                 <div className="text-center py-12">
-                  <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full mb-6">
-                    <Leaf className="w-12 h-12 text-gray-400" />
+                  <div className={`inline-flex items-center justify-center w-24 h-24 rounded-full mb-6 ${
+                    isDark
+                      ? 'bg-gradient-to-br from-slate-700 to-slate-800'
+                      : 'bg-gradient-to-br from-gray-100 to-gray-200'
+                  }`}>
+                    <Leaf className={`w-12 h-12 ${
+                      isDark ? 'text-slate-400' : 'text-gray-400'
+                    }`} />
                   </div>
-                  <h3 className="text-xl font-bold text-gray-700 mb-2">
+                  <h3 className={`text-xl font-bold mb-2 ${
+                    isDark ? 'text-slate-200' : 'text-gray-700'
+                  }`}>
                     শনাক্তকরণ শুরু করুন
                   </h3>
-                  <p className="text-gray-500">ছবি আপলোড করে বিশ্লেষণ করুন</p>
+                  <p className={isDark ? 'text-slate-400' : 'text-gray-500'}>
+                    ছবি আপলোড করে বিশ্লেষণ করুন
+                  </p>
                 </div>
               )}
             </div>
@@ -501,13 +580,19 @@ export default function AIDetection() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.5 }}
         >
-          <h2 className="text-3xl font-bold text-center text-gray-800 mb-12">
+          <h2 className={`text-3xl font-bold text-center mb-12 ${
+            isDark ? 'text-slate-100' : 'text-gray-800'
+          }`}>
             এআই শনাক্তকরণের সুবিধা
           </h2>
 
           <div className="grid md:grid-cols-3 gap-6">
             <motion.div
-              className="bg-white/70 backdrop-blur-xl rounded-2xl shadow-xl p-8 text-center border border-white/50"
+              className={`backdrop-blur-xl rounded-2xl shadow-xl p-8 text-center border ${
+                isDark
+                  ? 'bg-slate-800/70 border-slate-700/50'
+                  : 'bg-white/70 border-white/50'
+              }`}
               whileHover={{
                 y: -5,
                 shadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
@@ -516,16 +601,24 @@ export default function AIDetection() {
               <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl mb-4">
                 <span className="text-3xl">⚡</span>
               </div>
-              <h3 className="text-xl font-bold text-gray-800 mb-3">
+              <h3 className={`text-xl font-bold mb-3 ${
+                isDark ? 'text-slate-100' : 'text-gray-800'
+              }`}>
                 দ্রুত শনাক্তকরণ
               </h3>
-              <p className="text-gray-600 leading-relaxed">
+              <p className={`leading-relaxed ${
+                isDark ? 'text-slate-300' : 'text-gray-600'
+              }`}>
                 কয়েক সেকেন্ডে রোগ শনাক্ত করুন এবং তাৎক্ষণিক পরামর্শ পান
               </p>
             </motion.div>
 
             <motion.div
-              className="bg-white/70 backdrop-blur-xl rounded-2xl shadow-xl p-8 text-center border border-white/50"
+              className={`backdrop-blur-xl rounded-2xl shadow-xl p-8 text-center border ${
+                isDark
+                  ? 'bg-slate-800/70 border-slate-700/50'
+                  : 'bg-white/70 border-white/50'
+              }`}
               whileHover={{
                 y: -5,
                 shadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
@@ -534,16 +627,24 @@ export default function AIDetection() {
               <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-teal-500 to-cyan-500 rounded-2xl mb-4">
                 <span className="text-3xl">🎯</span>
               </div>
-              <h3 className="text-xl font-bold text-gray-800 mb-3">
+              <h3 className={`text-xl font-bold mb-3 ${
+                isDark ? 'text-slate-100' : 'text-gray-800'
+              }`}>
                 সঠিক ফলাফল
               </h3>
-              <p className="text-gray-600 leading-relaxed">
+              <p className={`leading-relaxed ${
+                isDark ? 'text-slate-300' : 'text-gray-600'
+              }`}>
                 উন্নত এআই মডেল ব্যবহার করে ৯০%+ নির্ভুলতা
               </p>
             </motion.div>
 
             <motion.div
-              className="bg-white/70 backdrop-blur-xl rounded-2xl shadow-xl p-8 text-center border border-white/50"
+              className={`backdrop-blur-xl rounded-2xl shadow-xl p-8 text-center border ${
+                isDark
+                  ? 'bg-slate-800/70 border-slate-700/50'
+                  : 'bg-white/70 border-white/50'
+              }`}
               whileHover={{
                 y: -5,
                 shadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
@@ -552,10 +653,14 @@ export default function AIDetection() {
               <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-2xl mb-4">
                 <span className="text-3xl">💡</span>
               </div>
-              <h3 className="text-xl font-bold text-gray-800 mb-3">
+              <h3 className={`text-xl font-bold mb-3 ${
+                isDark ? 'text-slate-100' : 'text-gray-800'
+              }`}>
                 বিশেষজ্ঞ পরামর্শ
               </h3>
-              <p className="text-gray-600 leading-relaxed">
+              <p className={`leading-relaxed ${
+                isDark ? 'text-slate-300' : 'text-gray-600'
+              }`}>
                 স্বয়ংক্রিয় চিকিৎসা পরামর্শ এবং প্রতিকারের উপায়
               </p>
             </motion.div>
