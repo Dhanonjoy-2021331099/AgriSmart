@@ -1,7 +1,12 @@
-import PropTypes from 'prop-types';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { AppSettingsProvider, useAppSettings } from '../Contexts/AppSettingsContext';
+import PropTypes from "prop-types";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import {
+  AppSettingsProvider,
+  useAppSettings,
+} from "../Contexts/AppSettingsContext";
+import { CartProvider } from "../Contexts/CartContext";
+import { AuthProvider } from "../Contexts/AuthProvider";
 
 function InnerProviders({ children }) {
   const { theme } = useAppSettings();
@@ -15,7 +20,7 @@ function InnerProviders({ children }) {
         draggable={false}
         pauseOnHover
         newestOnTop
-        theme={theme === 'dark' ? 'dark' : 'light'}
+        theme={theme === "dark" ? "dark" : "light"}
       />
     </>
   );
@@ -28,7 +33,11 @@ InnerProviders.propTypes = {
 export default function AppProviders({ children }) {
   return (
     <AppSettingsProvider>
-      <InnerProviders>{children}</InnerProviders>
+      <AuthProvider>
+        <CartProvider>
+          <InnerProviders>{children}</InnerProviders>
+        </CartProvider>
+      </AuthProvider>
     </AppSettingsProvider>
   );
 }

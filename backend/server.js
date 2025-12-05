@@ -25,15 +25,24 @@ const authRoutes = require("./controllers/authController");
 const sensorRoutes = require("./controllers/sensorController");
 const contactRoutes = require("./controllers/contactController");
 const productRoutes = require("./controllers/productController");
+const orderRoutes = require("./controllers/orderController");
+const userRoutes = require("./controllers/userController");
 
 // Import MongoDB connection (mongoose for Product model)
 const connectMongoose = require("./database/connect");
 
 const app = express();
-app.use(cors({
-  origin: ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:5173', 'http://localhost:5174'],
-  credentials: true
-}));
+app.use(
+  cors({
+    origin: [
+      "http://localhost:3000",
+      "http://localhost:3001",
+      "http://localhost:5173",
+      "http://localhost:5174",
+    ],
+    credentials: true,
+  })
+);
 app.use(express.json());
 
 // MongoDB Connection URI (for MongoClient - legacy)
@@ -91,14 +100,16 @@ app.use("/api/auth", authRoutes);
 app.use("/api/sensor", sensorRoutes);
 app.use("/api/contact", contactRoutes);
 app.use("/api/products", productRoutes);
+app.use("/api/orders", orderRoutes);
+app.use("/api/user", userRoutes);
 
 // Test route
 app.get("/", (req, res) => {
-  res.setHeader('Content-Type', 'application/json');
-  res.json({ 
+  res.setHeader("Content-Type", "application/json");
+  res.json({
     message: "Smart Agri API is running on Vercel!",
     status: "ok",
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   });
 });
 
@@ -110,13 +121,15 @@ const server = app.listen(PORT, () => {
   console.log(`🚀 Server started on port ${PORT}`);
 });
 
-server.on('error', (err) => {
-  if (err.code === 'EADDRINUSE') {
+server.on("error", (err) => {
+  if (err.code === "EADDRINUSE") {
     console.error(`❌ Port ${PORT} is already in use.`);
     console.log(`💡 Please either:`);
     console.log(`   1. Stop the process using port ${PORT}`);
     console.log(`   2. Or change PORT in .env file`);
-    console.log(`   3. Or run: netstat -ano | findstr :${PORT} to find the process`);
+    console.log(
+      `   3. Or run: netstat -ano | findstr :${PORT} to find the process`
+    );
     process.exit(1);
   } else {
     // If headers already sent, end the response
@@ -126,18 +139,19 @@ server.on('error', (err) => {
 
 // 404 handler (must be last)
 app.use((req, res) => {
-  res.setHeader('Content-Type', 'application/json');
-  res.status(404).json({ 
+  res.setHeader("Content-Type", "application/json");
+  res.status(404).json({
     error: "Route not found",
     path: req.path,
-    method: req.method
+    method: req.method,
   });
 });
 
 async function findAvailablePort(startPort, maxAttempts = 10) {
   const testPort = (port) =>
     new Promise((resolve) => {
-      const tester = net.createServer()
+      const tester = net
+        .createServer()
         .once("error", (err) => {
           if (err.code === "EADDRINUSE") {
             resolve(false);
@@ -161,7 +175,11 @@ async function findAvailablePort(startPort, maxAttempts = 10) {
     }
   }
 
-  throw new Error(`No free ports found between ${startPort} and ${startPort + maxAttempts - 1}`);
+  throw new Error(
+    `No free ports found between ${startPort} and ${
+      startPort + maxAttempts - 1
+    }`
+  );
 }
 
 async function startLocalServer() {
@@ -170,12 +188,14 @@ async function startLocalServer() {
     const port = await findAvailablePort(preferredPort, 20);
     if (port !== preferredPort) {
       console.warn(
-        `⚠️  Port ${preferredPort} is busy. Using fallback port ${port} instead. Set PORT env var to override.`,
+        `⚠️  Port ${preferredPort} is busy. Using fallback port ${port} instead. Set PORT env var to override.`
       );
     }
 
     const server = app.listen(port, () => {
-      console.log(`✅ Smart Agri Backend Server running on http://localhost:${port}`);
+      console.log(
+        `✅ Smart Agri Backend Server running on http://localhost:${port}`
+      );
       console.log(`📡 API Base URL: http://localhost:${port}/api`);
       console.log(`🌐 Test endpoint: http://localhost:${port}/`);
     });
@@ -183,7 +203,7 @@ async function startLocalServer() {
     server.on("error", (err) => {
       if (err.code === "EADDRINUSE") {
         console.error(
-          `❌ Port ${port} became unavailable. Please stop the conflicting process or set PORT to a different value.`,
+          `❌ Port ${port} became unavailable. Please stop the conflicting process or set PORT to a different value.`
         );
       } else {
         console.error("Server error:", err);

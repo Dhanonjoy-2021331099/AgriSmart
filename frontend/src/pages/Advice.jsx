@@ -1,87 +1,165 @@
-import { useState } from 'react';
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  Sprout,
+  Droplets,
+  Shield,
+  Package,
+  Calendar,
+  TrendingUp,
+  Leaf,
+  Sun,
+  Cloud,
+  Lightbulb,
+  AlertCircle,
+  CheckCircle,
+  Sparkles,
+} from "lucide-react";
 
 export default function Advice() {
-  const [selectedCrop, setSelectedCrop] = useState('');
-  const [selectedSeason, setSelectedSeason] = useState('');
+  const [selectedCrop, setSelectedCrop] = useState("");
+  const [selectedSeason, setSelectedSeason] = useState("");
   const [advice, setAdvice] = useState(null);
 
-  const crops = ['ধান', 'গম', 'ভুট্টা', 'আলু', 'টমেটো', 'বেগুন', 'পেঁয়াজ'];
-  const seasons = ['রবি', 'খরিফ', 'জায়েদ'];
+  const crops = ["ধান", "গম", "ভুট্টা", "আলু", "টমেটো", "বেগুন", "পেঁয়াজ"];
+  const seasons = ["রবি", "খরিফ", "জায়েদ"];
 
+  const quickFacts = [
+    {
+      icon: "🌱",
+      title: "মাটি পরীক্ষা",
+      content: "নিয়মিতভাবে মাটির pH এবং পুষ্টি উপাদান পরীক্ষা করুন",
+    },
+    {
+      icon: "⏰",
+      title: "সঠিক সময়",
+      content: "মৌসুম অনুযায়ী ফসল বপন করুন",
+    },
+    {
+      icon: "💧",
+      title: "পানির ব্যবস্থাপনা",
+      content: "প্রয়োজন অনুযায়ী সেচ দিন, অতিরিক্ত সেচ এড়িয়ে চলুন",
+    },
+    {
+      icon: "🌿",
+      title: "জৈব সার",
+      content: "জৈব সারের ব্যবহার বৃদ্ধি করুন",
+    },
+  ];
+
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.5 },
+    },
+  };
+
+  const cardVariants = {
+    hidden: { opacity: 0, scale: 0.95 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: { duration: 0.4 },
+    },
+    hover: {
+      scale: 1.02,
+      transition: { duration: 0.2 },
+    },
+  };
+
+  // All existing crop and season data
   const cropGuides = {
-    'ধান': {
-      soil: 'দোঁআশ বা এঁটেল মাটি',
-      seedRate: 'প্রতি বিঘায় ৮-১০ কেজি শোধিত বীজ ব্যবহার করুন',
-      spacing: 'লাইন দূরত্ব ২০-২৫ সেমি ও গাছের দূরত্ব ১৫ সেমি',
-      irrigation: 'মোটা করে ৫-৭ দিন অন্তর হালকা সেচ',
-      fertilizer: 'ইউরিয়া ৬০ কেজি, টিএসপি ৪০ কেজি, এমওপি ৩০ কেজি (প্রতি বিঘায়)',
-      pest: 'পাতাঝরা/ব্লাস্ট রোগ',
-      pestTip: 'কপার-ভিত্তিক বা ট্রাইসাইক্লাজোল স্প্রে করুন এবং ক্ষেতে পানি জমে থাকতে দিন',
-      harvest: 'ধান দুধ থেকে আঠা পর্যায়ে গেলে কাটাই শুরু করুন',
-      yield: '২২-২৫ মণ/বিঘা',
+    ধান: {
+      soil: "দোঁআশ বা এঁটেল মাটি",
+      seedRate: "প্রতি বিঘায় ৮-১০ কেজি শোধিত বীজ ব্যবহার করুন",
+      spacing: "লাইন দূরত্ব ২০-২৫ সেমি ও গাছের দূরত্ব ১৫ সেমি",
+      irrigation: "মোটা করে ৫-৭ দিন অন্তর হালকা সেচ",
+      fertilizer:
+        "ইউরিয়া ৬০ কেজি, টিএসপি ৪০ কেজি, এমওপি ৩০ কেজি (প্রতি বিঘায়)",
+      pest: "পাতাঝরা/ব্লাস্ট রোগ",
+      pestTip:
+        "কপার-ভিত্তিক বা ট্রাইসাইক্লাজোল স্প্রে করুন এবং ক্ষেতে পানি জমে থাকতে দিন",
+      harvest: "ধান দুধ থেকে আঠা পর্যায়ে গেলে কাটাই শুরু করুন",
+      yield: "২২-২৫ মণ/বিঘা",
     },
-    'গম': {
-      soil: 'অল্প দোঁআশ ও ভালো নিষ্কাশনযুক্ত মাটি',
-      seedRate: 'প্রতি বিঘায় ২০-২২ কেজি বীজ',
-      spacing: 'লাইন দূরত্ব ১৮ সেমি',
-      irrigation: 'মাটির আর্দ্রতা অনুযায়ী ৮-১০ দিন অন্তর সেচ',
-      fertilizer: 'সুষম ডিএপি ও এমওপি',
-      pest: 'ঝিল্লি পোকা ও রস্ট',
-      pestTip: 'রস্ট দেখা গেলে তাৎক্ষণিকভাবে টিল্ট স্প্রে করুন',
-      harvest: 'শীষ হলুদ হয়ে আর্দ্রতা ২০% হলে কাটাই করুন',
-      yield: '১৮-২০ মণ/বিঘা',
+    গম: {
+      soil: "অল্প দোঁআশ ও ভালো নিষ্কাশনযুক্ত মাটি",
+      seedRate: "প্রতি বিঘায় ২০-২২ কেজি বীজ",
+      spacing: "লাইন দূরত্ব ১৮ সেমি",
+      irrigation: "মাটির আর্দ্রতা অনুযায়ী ৮-১০ দিন অন্তর সেচ",
+      fertilizer: "সুষম ডিএপি ও এমওপি",
+      pest: "ঝিল্লি পোকা ও রস্ট",
+      pestTip: "রস্ট দেখা গেলে তাৎক্ষণিকভাবে টিল্ট স্প্রে করুন",
+      harvest: "শীষ হলুদ হয়ে আর্দ্রতা ২০% হলে কাটাই করুন",
+      yield: "১৮-২০ মণ/বিঘা",
     },
-    'default': {
-      soil: 'ভাল নিষ্কাশন ও জৈব সমৃদ্ধ দোঁআশ',
-      seedRate: 'উন্নত জাতের শোধিত বীজ ব্যবহার করুন',
-      spacing: 'গাছের স্বাস্থ্য অনুযায়ী ২০ সেমি দূরত্ব',
-      irrigation: 'প্রতি সপ্তাহে ২-৩ বার সেচ',
-      fertilizer: 'নাইট্রোজেন, ফসফরাস ও পটাশের সুষম মিশ্রণ',
-      pest: 'সাধারণ ছত্রাক/কীটপতঙ্গ',
-      pestTip: 'পরিচ্ছন্ন মাঠ ও জৈব কীটনাশক ব্যবহার করুন',
-      harvest: 'ফসলের ৮০% পরিপক্ব হলে কাটাই করুন',
-      yield: 'উপযুক্ত পরিচর্যায় উচ্চ ফলন',
+    default: {
+      soil: "ভাল নিষ্কাশন ও জৈব সমৃদ্ধ দোঁআশ",
+      seedRate: "উন্নত জাতের শোধিত বীজ ব্যবহার করুন",
+      spacing: "গাছের স্বাস্থ্য অনুযায়ী ২০ সেমি দূরত্ব",
+      irrigation: "প্রতি সপ্তাহে ২-৩ বার সেচ",
+      fertilizer: "নাইট্রোজেন, ফসফরাস ও পটাশের সুষম মিশ্রণ",
+      pest: "সাধারণ ছত্রাক/কীটপতঙ্গ",
+      pestTip: "পরিচ্ছন্ন মাঠ ও জৈব কীটনাশক ব্যবহার করুন",
+      harvest: "ফসলের ৮০% পরিপক্ব হলে কাটাই করুন",
+      yield: "উপযুক্ত পরিচর্যায় উচ্চ ফলন",
     },
   };
 
   const seasonGuides = {
-    'রবি': {
-      sowingWindow: 'নভেম্বর - ডিসেম্বর',
-      summary: 'শীতল ও শুষ্ক আবহাওয়ায় রোগের চাপ কম থাকে, তাই সেচ ও তাপমাত্রা সামঞ্জস্য জরুরি।',
-      soilPrep: 'মাটি শুকনো অবস্থায় চাষ দিয়ে প্রতিবার রোটাভেটর চালান।',
-      irrigationCycle: '৭ দিনে হালকা সেচ',
-      nutrition: 'মাটির পরীক্ষার ভিত্তিতে প্রাথমিক ডোজ দিন',
-      proAdvice: 'সকালের কুয়াশা শেষে কীট প্রতিরোধক স্প্রে কার্যকর।',
+    রবি: {
+      sowingWindow: "নভেম্বর - ডিসেম্বর",
+      summary:
+        "শীতল ও শুষ্ক আবহাওয়ায় রোগের চাপ কম থাকে, তাই সেচ ও তাপমাত্রা সামঞ্জস্য জরুরি।",
+      soilPrep: "মাটি শুকনো অবস্থায় চাষ দিয়ে প্রতিবার রোটাভেটর চালান।",
+      irrigationCycle: "৭ দিনে হালকা সেচ",
+      nutrition: "মাটির পরীক্ষার ভিত্তিতে প্রাথমিক ডোজ দিন",
+      proAdvice: "সকালের কুয়াশা শেষে কীট প্রতিরোধক স্প্রে কার্যকর।",
     },
-    'খরিফ': {
-      sowingWindow: 'জুন - জুলাই',
-      summary: 'বর্ষায় অতিরিক্ত আর্দ্রতা থাকায় জল নিষ্কাশন ও রোগব্যবস্থাপনায় সতর্ক থাকুন।',
-      soilPrep: 'জমি উঁচু করে নালা রাখুন যাতে পানি দ্রুত বের হয়।',
-      irrigationCycle: 'প্রয়োজনে বৃষ্টির ফাঁকে সেচ',
-      nutrition: 'জৈব পদার্থ ও জিপসাম প্রয়োগ করুন',
-      proAdvice: 'ঘন বৃষ্টির পর সিস্টেমিক ফাঙ্গিসাইড প্রয়োগে রোগ কমে।',
+    খরিফ: {
+      sowingWindow: "জুন - জুলাই",
+      summary:
+        "বর্ষায় অতিরিক্ত আর্দ্রতা থাকায় জল নিষ্কাশন ও রোগব্যবস্থাপনায় সতর্ক থাকুন।",
+      soilPrep: "জমি উঁচু করে নালা রাখুন যাতে পানি দ্রুত বের হয়।",
+      irrigationCycle: "প্রয়োজনে বৃষ্টির ফাঁকে সেচ",
+      nutrition: "জৈব পদার্থ ও জিপসাম প্রয়োগ করুন",
+      proAdvice: "ঘন বৃষ্টির পর সিস্টেমিক ফাঙ্গিসাইড প্রয়োগে রোগ কমে।",
     },
-    'জায়েদ': {
-      sowingWindow: 'ফেব্রুয়ারি - মার্চ',
-      summary: 'উষ্ণ ও শুষ্ক হাওয়ায় বাষ্পীভবন বেশি, ড্রিপ বা স্প্রিঙ্কলার সেচ উপযোগী।',
-      soilPrep: 'হালকা সেচ দিয়ে চাষ দিন ও মালচ ব্যবহার করুন।',
-      irrigationCycle: '৪-৫ দিনে সেচ',
-      nutrition: 'ফোলিয়ার স্প্রে করে মাইক্রো নিউট্রিয়েন্ট দিন',
-      proAdvice: 'গরম বাতাসে সকালে সেচ দিলে পানি সাশ্রয় হয়।',
+    জায়েদ: {
+      sowingWindow: "ফেব্রুয়ারি - মার্চ",
+      summary:
+        "উষ্ণ ও শুষ্ক হাওয়ায় বাষ্পীভবন বেশি, ড্রিপ বা স্প্রিঙ্কলার সেচ উপযোগী।",
+      soilPrep: "হালকা সেচ দিয়ে চাষ দিন ও মালচ ব্যবহার করুন।",
+      irrigationCycle: "৪-৫ দিনে সেচ",
+      nutrition: "ফোলিয়ার স্প্রে করে মাইক্রো নিউট্রিয়েন্ট দিন",
+      proAdvice: "গরম বাতাসে সকালে সেচ দিলে পানি সাশ্রয় হয়।",
     },
-    'default': {
-      sowingWindow: 'মৌসুম অনুযায়ী',
-      summary: 'স্থানীয় কৃষি অফিসের সুপারিশ অনুসরণ করুন।',
-      soilPrep: 'জৈব সার মিশিয়ে জমি ফাইন টিল্থে আনুন।',
-      irrigationCycle: 'সপ্তাহে ২ বার',
-      nutrition: 'সমন্বিত সারের ব্যবহার',
-      proAdvice: 'নিয়মিত রোগবালাই পর্যবেক্ষণ করুন।',
+    default: {
+      sowingWindow: "মৌসুম অনুযায়ী",
+      summary: "স্থানীয় কৃষি অফিসের সুপারিশ অনুসরণ করুন।",
+      soilPrep: "জৈব সার মিশিয়ে জমি ফাইন টিল্থে আনুন।",
+      irrigationCycle: "সপ্তাহে ২ বার",
+      nutrition: "সমন্বিত সারের ব্যবহার",
+      proAdvice: "নিয়মিত রোগবালাই পর্যবেক্ষণ করুন।",
     },
   };
 
   const getAdvice = () => {
     if (!selectedCrop || !selectedSeason) {
-      alert('অনুগ্রহ করে ফসল এবং মৌসুম নির্বাচন করুন');
+      alert("অনুগ্রহ করে ফসল এবং মৌসুম নির্বাচন করুন");
       return;
     }
 
@@ -93,25 +171,24 @@ export default function Advice() {
       season: selectedSeason,
       summary: `${selectedSeason} মৌসুমে ${selectedCrop} চাষে ${seasonInfo.summary} ${cropInfo.soil}`,
       quickFacts: [
-        { label: 'বপন সময়', value: seasonInfo.sowingWindow },
-        { label: 'সেচ রুটিন', value: seasonInfo.irrigationCycle || cropInfo.irrigation },
-        { label: 'মাটির ধরন', value: cropInfo.soil },
-        { label: 'লক্ষ্য ফলন', value: cropInfo.yield },
+        { label: "বপন সময়", value: seasonInfo.sowingWindow },
+        {
+          label: "সেচ রুটিন",
+          value: seasonInfo.irrigationCycle || cropInfo.irrigation,
+        },
+        { label: "মাটির ধরন", value: cropInfo.soil },
+        { label: "লক্ষ্য ফলন", value: cropInfo.yield },
       ],
       blocks: [
         {
-          title: 'বীজ বপন ও জমি প্রস্তুতি',
-          icon: '🌱',
+          title: "বীজ বপন ও জমি প্রস্তুতি",
+          icon: "🌱",
           badge: seasonInfo.sowingWindow,
-          items: [
-            cropInfo.seedRate,
-            seasonInfo.soilPrep,
-            cropInfo.spacing,
-          ],
+          items: [cropInfo.seedRate, seasonInfo.soilPrep, cropInfo.spacing],
         },
         {
-          title: 'সেচ ও পুষ্টি ব্যবস্থাপনা',
-          icon: '💧',
+          title: "সেচ ও পুষ্টি ব্যবস্থাপনা",
+          icon: "💧",
           badge: seasonInfo.irrigationCycle || cropInfo.irrigation,
           items: [
             cropInfo.irrigation,
@@ -120,33 +197,33 @@ export default function Advice() {
           ],
         },
         {
-          title: 'কীটপতঙ্গ ও রোগ নিয়ন্ত্রণ',
-          icon: '🛡️',
+          title: "কীটপতঙ্গ ও রোগ নিয়ন্ত্রণ",
+          icon: "🛡️",
           badge: cropInfo.pest,
           items: [
             `প্রধান রোগ: ${cropInfo.pest}`,
             cropInfo.pestTip,
-            'সাপ্তাহিক পর্যবেক্ষণ করে আক্রান্ত পাতা সরান',
+            "সাপ্তাহিক পর্যবেক্ষণ করে আক্রান্ত পাতা সরান",
           ],
         },
         {
-          title: 'ফসল তোলা ও সংরক্ষণ',
-          icon: '🧺',
+          title: "ফসল তোলা ও সংরক্ষণ",
+          icon: "🧺",
           badge: cropInfo.harvest,
           items: [
             cropInfo.harvest,
-            'কাটার পর ২-৩ দিন ছায়ায় শুকান',
-            'শুকনো ও বাতাস চলাচলকারী ঘরে সংরক্ষণ করুন',
+            "কাটার পর ২-৩ দিন ছায়ায় শুকান",
+            "শুকনো ও বাতাস চলাচলকারী ঘরে সংরক্ষণ করুন",
           ],
         },
       ],
       alerts: [
         {
-          title: 'বিশেষ সতর্কতা',
+          title: "বিশেষ সতর্কতা",
           content: cropInfo.pestTip,
         },
         {
-          title: 'বিশেষজ্ঞের নোট',
+          title: "বিশেষজ্ঞের নোট",
           content: seasonInfo.proAdvice,
         },
       ],
@@ -156,258 +233,305 @@ export default function Advice() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', padding: '40px 20px', background: 'var(--bg, #f8f9fa)' }}>
-      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-        <h1 style={{ 
-          fontSize: '42px', 
-          marginBottom: '10px',
-          color: '#333',
-          textAlign: 'center'
-        }}>
-          কৃষি পরামর্শ
-        </h1>
-        <p style={{ 
-          textAlign: 'center', 
-          color: '#666', 
-          marginBottom: '40px',
-          fontSize: '18px'
-        }}>
-          আপনার ফসলের জন্য বিশেষজ্ঞ পরামর্শ পান
-        </p>
-
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-          gap: '30px',
-          marginTop: '40px'
-        }}>
-          {/* Input Section */}
-          <div className="card" style={{ padding: '30px' }}>
-            <h2 style={{ marginBottom: '25px', color: '#333' }}>পরামর্শ চাইতে</h2>
-            
-            <div style={{ marginBottom: '20px' }}>
-              <label style={{ 
-                display: 'block', 
-                marginBottom: '10px', 
-                color: '#333',
-                fontWeight: '500'
-              }}>
-                ফসল নির্বাচন করুন
-              </label>
-              <select
-                value={selectedCrop}
-                onChange={(e) => setSelectedCrop(e.target.value)}
-                style={{
-                  width: '100%',
-                  padding: '12px',
-                  border: '2px solid #e0e0e0',
-                  borderRadius: '8px',
-                  fontSize: '16px'
-                }}
-              >
-                <option value="">ফসল নির্বাচন করুন</option>
-                {crops.map(crop => (
-                  <option key={crop} value={crop}>{crop}</option>
-                ))}
-              </select>
-            </div>
-
-            <div style={{ marginBottom: '25px' }}>
-              <label style={{ 
-                display: 'block', 
-                marginBottom: '10px', 
-                color: '#333',
-                fontWeight: '500'
-              }}>
-                মৌসুম নির্বাচন করুন
-              </label>
-              <select
-                value={selectedSeason}
-                onChange={(e) => setSelectedSeason(e.target.value)}
-                style={{
-                  width: '100%',
-                  padding: '12px',
-                  border: '2px solid #e0e0e0',
-                  borderRadius: '8px',
-                  fontSize: '16px'
-                }}
-              >
-                <option value="">মৌসুম নির্বাচন করুন</option>
-                {seasons.map(season => (
-                  <option key={season} value={season}>{season}</option>
-                ))}
-              </select>
-            </div>
-
-          <button
-              onClick={getAdvice}
-              style={{
-                width: '100%',
-                padding: '14px',
-                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                color: 'white',
-                border: 'none',
-                borderRadius: '10px',
-                fontSize: '16px',
-                fontWeight: '600',
-                cursor: 'pointer',
-                transition: 'all 0.3s'
-              }}
-            >
-              পরামর্শ পান
-            </button>
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 py-12 px-4 sm:px-6 lg:px-8">
+      <motion.div
+        className="max-w-7xl mx-auto"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        {/* Header Section */}
+        <motion.div className="text-center mb-16" variants={itemVariants}>
+          <div className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm px-6 py-3 rounded-full shadow-lg mb-6">
+            <Sparkles className="w-5 h-5 text-emerald-600" />
+            <span className="text-sm font-semibold text-emerald-700 uppercase tracking-wide">
+              বিশেষজ্ঞ পরামর্শ
+            </span>
           </div>
 
-          {/* Advice Display Section */}
-          <div className="card" style={{ padding: '30px' }}>
-            <h2 style={{ marginBottom: '25px', color: '#333' }}>পরামর্শ</h2>
-            {advice ? (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-                <div style={{
-                  padding: '24px',
-                  background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                  color: 'white',
-                  borderRadius: '14px'
-                }}>
-                  <p style={{ margin: 0, opacity: 0.9 }}>নির্বাচিত ফসল</p>
-                  <h3 style={{ margin: '6px 0 12px', fontSize: '26px' }}>
-                    {advice.crop} · {advice.season} মৌসুম
-                  </h3>
-                  <p style={{ margin: 0, lineHeight: 1.7 }}>{advice.summary}</p>
-                </div>
+          <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 bg-clip-text text-transparent mb-4">
+            কৃষি পরামর্শ
+          </h1>
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            আপনার ফসলের জন্য বিশেষজ্ঞ পরামর্শ পান 🌾
+          </p>
+        </motion.div>
 
-                <div style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
-                  gap: '12px'
-                }}>
-                  {advice.quickFacts.map((fact) => (
-                    <div key={fact.label} style={{
-                      border: '1px solid #e2e8f0',
-                      borderRadius: '12px',
-                      padding: '14px'
-                    }}>
-                      <p style={{ margin: 0, color: '#94a3b8', fontSize: '12px', letterSpacing: '0.5px' }}>
-                        {fact.label}
-                      </p>
-                      <p style={{ margin: '8px 0 0', color: '#0f172a', fontWeight: 600 }}>
-                        {fact.value}
+        {/* Input Form Section */}
+        <motion.div
+          className="grid lg:grid-cols-3 gap-8 mb-12"
+          variants={itemVariants}
+        >
+          <motion.div
+            className="lg:col-span-1 bg-white/70 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-white/50"
+            variants={cardVariants}
+            whileHover="hover"
+          >
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-3 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-xl">
+                <Leaf className="w-6 h-6 text-white" />
+              </div>
+              <h2 className="text-2xl font-bold text-gray-800">
+                পরামর্শ চাইতে
+              </h2>
+            </div>
+
+            <div className="space-y-6">
+              <div>
+                <label className="flex items-center gap-2 mb-3 text-sm font-semibold text-gray-700 uppercase tracking-wide">
+                  <Sprout className="w-4 h-4 text-emerald-600" />
+                  ফসল নির্বাচন করুন
+                </label>
+                <select
+                  value={selectedCrop}
+                  onChange={(e) => setSelectedCrop(e.target.value)}
+                  className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl text-gray-800 font-medium focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20 transition-all duration-300 hover:border-emerald-300"
+                >
+                  <option value="">ফসল নির্বাচন করুন</option>
+                  {crops.map((crop) => (
+                    <option key={crop} value={crop}>
+                      {crop}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="flex items-center gap-2 mb-3 text-sm font-semibold text-gray-700 uppercase tracking-wide">
+                  <Calendar className="w-4 h-4 text-teal-600" />
+                  মৌসুম নির্বাচন করুন
+                </label>
+                <select
+                  value={selectedSeason}
+                  onChange={(e) => setSelectedSeason(e.target.value)}
+                  className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl text-gray-800 font-medium focus:border-teal-500 focus:ring-4 focus:ring-teal-500/20 transition-all duration-300 hover:border-teal-300"
+                >
+                  <option value="">মৌসুম নির্বাচন করুন</option>
+                  {seasons.map((season) => (
+                    <option key={season} value={season}>
+                      {season}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <motion.button
+                onClick={getAdvice}
+                className="w-full px-6 py-4 bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 text-white font-bold rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 flex items-center justify-center gap-2 group"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <Lightbulb className="w-5 h-5 group-hover:rotate-12 transition-transform" />
+                পরামর্শ পান
+              </motion.button>
+            </div>
+          </motion.div>
+
+          {/* Quick Tips Section */}
+          <motion.div
+            className="lg:col-span-2 bg-white/70 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-white/50"
+            variants={cardVariants}
+            whileHover="hover"
+          >
+            <div className="flex items-center gap-3 mb-8">
+              <div className="p-3 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-xl">
+                <TrendingUp className="w-6 h-6 text-white" />
+              </div>
+              <h2 className="text-2xl font-bold text-gray-800">দ্রুত তথ্য</h2>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-4">
+              {quickFacts.map((fact, index) => (
+                <motion.div
+                  key={index}
+                  className="p-6 bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  whileHover={{ y: -5 }}
+                >
+                  <div className="flex items-start gap-4">
+                    <div className="text-4xl">{fact.icon}</div>
+                    <div>
+                      <h3 className="font-bold text-gray-800 mb-2">
+                        {fact.title}
+                      </h3>
+                      <p className="text-gray-600 text-sm leading-relaxed">
+                        {fact.content}
                       </p>
                     </div>
-                  ))}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        </motion.div>
+
+        {/* Advice Display Section */}
+        <AnimatePresence mode="wait">
+          {advice && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.5 }}
+              className="space-y-8"
+            >
+              {/* Header Info */}
+              <motion.div
+                className="bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 rounded-3xl shadow-2xl p-10 text-white"
+                variants={itemVariants}
+              >
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="p-4 bg-white/20 backdrop-blur-sm rounded-2xl">
+                    <Package className="w-8 h-8" />
+                  </div>
+                  <div>
+                    <h2 className="text-4xl font-bold">{advice.crop}</h2>
+                    <p className="text-emerald-100 text-lg">
+                      পরামর্শ প্রতিবেদন
+                    </p>
+                  </div>
                 </div>
 
-                <div style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-                  gap: '18px'
-                }}>
-                  {advice.blocks.map((block) => (
-                    <div key={block.title} style={{
-                      border: '1px solid #e5e7eb',
-                      borderRadius: '16px',
-                      padding: '20px',
-                      background: '#fcfdff',
-                      boxShadow: '0 10px 30px rgba(15,23,42,0.04)'
-                    }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
-                        <span style={{ fontSize: '26px' }}>{block.icon}</span>
-                        <span style={{
-                          padding: '4px 10px',
-                          borderRadius: '999px',
-                          background: '#eef2ff',
-                          color: '#4338ca',
-                          fontSize: '12px',
-                          fontWeight: 600
-                        }}>
-                          {block.badge}
-                        </span>
+                <div className="grid md:grid-cols-2 gap-4 mt-8">
+                  <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6">
+                    <div className="flex items-center gap-3 mb-2">
+                      <Sun className="w-5 h-5" />
+                      <span className="text-sm font-semibold uppercase tracking-wide">
+                        মৌসুম
+                      </span>
+                    </div>
+                    <p className="text-2xl font-bold">{advice.season}</p>
+                  </div>
+
+                  <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6">
+                    <div className="flex items-center gap-3 mb-2">
+                      <Calendar className="w-5 h-5" />
+                      <span className="text-sm font-semibold uppercase tracking-wide">
+                        রোপণ সময়
+                      </span>
+                    </div>
+                    <p className="text-2xl font-bold">{advice.plantingTime}</p>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Detailed Blocks */}
+              <div className="grid md:grid-cols-2 gap-6">
+                {advice.blocks.map((block, index) => {
+                  const iconMap = {
+                    "🌱": Sprout,
+                    "💧": Droplets,
+                    "🛡️": Shield,
+                    "🧺": Package,
+                  };
+                  const IconComponent = iconMap[block.icon] || Leaf;
+                  const colors = [
+                    "from-emerald-500 to-teal-500",
+                    "from-teal-500 to-cyan-500",
+                    "from-cyan-500 to-blue-500",
+                    "from-blue-500 to-indigo-500",
+                  ];
+
+                  return (
+                    <motion.div
+                      key={index}
+                      className="bg-white/70 backdrop-blur-xl rounded-2xl shadow-xl p-8 border border-white/50 hover:shadow-2xl transition-all duration-300"
+                      initial={{ opacity: 0, y: 30 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                      whileHover={{ y: -5 }}
+                    >
+                      <div className="flex items-center gap-4 mb-6">
+                        <div
+                          className={`p-4 bg-gradient-to-br ${
+                            colors[index % 4]
+                          } rounded-xl shadow-lg`}
+                        >
+                          <IconComponent className="w-6 h-6 text-white" />
+                        </div>
+                        <div>
+                          <h3 className="text-xl font-bold text-gray-800">
+                            {block.title}
+                          </h3>
+                          <span className="inline-block mt-2 px-4 py-1 bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 text-sm font-semibold rounded-full">
+                            {block.badge}
+                          </span>
+                        </div>
                       </div>
-                      <h4 style={{ margin: '0 0 12px', color: '#1e293b' }}>{block.title}</h4>
-                      <ul style={{ margin: 0, paddingLeft: '18px', color: '#475569', lineHeight: 1.7 }}>
-                        {block.items.map((item) => (
-                          <li key={item}>{item}</li>
+
+                      <ul className="space-y-3">
+                        {block.items.map((item, i) => (
+                          <motion.li
+                            key={i}
+                            className="flex items-start gap-3 text-gray-700"
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: index * 0.1 + i * 0.05 }}
+                          >
+                            <CheckCircle className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" />
+                            <span className="leading-relaxed">{item}</span>
+                          </motion.li>
                         ))}
                       </ul>
-                    </div>
-                  ))}
-                </div>
-
-                <div style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
-                  gap: '16px'
-                }}>
-                  {advice.alerts.map((alert) => (
-                    <div key={alert.title} style={{
-                      border: '1px dashed #c4b5fd',
-                      borderRadius: '16px',
-                      padding: '18px',
-                      background: '#f5f3ff'
-                    }}>
-                      <p style={{ margin: '0 0 8px', color: '#7c3aed', fontWeight: 600 }}>{alert.title}</p>
-                      <p style={{ margin: 0, color: '#4c1d95', lineHeight: 1.6 }}>{alert.content}</p>
-                    </div>
-                  ))}
-                </div>
+                    </motion.div>
+                  );
+                })}
               </div>
-            ) : (
-              <div style={{
-                textAlign: 'center',
-                padding: '40px 20px',
-                color: '#999'
-              }}>
-                <div style={{ fontSize: '48px', marginBottom: '15px' }}>💡</div>
-                <p>ফসল এবং মৌসুম নির্বাচন করে পরামর্শ পান</p>
-              </div>
-            )}
-          </div>
-        </div>
 
-       {/* Tips Section */}
-        <div style={{ marginTop: '60px' }}>
-          <h2 style={{ 
-            textAlign: 'center', 
-            fontSize: '32px', 
-            marginBottom: '40px',
-            color: '#333'
-          }}>
-            সাধারণ কৃষি টিপস
-          </h2>
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-            gap: '20px'
-          }}>
-            <div className="card" style={{ padding: '25px' }}>
-              <h3 style={{ color: '#22c55e', marginBottom: '10px' }}>✓ মাটি পরীক্ষা</h3>
-              <p style={{ color: '#666', lineHeight: '1.6' }}>
-                নিয়মিতভাবে মাটির pH এবং পুষ্টি উপাদান পরীক্ষা করুন
-              </p>
+              {/* Alerts Section */}
+              <div className="grid md:grid-cols-2 gap-6">
+                {advice.alerts.map((alert, index) => (
+                  <motion.div
+                    key={index}
+                    className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl shadow-lg p-8 border-2 border-amber-200"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.5 + index * 0.1 }}
+                    whileHover={{ scale: 1.02 }}
+                  >
+                    <div className="flex items-start gap-4">
+                      <div className="p-3 bg-amber-500 rounded-xl">
+                        <AlertCircle className="w-6 h-6 text-white" />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-bold text-amber-900 mb-3">
+                          {alert.title}
+                        </h3>
+                        <p className="text-amber-800 leading-relaxed">
+                          {alert.content}
+                        </p>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Empty State */}
+        {!advice && (
+          <motion.div
+            className="text-center py-20"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+          >
+            <div className="inline-flex items-center justify-center w-32 h-32 bg-gradient-to-br from-emerald-100 to-teal-100 rounded-full mb-6">
+              <Cloud className="w-16 h-16 text-emerald-600" />
             </div>
-            <div className="card" style={{ padding: '25px' }}>
-              <h3 style={{ color: '#22c55e', marginBottom: '10px' }}>✓ সঠিক সময়</h3>
-              <p style={{ color: '#666', lineHeight: '1.6' }}>
-                মৌসুম অনুযায়ী ফসল বপন করুন
-              </p>
-            </div>
-            <div className="card" style={{ padding: '25px' }}>
-              <h3 style={{ color: '#22c55e', marginBottom: '10px' }}>✓ পানির ব্যবস্থাপনা</h3>
-              <p style={{ color: '#666', lineHeight: '1.6' }}>
-                প্রয়োজন অনুযায়ী সেচ দিন, অতিরিক্ত সেচ এড়িয়ে চলুন
-              </p>
-            </div>
-            <div className="card" style={{ padding: '25px' }}>
-              <h3 style={{ color: '#22c55e', marginBottom: '10px' }}>✓ জৈব সার</h3>
-              <p style={{ color: '#666', lineHeight: '1.6' }}>
-                জৈব সারের ব্যবহার বৃদ্ধি করুন
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
+            <h3 className="text-2xl font-bold text-gray-800 mb-3">
+              ফসল এবং মৌসুম নির্বাচন করুন
+            </h3>
+            <p className="text-gray-600 max-w-md mx-auto">
+              আপনার ফসলের জন্য বিস্তারিত কৃষি পরামর্শ পেতে উপরের ফর্মটি পূরণ
+              করুন
+            </p>
+          </motion.div>
+        )}
+      </motion.div>
     </div>
   );
 }
-
-   
