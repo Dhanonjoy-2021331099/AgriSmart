@@ -64,7 +64,7 @@ export default function Profile() {
     import.meta.env.VITE_API_BASE_URL || "http://localhost:6001/api";
   const { user, userId, token, updateProfile } = useAuth();
   const { theme } = useAppSettings();
-  const isDark = theme === 'dark';
+  const isDark = theme === "dark";
 
   const [stats, setStats] = useState({
     totalOrders: 0,
@@ -191,11 +191,11 @@ export default function Profile() {
       toast.error("Please login to update profile");
       return;
     }
-    
+
     try {
       setSavingProfile(true);
       const updatedUser = await updateProfile(editForm);
-      
+
       if (updatedUser) {
         toast.success("Profile updated successfully!");
         // Wait a bit for state to update, then close modal
@@ -208,7 +208,10 @@ export default function Profile() {
       }
     } catch (error) {
       console.error("Profile update failed", error?.message || error);
-      const errorMessage = error?.response?.data?.message || error?.message || "Failed to update profile. Please try again.";
+      const errorMessage =
+        error?.response?.data?.message ||
+        error?.message ||
+        "Failed to update profile. Please try again.";
       toast.error(errorMessage);
     } finally {
       setSavingProfile(false);
@@ -279,11 +282,13 @@ export default function Profile() {
   const recentOrders = stats.recentOrders || [];
 
   return (
-    <div className={`min-h-screen px-4 py-10 ${
-      isDark 
-        ? 'bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-slate-100' 
-        : 'bg-gradient-to-br from-slate-50 via-slate-100 to-slate-50 text-slate-900'
-    }`}>
+    <div
+      className={`min-h-screen px-4 py-10 ${
+        isDark
+          ? "bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-slate-100"
+          : "bg-gradient-to-br from-slate-50 via-slate-100 to-slate-50 text-slate-900"
+      }`}
+    >
       <div className="max-w-7xl mx-auto space-y-8">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
@@ -301,16 +306,18 @@ export default function Profile() {
         <div className="grid lg:grid-cols-[340px,1fr] gap-6">
           <motion.div
             className={`rounded-3xl p-6 shadow-2xl backdrop-blur border ${
-              isDark 
-                ? 'bg-slate-900/70 border-white/5' 
-                : 'bg-white/70 border-slate-200/50'
+              isDark
+                ? "bg-slate-900/70 border-white/5"
+                : "bg-white/70 border-slate-200/50"
             }`}
             {...cardHover}
           >
             <div className="flex items-start gap-4">
-              <div className={`w-20 h-20 rounded-2xl bg-gradient-to-br from-emerald-500/60 to-teal-500/40 border flex items-center justify-center overflow-hidden ${
-                isDark ? 'border-white/10' : 'border-emerald-300/30'
-              }`}>
+              <div
+                className={`w-20 h-20 rounded-2xl bg-gradient-to-br from-emerald-500/60 to-teal-500/40 border flex items-center justify-center overflow-hidden ${
+                  isDark ? "border-white/10" : "border-emerald-300/30"
+                }`}
+              >
                 {editForm.photoURL ? (
                   <img
                     src={editForm.photoURL}
@@ -322,73 +329,104 @@ export default function Profile() {
                 )}
               </div>
               <div className="flex-1 space-y-1">
-                <p className={`text-xs uppercase tracking-[0.2em] ${
-                  isDark ? 'text-slate-400' : 'text-slate-600'
-                }`}>
+                <p
+                  className={`text-xs uppercase tracking-[0.2em] ${
+                    isDark ? "text-slate-400" : "text-slate-600"
+                  }`}
+                >
                   Profile
                 </p>
-                <h2 className={`text-xl font-semibold leading-tight ${
-                  isDark ? 'text-slate-100' : 'text-slate-900'
-                }`}>
+                <h2
+                  className={`text-xl font-semibold leading-tight ${
+                    isDark ? "text-slate-100" : "text-slate-900"
+                  }`}
+                >
                   {user?.name || "User"}
                 </h2>
-                <p className={`text-sm ${
-                  isDark ? 'text-emerald-300/80' : 'text-emerald-600'
-                }`}>
+                <p
+                  className={`text-sm ${
+                    isDark ? "text-emerald-300/80" : "text-emerald-600"
+                  }`}
+                >
                   {user?.role === "admin" ? "Administrator" : "Customer"}
                 </p>
               </div>
             </div>
 
-            <div className={`mt-6 space-y-3 text-sm ${
-              isDark ? 'text-slate-200' : 'text-slate-700'
-            }`}>
-              <div className={`flex items-center gap-3 rounded-xl px-3 py-2 border ${
-                isDark 
-                  ? 'bg-white/5 border-white/5' 
-                  : 'bg-slate-100 border-slate-200'
-              }`}>
-                <Mail size={16} className={isDark ? 'text-emerald-300' : 'text-emerald-600'} />
+            <div
+              className={`mt-6 space-y-3 text-sm ${
+                isDark ? "text-slate-200" : "text-slate-700"
+              }`}
+            >
+              <div
+                className={`flex items-center gap-3 rounded-xl px-3 py-2 border ${
+                  isDark
+                    ? "bg-white/5 border-white/5"
+                    : "bg-slate-100 border-slate-200"
+                }`}
+              >
+                <Mail
+                  size={16}
+                  className={isDark ? "text-emerald-300" : "text-emerald-600"}
+                />
                 <span>{user?.email || "—"}</span>
               </div>
-              <div className={`flex items-center gap-3 rounded-xl px-3 py-2 border ${
-                isDark 
-                  ? 'bg-white/5 border-white/5' 
-                  : 'bg-slate-100 border-slate-200'
-              }`}>
-                <Phone size={16} className={isDark ? 'text-emerald-300' : 'text-emerald-600'} />
+              <div
+                className={`flex items-center gap-3 rounded-xl px-3 py-2 border ${
+                  isDark
+                    ? "bg-white/5 border-white/5"
+                    : "bg-slate-100 border-slate-200"
+                }`}
+              >
+                <Phone
+                  size={16}
+                  className={isDark ? "text-emerald-300" : "text-emerald-600"}
+                />
                 <span>{user?.phone || "—"}</span>
               </div>
-              <div className={`flex items-center gap-3 rounded-xl px-3 py-2 border ${
-                isDark 
-                  ? 'bg-white/5 border-white/5' 
-                  : 'bg-slate-100 border-slate-200'
-              }`}>
-                <MapPin size={16} className={isDark ? 'text-emerald-300' : 'text-emerald-600'} />
+              <div
+                className={`flex items-center gap-3 rounded-xl px-3 py-2 border ${
+                  isDark
+                    ? "bg-white/5 border-white/5"
+                    : "bg-slate-100 border-slate-200"
+                }`}
+              >
+                <MapPin
+                  size={16}
+                  className={isDark ? "text-emerald-300" : "text-emerald-600"}
+                />
                 <span>{user?.shippingAddress || user?.address || "—"}</span>
               </div>
             </div>
 
-            <div className={`mt-6 bg-gradient-to-r rounded-2xl p-4 text-sm border ${
-              isDark 
-                ? 'from-emerald-500/10 to-teal-500/10 border-emerald-500/20 text-slate-100' 
-                : 'from-emerald-100 to-teal-100 border-emerald-200 text-slate-800'
-            }`}>
-              <p className={`font-medium ${
-                isDark ? 'text-emerald-200' : 'text-emerald-700'
-              }`}>Shipping Address</p>
-              <p className={`mt-1 ${
-                isDark ? 'text-slate-300' : 'text-slate-600'
-              }`}>
+            <div
+              className={`mt-6 bg-gradient-to-r rounded-2xl p-4 text-sm border ${
+                isDark
+                  ? "from-emerald-500/10 to-teal-500/10 border-emerald-500/20 text-slate-100"
+                  : "from-emerald-100 to-teal-100 border-emerald-200 text-slate-800"
+              }`}
+            >
+              <p
+                className={`font-medium ${
+                  isDark ? "text-emerald-200" : "text-emerald-700"
+                }`}
+              >
+                Shipping Address
+              </p>
+              <p
+                className={`mt-1 ${
+                  isDark ? "text-slate-300" : "text-slate-600"
+                }`}
+              >
                 {user?.shippingAddress ||
                   "Add a shipping address to speed up checkout."}
               </p>
               <button
                 onClick={() => setShowEdit(true)}
                 className={`mt-3 inline-flex items-center gap-2 ${
-                  isDark 
-                    ? 'text-emerald-300 hover:text-emerald-200' 
-                    : 'text-emerald-600 hover:text-emerald-700'
+                  isDark
+                    ? "text-emerald-300 hover:text-emerald-200"
+                    : "text-emerald-600 hover:text-emerald-700"
                 }`}
               >
                 <Edit3 size={16} /> Update
@@ -419,35 +457,51 @@ export default function Profile() {
         <div className="grid lg:grid-cols-3 gap-6">
           <motion.div
             className={`lg:col-span-2 rounded-3xl p-6 shadow-2xl backdrop-blur border ${
-              isDark 
-                ? 'bg-slate-900/70 border-white/5' 
-                : 'bg-white/70 border-slate-200/50'
+              isDark
+                ? "bg-slate-900/70 border-white/5"
+                : "bg-white/70 border-slate-200/50"
             }`}
             ref={spendSectionRef}
             {...cardHover}
           >
             <div className="flex items-center justify-between mb-4">
               <div>
-                <p className={`text-xs uppercase tracking-[0.2em] ${
-                  isDark ? 'text-slate-400' : 'text-slate-600'
-                }`}>
+                <p
+                  className={`text-xs uppercase tracking-[0.2em] ${
+                    isDark ? "text-slate-400" : "text-slate-600"
+                  }`}
+                >
                   Analytics
                 </p>
-                <h3 className={`text-lg font-semibold ${
-                  isDark ? 'text-slate-100' : 'text-slate-900'
-                }`}>Monthly Spend</h3>
+                <h3
+                  className={`text-lg font-semibold ${
+                    isDark ? "text-slate-100" : "text-slate-900"
+                  }`}
+                >
+                  Monthly Spend
+                </h3>
               </div>
               {loadingStats && (
-                <span className={`text-xs ${
-                  isDark ? 'text-slate-400' : 'text-slate-600'
-                }`}>Loading...</span>
+                <span
+                  className={`text-xs ${
+                    isDark ? "text-slate-400" : "text-slate-600"
+                  }`}
+                >
+                  Loading...
+                </span>
               )}
             </div>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={monthlyChartData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke={isDark ? "#1f2937" : "#e2e8f0"} />
-                  <XAxis dataKey="month" stroke={isDark ? "#cbd5e1" : "#64748b"} />
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    stroke={isDark ? "#1f2937" : "#e2e8f0"}
+                  />
+                  <XAxis
+                    dataKey="month"
+                    stroke={isDark ? "#cbd5e1" : "#64748b"}
+                  />
                   <YAxis stroke={isDark ? "#cbd5e1" : "#64748b"} />
                   <Tooltip
                     contentStyle={{
@@ -468,28 +522,38 @@ export default function Profile() {
 
           <motion.div
             className={`rounded-3xl p-6 shadow-2xl backdrop-blur border ${
-              isDark 
-                ? 'bg-slate-900/70 border-white/5' 
-                : 'bg-white/70 border-slate-200/50'
+              isDark
+                ? "bg-slate-900/70 border-white/5"
+                : "bg-white/70 border-slate-200/50"
             }`}
             ref={categorySectionRef}
             {...cardHover}
           >
             <div className="flex items-center justify-between mb-4">
               <div>
-                <p className={`text-xs uppercase tracking-[0.2em] ${
-                  isDark ? 'text-slate-400' : 'text-slate-600'
-                }`}>
+                <p
+                  className={`text-xs uppercase tracking-[0.2em] ${
+                    isDark ? "text-slate-400" : "text-slate-600"
+                  }`}
+                >
                   Categories
                 </p>
-                <h3 className={`text-lg font-semibold ${
-                  isDark ? 'text-slate-100' : 'text-slate-900'
-                }`}>Product Mix</h3>
+                <h3
+                  className={`text-lg font-semibold ${
+                    isDark ? "text-slate-100" : "text-slate-900"
+                  }`}
+                >
+                  Product Mix
+                </h3>
               </div>
               {loadingStats && (
-                <span className={`text-xs ${
-                  isDark ? 'text-slate-400' : 'text-slate-600'
-                }`}>Loading...</span>
+                <span
+                  className={`text-xs ${
+                    isDark ? "text-slate-400" : "text-slate-600"
+                  }`}
+                >
+                  Loading...
+                </span>
               )}
             </div>
             <div className="h-64">
@@ -520,9 +584,11 @@ export default function Profile() {
                 </PieChart>
               </ResponsiveContainer>
             </div>
-            <div className={`mt-3 space-y-2 text-sm ${
-              isDark ? 'text-slate-200' : 'text-slate-700'
-            }`}>
+            <div
+              className={`mt-3 space-y-2 text-sm ${
+                isDark ? "text-slate-200" : "text-slate-700"
+              }`}
+            >
               {categoryChartData.map((c, idx) => (
                 <div
                   key={c.category}
@@ -535,7 +601,11 @@ export default function Profile() {
                     />
                     <span>{c.category}</span>
                   </div>
-                  <span className={isDark ? 'text-slate-300' : 'text-slate-600'}>{c.total} items</span>
+                  <span
+                    className={isDark ? "text-slate-300" : "text-slate-600"}
+                  >
+                    {c.total} items
+                  </span>
                 </div>
               ))}
             </div>
