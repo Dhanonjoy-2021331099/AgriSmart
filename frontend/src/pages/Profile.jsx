@@ -269,14 +269,28 @@ export default function Profile() {
   ];
 
   const renderStatus = (status) => {
-    const map = {
-      pending: "bg-amber-100 text-amber-800",
-      delivered: "bg-emerald-100 text-emerald-700",
-      cancelled: "bg-rose-100 text-rose-700",
-      processing: "bg-blue-100 text-blue-700",
-      shipped: "bg-indigo-100 text-indigo-700",
+    const darkMap = {
+      pending: "bg-amber-500/20 text-amber-200 border border-amber-500/30",
+      delivered:
+        "bg-emerald-500/20 text-emerald-200 border border-emerald-500/30",
+      cancelled: "bg-rose-500/20 text-rose-200 border border-rose-500/30",
+      processing: "bg-blue-500/20 text-blue-200 border border-blue-500/30",
+      shipped: "bg-indigo-500/20 text-indigo-200 border border-indigo-500/30",
     };
-    return map[status] || "bg-gray-100 text-gray-700";
+
+    const lightMap = {
+      pending: "bg-amber-100 text-amber-800 border border-amber-200",
+      delivered: "bg-emerald-100 text-emerald-700 border border-emerald-200",
+      cancelled: "bg-rose-100 text-rose-700 border border-rose-200",
+      processing: "bg-blue-100 text-blue-700 border border-blue-200",
+      shipped: "bg-indigo-100 text-indigo-700 border border-indigo-200",
+    };
+
+    const mapToUse = isDark ? darkMap : lightMap;
+    return (
+      mapToUse[status] ||
+      (isDark ? "bg-slate-500/20 text-slate-300" : "bg-gray-100 text-gray-700")
+    );
   };
 
   const recentOrders = stats.recentOrders || [];
@@ -614,19 +628,39 @@ export default function Profile() {
 
         <div className="grid lg:grid-cols-3 gap-6">
           <motion.div
-            className="lg:col-span-3 bg-slate-900/70 border border-white/5 rounded-3xl p-6 shadow-2xl backdrop-blur"
+            className={`lg:col-span-3 rounded-3xl p-6 shadow-2xl backdrop-blur border ${
+              isDark
+                ? "bg-slate-900/70 border-white/5"
+                : "bg-white/70 border-slate-200/50"
+            }`}
             ref={productBreakdownSectionRef}
             {...cardHover}
           >
             <div className="flex items-center justify-between mb-6">
               <div>
-                <p className="text-xs uppercase tracking-[0.2em] text-slate-400">
+                <p
+                  className={`text-xs uppercase tracking-[0.2em] ${
+                    isDark ? "text-slate-400" : "text-slate-600"
+                  }`}
+                >
                   Purchases
                 </p>
-                <h3 className="text-lg font-semibold">Product Breakdown</h3>
+                <h3
+                  className={`text-lg font-semibold ${
+                    isDark ? "text-slate-100" : "text-slate-900"
+                  }`}
+                >
+                  Product Breakdown
+                </h3>
               </div>
               {loadingStats && (
-                <span className="text-xs text-slate-400">Loading...</span>
+                <span
+                  className={`text-xs ${
+                    isDark ? "text-slate-400" : "text-slate-600"
+                  }`}
+                >
+                  Loading...
+                </span>
               )}
             </div>
 
@@ -640,20 +674,49 @@ export default function Profile() {
                     whileHover={{ scale: 1.05, y: -4 }}
                     transition={{ delay: idx * 0.05 }}
                     onClick={() => navigate("/products")}
-                    className="relative group bg-gradient-to-br from-emerald-500/10 to-teal-500/5 border border-emerald-500/20 rounded-2xl p-4 hover:border-emerald-400/40 hover:shadow-xl hover:shadow-emerald-500/20 transition-all duration-300 cursor-pointer"
+                    className={`relative group rounded-2xl p-4 transition-all duration-300 cursor-pointer border ${
+                      isDark
+                        ? "bg-gradient-to-br from-emerald-500/10 to-teal-500/5 border-emerald-500/20 hover:border-emerald-400/40 hover:shadow-xl hover:shadow-emerald-500/20"
+                        : "bg-gradient-to-br from-emerald-100 to-teal-100 border-emerald-300/30 hover:border-emerald-400 hover:shadow-xl hover:shadow-emerald-200/40"
+                    }`}
                   >
                     <div className="flex items-center gap-3 mb-2">
-                      <div className="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center group-hover:scale-110 transition-transform">
-                        <ShoppingCart size={20} className="text-emerald-300" />
+                      <div
+                        className={`w-10 h-10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform border ${
+                          isDark
+                            ? "bg-emerald-500/20 border-emerald-400/30"
+                            : "bg-emerald-200/60 border-emerald-400/50"
+                        }`}
+                      >
+                        <ShoppingCart
+                          size={20}
+                          className={
+                            isDark ? "text-emerald-300" : "text-emerald-700"
+                          }
+                        />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-2xl font-bold text-emerald-300">
+                        <p
+                          className={`text-2xl font-bold ${
+                            isDark ? "text-emerald-300" : "text-emerald-700"
+                          }`}
+                        >
                           {item.totalQuantity}
                         </p>
-                        <p className="text-xs text-slate-400">items</p>
+                        <p
+                          className={`text-xs ${
+                            isDark ? "text-slate-400" : "text-slate-600"
+                          }`}
+                        >
+                          items
+                        </p>
                       </div>
                     </div>
-                    <p className="font-medium text-slate-100 truncate">
+                    <p
+                      className={`font-medium truncate ${
+                        isDark ? "text-slate-100" : "text-slate-900"
+                      }`}
+                    >
                       {item.name}
                     </p>
                   </motion.div>
@@ -661,13 +724,30 @@ export default function Profile() {
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center py-12 text-center">
-                <div className="w-16 h-16 rounded-full bg-slate-800/50 border border-white/10 flex items-center justify-center mb-4">
-                  <ShoppingCart size={28} className="text-slate-500" />
+                <div
+                  className={`w-16 h-16 rounded-full border flex items-center justify-center mb-4 ${
+                    isDark
+                      ? "bg-slate-800/50 border-white/10"
+                      : "bg-slate-200/50 border-slate-300"
+                  }`}
+                >
+                  <ShoppingCart
+                    size={28}
+                    className={isDark ? "text-slate-500" : "text-slate-500"}
+                  />
                 </div>
-                <p className="text-slate-400 text-sm">
+                <p
+                  className={`text-sm ${
+                    isDark ? "text-slate-400" : "text-slate-600"
+                  }`}
+                >
                   No purchase data available yet.
                 </p>
-                <p className="text-slate-500 text-xs mt-1">
+                <p
+                  className={`text-xs mt-1 ${
+                    isDark ? "text-slate-500" : "text-slate-500"
+                  }`}
+                >
                   Start ordering to see your product breakdown here.
                 </p>
               </div>
@@ -677,15 +757,29 @@ export default function Profile() {
 
         <div className="grid lg:grid-cols-2 gap-6">
           <motion.div
-            className="bg-slate-900/70 border border-white/5 rounded-3xl p-6 shadow-2xl backdrop-blur"
+            className={`rounded-3xl p-6 shadow-2xl backdrop-blur border ${
+              isDark
+                ? "bg-slate-900/70 border-white/5"
+                : "bg-white/70 border-slate-200/50"
+            }`}
             {...cardHover}
           >
             <div className="flex items-center justify-between mb-4">
               <div>
-                <p className="text-xs uppercase tracking-[0.2em] text-slate-400">
+                <p
+                  className={`text-xs uppercase tracking-[0.2em] ${
+                    isDark ? "text-slate-400" : "text-slate-600"
+                  }`}
+                >
                   Recent
                 </p>
-                <h3 className="text-lg font-semibold">Recent Orders</h3>
+                <h3
+                  className={`text-lg font-semibold ${
+                    isDark ? "text-slate-100" : "text-slate-900"
+                  }`}
+                >
+                  Recent Orders
+                </h3>
               </div>
               <button
                 onClick={() =>
@@ -693,7 +787,9 @@ export default function Profile() {
                     .getElementById("order-history")
                     ?.scrollIntoView({ behavior: "smooth" })
                 }
-                className="text-emerald-300 text-sm inline-flex items-center gap-1"
+                className={`text-sm inline-flex items-center gap-1 ${
+                  isDark ? "text-emerald-300" : "text-emerald-600"
+                }`}
               >
                 View All <ChevronRight size={16} />
               </button>
@@ -703,16 +799,34 @@ export default function Profile() {
               {recentOrders.map((order) => (
                 <div
                   key={order._id}
-                  className="flex items-center justify-between bg-white/5 border border-white/5 rounded-2xl px-4 py-3"
+                  className={`flex items-center justify-between rounded-2xl px-4 py-3 border ${
+                    isDark
+                      ? "bg-white/5 border-white/5"
+                      : "bg-slate-100/50 border-slate-200"
+                  }`}
                 >
                   <div>
-                    <p className="text-sm font-medium">Order #{order._id}</p>
-                    <p className="text-xs text-slate-400">
+                    <p
+                      className={`text-sm font-medium ${
+                        isDark ? "text-slate-100" : "text-slate-900"
+                      }`}
+                    >
+                      Order #{order._id}
+                    </p>
+                    <p
+                      className={`text-xs ${
+                        isDark ? "text-slate-400" : "text-slate-600"
+                      }`}
+                    >
                       {new Date(order.createdAt).toLocaleDateString()}
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className="text-sm font-semibold text-emerald-300">
+                    <p
+                      className={`text-sm font-semibold ${
+                        isDark ? "text-emerald-300" : "text-emerald-700"
+                      }`}
+                    >
                       ৳{formatCurrency(order.totals?.grandTotal)}
                     </p>
                     <span
@@ -726,7 +840,11 @@ export default function Profile() {
                 </div>
               ))}
               {!recentOrders.length && (
-                <p className="text-sm text-slate-400">
+                <p
+                  className={`text-sm ${
+                    isDark ? "text-slate-400" : "text-slate-600"
+                  }`}
+                >
                   No recent orders found.
                 </p>
               )}
@@ -734,28 +852,65 @@ export default function Profile() {
           </motion.div>
 
           <motion.div
-            className="bg-slate-900/70 border border-white/5 rounded-3xl p-6 shadow-2xl backdrop-blur"
+            className={`rounded-3xl p-6 shadow-2xl backdrop-blur border ${
+              isDark
+                ? "bg-slate-900/70 border-white/5"
+                : "bg-white/70 border-slate-200/50"
+            }`}
             {...cardHover}
           >
             <div className="flex items-center justify-between mb-4">
               <div>
-                <p className="text-xs uppercase tracking-[0.2em] text-slate-400">
+                <p
+                  className={`text-xs uppercase tracking-[0.2em] ${
+                    isDark ? "text-slate-400" : "text-slate-600"
+                  }`}
+                >
                   Favorite
                 </p>
-                <h3 className="text-lg font-semibold">Most Ordered Product</h3>
+                <h3
+                  className={`text-lg font-semibold ${
+                    isDark ? "text-slate-100" : "text-slate-900"
+                  }`}
+                >
+                  Most Ordered Product
+                </h3>
               </div>
             </div>
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center">
-                <Star className="text-emerald-300" size={24} />
+              <div
+                className={`w-12 h-12 rounded-2xl border flex items-center justify-center ${
+                  isDark
+                    ? "bg-emerald-500/20 border-emerald-400/30"
+                    : "bg-emerald-200/60 border-emerald-400/50"
+                }`}
+              >
+                <Star
+                  className={isDark ? "text-emerald-300" : "text-emerald-700"}
+                  size={24}
+                />
               </div>
               <div>
-                <p className="text-sm text-slate-400">Top product</p>
-                <p className="text-lg font-semibold">
+                <p
+                  className={`text-sm ${
+                    isDark ? "text-slate-400" : "text-slate-600"
+                  }`}
+                >
+                  Top product
+                </p>
+                <p
+                  className={`text-lg font-semibold ${
+                    isDark ? "text-slate-100" : "text-slate-900"
+                  }`}
+                >
                   {stats.mostFrequentProduct?.name || "Not enough data"}
                 </p>
                 {stats.mostFrequentProduct?.count && (
-                  <p className="text-sm text-emerald-300">
+                  <p
+                    className={`text-sm ${
+                      isDark ? "text-emerald-300" : "text-emerald-700"
+                    }`}
+                  >
                     {stats.mostFrequentProduct.count} items ordered
                   </p>
                 )}
@@ -766,28 +921,53 @@ export default function Profile() {
 
         {/* Detailed Orders */}
         <motion.div
-          className="bg-slate-900/70 border border-white/5 rounded-3xl p-6 shadow-2xl backdrop-blur"
+          className={`rounded-3xl p-6 shadow-2xl backdrop-blur border ${
+            isDark
+              ? "bg-slate-900/70 border-white/5"
+              : "bg-white/70 border-slate-200/50"
+          }`}
           id="order-history"
           ref={ordersSectionRef}
           {...cardHover}
         >
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-4">
             <div>
-              <p className="text-xs uppercase tracking-[0.2em] text-slate-400">
+              <p
+                className={`text-xs uppercase tracking-[0.2em] ${
+                  isDark ? "text-slate-400" : "text-slate-600"
+                }`}
+              >
                 History
               </p>
-              <h3 className="text-lg font-semibold">All Orders</h3>
+              <h3
+                className={`text-lg font-semibold ${
+                  isDark ? "text-slate-100" : "text-slate-900"
+                }`}
+              >
+                All Orders
+              </h3>
             </div>
             <div className="flex flex-wrap gap-2 text-sm">
-              <div className="flex items-center gap-2 bg-white/5 border border-white/5 rounded-xl px-3 py-2">
-                <Search size={16} className="text-slate-100" />
+              <div
+                className={`flex items-center gap-2 rounded-xl px-3 py-2 border ${
+                  isDark
+                    ? "bg-white/5 border-white/5"
+                    : "bg-slate-100/50 border-slate-200"
+                }`}
+              >
+                <Search
+                  size={16}
+                  className={isDark ? "text-slate-100" : "text-slate-700"}
+                />
                 <input
                   value={filters.search}
                   onChange={(e) =>
                     setFilters((f) => ({ ...f, search: e.target.value }))
                   }
                   placeholder="Search by Order ID"
-                  className="bg-transparent outline-none text-slate-100 placeholder:text-slate-100"
+                  className={`bg-transparent outline-none placeholder:text-slate-400 ${
+                    isDark ? "text-slate-100" : "text-slate-900"
+                  }`}
                 />
               </div>
               <select
@@ -795,7 +975,11 @@ export default function Profile() {
                 onChange={(e) =>
                   setFilters((f) => ({ ...f, status: e.target.value }))
                 }
-                className="bg-white/5 border border-white/5 rounded-xl px-3 py-2 text-slate-100"
+                className={`rounded-xl px-3 py-2 outline-none border ${
+                  isDark
+                    ? "bg-white/5 border-white/5 text-slate-100"
+                    : "bg-slate-100/50 border-slate-200 text-slate-900"
+                }`}
               >
                 <option value="">All Status</option>
                 <option value="pending">Pending</option>
@@ -804,24 +988,39 @@ export default function Profile() {
                 <option value="delivered">Delivered</option>
                 <option value="cancelled">Cancelled</option>
               </select>
-              <div className="flex items-center gap-2 bg-white/5 border border-white/5 rounded-xl px-3 py-2">
-                <Calendar size={16} className="text-slate-400" />
+              <div
+                className={`flex items-center gap-2 rounded-xl px-3 py-2 border ${
+                  isDark
+                    ? "bg-white/5 border-white/5"
+                    : "bg-slate-100/50 border-slate-200"
+                }`}
+              >
+                <Calendar
+                  size={16}
+                  className={isDark ? "text-slate-400" : "text-slate-600"}
+                />
                 <input
                   type="date"
                   value={filters.startDate}
                   onChange={(e) =>
                     setFilters((f) => ({ ...f, startDate: e.target.value }))
                   }
-                  className="bg-transparent outline-none text-slate-100"
+                  className={`bg-transparent outline-none ${
+                    isDark ? "text-slate-100" : "text-slate-900"
+                  }`}
                 />
-                <span className="text-slate-500">to</span>
+                <span className={isDark ? "text-slate-500" : "text-slate-500"}>
+                  to
+                </span>
                 <input
                   type="date"
                   value={filters.endDate}
                   onChange={(e) =>
                     setFilters((f) => ({ ...f, endDate: e.target.value }))
                   }
-                  className="bg-transparent outline-none text-slate-100"
+                  className={`bg-transparent outline-none ${
+                    isDark ? "text-slate-100" : "text-slate-900"
+                  }`}
                 />
               </div>
               <button
@@ -833,9 +1032,19 @@ export default function Profile() {
             </div>
           </div>
 
-          <div className="overflow-x-auto rounded-2xl border border-white/5">
+          <div
+            className={`overflow-x-auto rounded-2xl border ${
+              isDark ? "border-white/5" : "border-slate-200"
+            }`}
+          >
             <table className="min-w-full text-sm">
-              <thead className="bg-white/5 text-slate-300">
+              <thead
+                className={`${
+                  isDark
+                    ? "bg-white/5 text-slate-300"
+                    : "bg-slate-100/70 text-slate-700"
+                }`}
+              >
                 <tr>
                   <th className="px-4 py-3 text-left">Order ID</th>
                   <th className="px-4 py-3 text-left">Date</th>
@@ -845,12 +1054,31 @@ export default function Profile() {
               </thead>
               <tbody>
                 {orders.map((order) => (
-                  <tr key={order._id} className="border-t border-white/5">
-                    <td className="px-4 py-3 font-medium">{order._id}</td>
-                    <td className="px-4 py-3 text-slate-300">
+                  <tr
+                    key={order._id}
+                    className={`border-t ${
+                      isDark ? "border-white/5" : "border-slate-200"
+                    }`}
+                  >
+                    <td
+                      className={`px-4 py-3 font-medium ${
+                        isDark ? "text-slate-100" : "text-slate-900"
+                      }`}
+                    >
+                      {order._id}
+                    </td>
+                    <td
+                      className={`px-4 py-3 ${
+                        isDark ? "text-slate-300" : "text-slate-700"
+                      }`}
+                    >
                       {new Date(order.createdAt).toLocaleDateString()}
                     </td>
-                    <td className="px-4 py-3 text-emerald-200">
+                    <td
+                      className={`px-4 py-3 ${
+                        isDark ? "text-emerald-200" : "text-emerald-700"
+                      }`}
+                    >
                       ৳{formatCurrency(order.totals?.grandTotal)}
                     </td>
                     <td className="px-4 py-3">
@@ -867,7 +1095,9 @@ export default function Profile() {
                 {!orders.length && (
                   <tr>
                     <td
-                      className="px-4 py-5 text-center text-slate-400"
+                      className={`px-4 py-5 text-center ${
+                        isDark ? "text-slate-400" : "text-slate-600"
+                      }`}
                       colSpan={4}
                     >
                       {loadingOrders ? "Loading..." : "No orders found"}
@@ -878,7 +1108,11 @@ export default function Profile() {
             </table>
           </div>
 
-          <div className="flex items-center justify-between text-sm text-slate-300 mt-4">
+          <div
+            className={`flex items-center justify-between text-sm mt-4 ${
+              isDark ? "text-slate-300" : "text-slate-700"
+            }`}
+          >
             <div>
               Page {meta.page} of {meta.pages}
             </div>
