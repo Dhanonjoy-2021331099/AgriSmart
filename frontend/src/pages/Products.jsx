@@ -13,7 +13,7 @@ export default function Products() {
   const { getText, theme } = useAppSettings();
   const t = (bn, en) => getText(bn, en);
   const { addToCart } = useCart();
-  const isDark = theme === 'dark';
+  const isDark = theme === "dark";
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -254,7 +254,9 @@ export default function Products() {
                   >
                     {product.name}
                   </h2>
-                  <p style={{ color: isDark ? "#94a3b8" : "#64748b", margin: 0 }}>
+                  <p
+                    style={{ color: isDark ? "#94a3b8" : "#64748b", margin: 0 }}
+                  >
                     উৎপত্তি: {product.origin || "—"}
                   </p>
                 </div>
@@ -305,8 +307,8 @@ export default function Products() {
                     style={{
                       flex: 1,
                       padding: "12px",
-                      background: "white",
-                      color: "#667eea",
+                      background: theme === "dark" ? "#1a1a1a" : "white", // background dynamic
+                      color: theme === "dark" ? "#667eea" : "#667eea", // text color always visible
                       border: "2px solid #667eea",
                       borderRadius: "10px",
                       fontSize: "16px",
@@ -320,7 +322,8 @@ export default function Products() {
                       e.target.style.color = "white";
                     }}
                     onMouseLeave={(e) => {
-                      e.target.style.background = "white";
+                      e.target.style.background =
+                        theme === "dark" ? "#1a1a1a" : "white";
                       e.target.style.color = "#667eea";
                     }}
                   >
@@ -349,11 +352,12 @@ export default function Products() {
             আমাদের সাথে যোগাযোগ করুন এবং আপনার কৃষি ব্যবস্থাপনার জন্য সেরা
             সমাধান পান
           </p>
+
           <button
             style={{
               padding: "14px 32px",
-              background: "white",
-              color: "#667eea",
+              background: theme === "dark" ? "#1a1a1a" : "white", // theme-aware background
+              color: "#667eea", // সবসময় visible color
               border: "none",
               borderRadius: "50px",
               fontSize: "18px",
@@ -362,10 +366,18 @@ export default function Products() {
               transition: "all 0.3s",
             }}
             onClick={() => setIsContactModalOpen(true)}
-            onMouseEnter={(e) =>
-              (e.target.style.transform = "translateY(-3px)")
-            }
-            onMouseLeave={(e) => (e.target.style.transform = "translateY(0)")}
+            onMouseEnter={(e) => {
+              e.target.style.transform = "translateY(-3px)";
+              // Optional: hover color change
+              e.target.style.background = "#667eea";
+              e.target.style.color = "white";
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.transform = "translateY(0)";
+              e.target.style.background =
+                theme === "dark" ? "#1a1a1a" : "white";
+              e.target.style.color = "#667eea";
+            }}
           >
             যোগাযোগ করুন
           </button>
