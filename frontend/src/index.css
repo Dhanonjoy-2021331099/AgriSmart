@@ -6,7 +6,7 @@
 :root {
   /* Footer Light Mode */
   --footer-bg: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-  --footer-text: #334155;
+  --footer-text: #3a4a60;
   --footer-muted: #64748b;
   --footer-link: #475569;
   --footer-heading: #0f766e;
