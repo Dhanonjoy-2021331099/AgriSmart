@@ -440,20 +440,30 @@ export default function Home() {
                   to="/products"
                   style={{
                     padding: "12px 24px",
-                    background: "white",
-                    color: "#15803d",
+                    background: isDark ? "#15803d" : "orange",
+                    color: isDark ? "orange" : "#15803d",
                     fontWeight: "600",
                     borderRadius: "8px",
                     textDecoration: "none",
-                    boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
+                    boxShadow: `0 4px 6px ${isDark ? "rgba(0,0,0,0.3)" : "rgba(0,0,0,0.1)"}`,
                     transition: "all 0.3s",
                   }}
-                  onMouseEnter={(e) =>
-                    (e.target.style.transform = "translateY(-2px)")
-                  }
-                  onMouseLeave={(e) =>
-                    (e.target.style.transform = "translateY(0)")
-                  }
+                  onMouseEnter={(e) => {
+                    e.target.style.transform = "translateY(-2px)";
+                    if (isDark) {
+                      e.target.style.background = "#166534";
+                    } else {
+                      e.target.style.opacity = "0.9";
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.transform = "translateY(0)";
+                    if (isDark) {
+                      e.target.style.background = "#15803d";
+                    } else {
+                      e.target.style.opacity = "1";
+                    }
+                  }}
                 >
                   {t("পণ্য দেখুন", "Shop Products")}
                 </Link>
@@ -465,21 +475,33 @@ export default function Home() {
                   }
                   style={{
                     padding: "12px 24px",
-                    background: "transparent",
-                    color: "white",
-                    border: "2px solid white",
+                    background: isDark ? "transparent" : "white",
+                    color: isDark ? "white" : "#15803d",
+                    border: isDark ? "2px solid white" : "2px solid transparent",
                     borderRadius: "8px",
                     fontWeight: "600",
                     cursor: "pointer",
                     transition: "all 0.3s",
                   }}
                   onMouseEnter={(e) => {
-                    e.target.style.background = "white";
-                    e.target.style.color = "#15803d";
+                    if (isDark) {
+                      e.target.style.background = "white";
+                      e.target.style.color = "#15803d";
+                    } else {
+                      e.target.style.background = "#f0f0f0";
+                      e.target.style.color = "#15803d";
+                    }
+                    e.target.style.transform = "translateY(-2px)";
                   }}
                   onMouseLeave={(e) => {
-                    e.target.style.background = "transparent";
-                    e.target.style.color = "white";
+                    if (isDark) {
+                      e.target.style.background = "transparent";
+                      e.target.style.color = "white";
+                    } else {
+                      e.target.style.background = "white";
+                      e.target.style.color = "#15803d";
+                    }
+                    e.target.style.transform = "translateY(0)";
                   }}
                 >
                   {t("আরও জানুন", "Learn More")}
@@ -567,13 +589,20 @@ export default function Home() {
               <button
                 onClick={() => setSelectedService(s)}
                 style={{
-                  color: "#15803d",
+                  color: isDark ? "#4ade80" : "#15803d",
                   fontWeight: "500",
                   background: "none",
                   border: "none",
                   cursor: "pointer",
                   padding: 0,
                   fontSize: "14px",
+                  transition: "color 0.3s",
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.color = isDark ? "#86efac" : "#166534";
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.color = isDark ? "#4ade80" : "#15803d";
                 }}
               >
                 {t("আরও জানুন →", "Learn more →")}
