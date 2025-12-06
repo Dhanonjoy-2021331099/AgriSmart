@@ -608,11 +608,11 @@ header.nav {
 
 /* Language Control */
 .language-control {
-  color: rgba(168, 139, 250, 0.98);
+  color: #ffffff !important;
 }
 
 .language-control .control-icon {
-  stroke: rgba(168, 139, 250, 0.98);
+  stroke: #ffffff !important;
 }
 
 .control-card:has(.language-control):hover {
@@ -623,7 +623,7 @@ header.nav {
 }
 
 .language-control:hover {
-  color: rgba(196, 181, 253, 1);
+  color: #ffffff !important;
 }
 
 /* Theme Control */
@@ -656,11 +656,11 @@ header.nav {
 }
 
 .profile-btn {
-  color: rgba(196, 181, 253, 0.98);
+  color: #ffffff !important;
 }
 
 .profile-btn .control-icon {
-  stroke: rgba(196, 181, 253, 0.98);
+  stroke: #ffffff !important;
 }
 
 .profile-card:hover {
@@ -671,7 +671,7 @@ header.nav {
 }
 
 .profile-btn:hover {
-  color: rgba(220, 198, 255, 1);
+  color: #ffffff !important;
 }
 
 /* Logout Button */
@@ -681,11 +681,11 @@ header.nav {
 }
 
 .logout-btn {
-  color: rgba(252, 165, 165, 0.98);
+  color: #ffffff !important;
 }
 
 .logout-btn .control-icon {
-  stroke: rgba(252, 165, 165, 0.98);
+  stroke: #ffffff !important;
 }
 
 .logout-card:hover {
@@ -696,7 +696,7 @@ header.nav {
 }
 
 .logout-btn:hover {
-  color: rgba(254, 202, 202, 1);
+  color: #ffffff !important;
 }
 
 /* Login Button */

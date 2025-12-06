@@ -7,14 +7,14 @@ export default function Home() {
   const { getText, theme } = useAppSettings();
   const t = (bn, en) => getText(bn, en);
   const [selectedService, setSelectedService] = useState(null);
-  
+
   // Theme-aware colors
-  const isDark = theme === 'dark';
-  const bgColor = isDark ? '#0f172a' : '#ffffff';
-  const cardBg = isDark ? '#1e293b' : '#ffffff';
-  const textColor = isDark ? '#f8fafc' : '#0f172a';
-  const textSecondary = isDark ? '#cbd5e1' : '#475569';
-  const textMuted = isDark ? '#94a3b8' : '#64748b';
+  const isDark = theme === "dark";
+  const bgColor = isDark ? "#0f172a" : "#ffffff";
+  const cardBg = isDark ? "#1e293b" : "#ffffff";
+  const textColor = isDark ? "#f8fafc" : "#0f172a";
+  const textSecondary = isDark ? "#cbd5e1" : "#475569";
+  const textMuted = isDark ? "#94a3b8" : "#64748b";
 
   // Review system state
   const [reviews, setReviews] = useState([]);
@@ -255,7 +255,13 @@ export default function Home() {
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div style={{ fontSize: "48px", marginBottom: "16px", color: textColor }}>
+            <div
+              style={{
+                fontSize: "48px",
+                marginBottom: "16px",
+                color: textColor,
+              }}
+            >
               {selectedService.icon}
             </div>
             <h2
@@ -711,7 +717,7 @@ export default function Home() {
             to="/products"
             style={{
               padding: "10px 20px",
-              border: `1px solid ${isDark ? '#475569' : '#d1d5db'}`,
+              border: `1px solid ${isDark ? "#475569" : "#d1d5db"}`,
               borderRadius: "8px",
               textDecoration: "none",
               color: textColor,
@@ -720,7 +726,9 @@ export default function Home() {
               transition: "all 0.3s",
             }}
             onMouseEnter={(e) => (e.target.style.borderColor = "#15803d")}
-            onMouseLeave={(e) => (e.target.style.borderColor = isDark ? '#475569' : '#d1d5db')}
+            onMouseLeave={(e) =>
+              (e.target.style.borderColor = isDark ? "#475569" : "#d1d5db")
+            }
           >
             {t("সব দেখুন", "View All")}
           </Link>
@@ -739,17 +747,22 @@ export default function Home() {
               style={{
                 borderRadius: "16px",
                 background: cardBg,
-                boxShadow: isDark ? "0 1px 3px rgba(0,0,0,0.3)" : "0 1px 3px rgba(0,0,0,0.1)",
+                boxShadow: isDark
+                  ? "0 1px 3px rgba(0,0,0,0.3)"
+                  : "0 1px 3px rgba(0,0,0,0.1)",
                 overflow: "hidden",
                 transition: "all 0.3s",
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.boxShadow =
-                  isDark ? "0 10px 25px rgba(0,0,0,0.5)" : "0 10px 25px rgba(0,0,0,0.15)";
+                e.currentTarget.style.boxShadow = isDark
+                  ? "0 10px 25px rgba(0,0,0,0.5)"
+                  : "0 10px 25px rgba(0,0,0,0.15)";
                 e.currentTarget.style.transform = "translateY(-4px)";
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.boxShadow = isDark ? "0 1px 3px rgba(0,0,0,0.3)" : "0 1px 3px rgba(0,0,0,0.1)";
+                e.currentTarget.style.boxShadow = isDark
+                  ? "0 1px 3px rgba(0,0,0,0.3)"
+                  : "0 1px 3px rgba(0,0,0,0.1)";
                 e.currentTarget.style.transform = "translateY(0)";
               }}
             >
@@ -876,7 +889,9 @@ export default function Home() {
                   padding: "16px",
                   background: cardBg,
                   borderRadius: "12px",
-                  boxShadow: isDark ? "0 1px 3px rgba(0,0,0,0.3)" : "0 1px 3px rgba(0,0,0,0.1)",
+                  boxShadow: isDark
+                    ? "0 1px 3px rgba(0,0,0,0.3)"
+                    : "0 1px 3px rgba(0,0,0,0.1)",
                   color: textColor,
                 }}
               >
@@ -890,7 +905,9 @@ export default function Home() {
                   padding: "16px",
                   background: cardBg,
                   borderRadius: "12px",
-                  boxShadow: isDark ? "0 1px 3px rgba(0,0,0,0.3)" : "0 1px 3px rgba(0,0,0,0.1)",
+                  boxShadow: isDark
+                    ? "0 1px 3px rgba(0,0,0,0.3)"
+                    : "0 1px 3px rgba(0,0,0,0.1)",
                   color: textColor,
                 }}
               >
@@ -929,7 +946,9 @@ export default function Home() {
               background: cardBg,
               borderRadius: "16px",
               padding: "32px",
-              boxShadow: isDark ? "0 4px 6px rgba(0,0,0,0.3)" : "0 4px 6px rgba(0,0,0,0.1)",
+              boxShadow: isDark
+                ? "0 4px 6px rgba(0,0,0,0.3)"
+                : "0 4px 6px rgba(0,0,0,0.1)",
               minHeight: "140px",
               display: "flex",
               alignItems: "center",
@@ -1642,6 +1661,8 @@ function NewsletterSection({ t, onReviewSubmit }) {
 
 function StoryModal({ t, onClose }) {
   const [isClosing, setIsClosing] = useState(false);
+  const { theme } = useAppSettings();
+  const isDark = theme === "dark";
 
   const handleClose = () => {
     setIsClosing(true);
@@ -2163,7 +2184,7 @@ function StoryModal({ t, onClose }) {
               style={{
                 marginTop: "40px",
                 padding: "24px",
-                background: isDark 
+                background: isDark
                   ? "linear-gradient(135deg, #065f46 0%, #047857 100%)"
                   : "linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)",
                 borderRadius: "12px",
@@ -2263,13 +2284,17 @@ function StoryModal({ t, onClose }) {
 
 function Section({ t, title, enTitle, icon, content, small }) {
   const { theme } = useAppSettings();
-  const isDark = theme === 'dark';
-  const bgColor = isDark 
-    ? (small ? '#1e293b' : '#334155')
-    : (small ? '#f9fafb' : '#f3f4f6');
-  const textColor = isDark ? '#f8fafc' : '#374151';
-  const headingColor = '#15803d';
-  
+  const isDark = theme === "dark";
+  const bgColor = isDark
+    ? small
+      ? "#1e293b"
+      : "#334155"
+    : small
+    ? "#f9fafb"
+    : "#f3f4f6";
+  const textColor = isDark ? "#f8fafc" : "#374151";
+  const headingColor = "#15803d";
+
   return (
     <div
       style={{
@@ -2282,7 +2307,7 @@ function Section({ t, title, enTitle, icon, content, small }) {
       }}
       onMouseEnter={(e) => {
         e.currentTarget.style.transform = "translateX(4px)";
-        e.currentTarget.style.boxShadow = isDark 
+        e.currentTarget.style.boxShadow = isDark
           ? "0 4px 12px rgba(21, 128, 61, 0.3)"
           : "0 4px 12px rgba(21, 128, 61, 0.1)";
       }}
