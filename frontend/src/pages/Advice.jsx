@@ -173,6 +173,7 @@ export default function Advice() {
     const adviceData = {
       crop: selectedCrop,
       season: selectedSeason,
+      plantingTime: seasonInfo.sowingWindow,
       summary: `${selectedSeason} মৌসুমে ${selectedCrop} চাষে ${seasonInfo.summary} ${cropInfo.soil}`,
       quickFacts: [
         { label: "বপন সময়", value: seasonInfo.sowingWindow },
