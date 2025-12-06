@@ -68,7 +68,7 @@ export default function Navbar() {
   const t = translations[validLanguage] || translations.bangla;
 
   const headerStyle = {
-    background: theme === "dark" ? "#0f0f0f" : "#1a1a1a",
+    background: theme === "dark" ? "#0f0f0f" : "#cbbd93",
     color: "#ffffff",
     boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)",
     position: "sticky",
