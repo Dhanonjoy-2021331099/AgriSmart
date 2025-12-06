@@ -3,6 +3,7 @@
 ## 📋 Project Overview
 
 **Agri Smart** is a modern web-based agricultural management platform that enables farmers to:
+
 - 🤖 Detect crop diseases using AI technology
 - 💡 Get expert agricultural advice
 - 🛒 Buy and sell agricultural products
@@ -14,34 +15,36 @@
 ## 🛠️ Technologies Used
 
 ### **Frontend (Client Side)**
-| Technology | Version | Purpose |
-|-----------|---------|---------|
-| **React** | 18.2.0 | Core JavaScript library for building UI |
-| **Vite** | 5.0.12 | Fast development server and build tool |
-| **React Router** | 6.22.3 | Page navigation and routing |
-| **Tailwind CSS** | 4.1.17 | Styling framework |
-| **DaisyUI** | 5.5.5 | Component library for Tailwind CSS |
-| **Framer Motion** | 12.23.25 | Animation library |
-| **Axios** | 1.4.0 | HTTP client for API requests |
-| **Firebase** | 12.6.0 | Authentication (Login/Signup) |
-| **Chart.js** | 4.4.0 | Data visualization (Charts/Graphs) |
-| **React Chartjs 2** | 5.2.0 | React wrapper for Chart.js |
-| **Lucide React** | 0.555.0 | Icon library |
-| **React Toastify** | 11.0.5 | Notification system |
+
+| Technology          | Version  | Purpose                                 |
+| ------------------- | -------- | --------------------------------------- |
+| **React**           | 18.2.0   | Core JavaScript library for building UI |
+| **Vite**            | 5.0.12   | Fast development server and build tool  |
+| **React Router**    | 6.22.3   | Page navigation and routing             |
+| **Tailwind CSS**    | 4.1.17   | Styling framework                       |
+| **DaisyUI**         | 5.5.5    | Component library for Tailwind CSS      |
+| **Framer Motion**   | 12.23.25 | Animation library                       |
+| **Axios**           | 1.4.0    | HTTP client for API requests            |
+| **Firebase**        | 12.6.0   | Authentication (Login/Signup)           |
+| **Chart.js**        | 4.4.0    | Data visualization (Charts/Graphs)      |
+| **React Chartjs 2** | 5.2.0    | React wrapper for Chart.js              |
+| **Lucide React**    | 0.555.0  | Icon library                            |
+| **React Toastify**  | 11.0.5   | Notification system                     |
 
 ### **Backend (Server Side)**
-| Technology | Version | Purpose |
-|-----------|---------|---------|
-| **Node.js** | Latest | JavaScript runtime environment |
-| **Express.js** | 4.21.2 | Web server framework |
-| **MongoDB** | 7.0.0 | NoSQL database |
-| **Mongoose** | 7.0.0 | MongoDB Object Data Modeling (ODM) |
-| **Firebase Admin** | 13.6.0 | Token verification and admin SDK |
-| **JWT** | 9.0.0 | JSON Web Token for authentication |
-| **Bcryptjs** | 2.4.3 | Password encryption |
-| **Cors** | 2.8.5 | Cross-Origin Resource Sharing |
-| **Dotenv** | 16.6.1 | Environment variables management |
-| **Axios** | 1.4.0 | External API calls |
+
+| Technology         | Version | Purpose                            |
+| ------------------ | ------- | ---------------------------------- |
+| **Node.js**        | Latest  | JavaScript runtime environment     |
+| **Express.js**     | 4.21.2  | Web server framework               |
+| **MongoDB**        | 7.0.0   | NoSQL database                     |
+| **Mongoose**       | 7.0.0   | MongoDB Object Data Modeling (ODM) |
+| **Firebase Admin** | 13.6.0  | Token verification and admin SDK   |
+| **JWT**            | 9.0.0   | JSON Web Token for authentication  |
+| **Bcryptjs**       | 2.4.3   | Password encryption                |
+| **Cors**           | 2.8.5   | Cross-Origin Resource Sharing      |
+| **Dotenv**         | 16.6.1  | Environment variables management   |
+| **Axios**          | 1.4.0   | External API calls                 |
 
 ---
 
@@ -150,11 +153,10 @@ SmartAgri/
 
 ---
 
-
-
 ## 🚀 How to Run the Project
 
 ### **Prerequisites**
+
 - Node.js (v16+)
 - MongoDB Atlas account
 - Firebase project
@@ -163,26 +165,28 @@ SmartAgri/
 ### **Installation Steps**
 
 #### **1. Clone the Repository**
+
 ```bash
 git clone https://github.com/Dhanonjoy-2021331099/AgriSmart.git
 cd SmartAgri
 ```
 
 #### **2. Backend Setup**
+
 ```bash
 cd backend
 npm install
 ```
 
-
-
 **Start Backend**
+
 ```bash
 npm run dev
 # Server runs on: http://localhost:5000
 ```
 
 #### **3. Frontend Setup**
+
 ```bash
 cd frontend
 npm install
@@ -191,6 +195,7 @@ npm install
 **Add Firebase credentials to `src/firebase/firebase.config.js`**
 
 **Start Frontend**
+
 ```bash
 npm run dev
 # App runs on: http://localhost:5173
@@ -198,10 +203,10 @@ npm run dev
 
 ---
 
-
 ## 🎨 UI/UX Features
 
 ### **Design Principles:**
+
 - Modern & Clean Interface
 - Responsive Design (Mobile, Tablet, Desktop)
 - Smooth Animations (Framer Motion)
@@ -209,6 +214,7 @@ npm run dev
 - Intuitive Navigation
 
 ### **Styling Tools:**
+
 - Tailwind CSS (Utility-first)
 - DaisyUI (Pre-built components)
 - Custom CSS Variables (Theme support)
@@ -224,8 +230,8 @@ npm run dev
 
 ---
 
-
 ### **Q1: What technologies did you use?**
+
 ```
 A: I built a Full-Stack MERN Application:
 
@@ -247,6 +253,7 @@ Backend:
 ```
 
 ### **Q2: What database did you use and why?**
+
 ```
 A: MongoDB (NoSQL Database):
 
@@ -265,6 +272,7 @@ Collections:
 ```
 
 ### **Q3: How did you implement authentication?**
+
 ```
 A: Two-layer authentication system:
 
@@ -284,6 +292,7 @@ Login → Firebase Auth → JWT Token → Store locally
 ```
 
 ### **Q4: How does AI feature work?**
+
 ```
 A: Google Gemini AI API integration:
 
@@ -304,6 +313,7 @@ Backend endpoint: /api/chatbot/chat
 ```
 
 ### **Q5: How does frontend-backend communication work?**
+
 ```
 A: RESTful API Architecture:
 
@@ -320,8 +330,8 @@ Frontend → axios.get('/api/products')
 → Frontend displays data
 ```
 
-
 ### **Q7: How did you make it responsive?**
+
 ```
 A: Tailwind CSS breakpoints:
 
@@ -332,7 +342,9 @@ A: Tailwind CSS breakpoints:
 - xl: (1280px) - Extra large
 
 ```
+
 ### **Q9: What security measures did you implement?**
+
 ```
 A: Multiple security layers:
 
@@ -345,9 +357,11 @@ A: Multiple security layers:
 7. Firebase security rules
 8. MongoDB injection prevention via Mongoose
 ```
+
 ```
 ### **Q10: What were the main challenges?**
 ```
+
 A: Challenges faced and solutions:
 
 1. Firebase + MongoDB integration
@@ -364,9 +378,13 @@ A: Challenges faced and solutions:
 
 5. Responsive design
    → Tailwind breakpoints + testing
+
 ```
+
 ```
+
 ### **Q12: What did you learn from this project?**
+
 ```
 A: Technical learnings:
 - Full-stack development
@@ -414,7 +432,3 @@ Soft Skills:
 ✅ **Light/Dark theme support**
 
 ---
-
-
-
-
