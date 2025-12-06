@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Language Toggle Demo</title>
+    <style>
+      :root {
+        --bg: #0b1724;
+        --panel: #0f2133;
+        --accent: #16a34a;
+        --muted: #9fb1c5;
+        --text: #e7f0fb;
+        --shadow: 0 14px 36px rgba(0, 0, 0, 0.25);
+        font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: radial-gradient(
+            circle at 20% 20%,
+            rgba(22, 163, 74, 0.08),
+            transparent 30%
+          ),
+          radial-gradient(
+            circle at 80% 10%,
+            rgba(59, 130, 246, 0.12),
+            transparent 32%
+          ),
+          var(--bg);
+        color: var(--text);
+      }
+
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 24px;
+        background: rgba(15, 33, 51, 0.85);
+        backdrop-filter: blur(10px);
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        box-shadow: var(--shadow);
+      }
+
+      nav {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+      }
+
+      .brand {
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--text);
+        text-decoration: none;
+      }
+
+      .nav-link {
+        color: var(--muted);
+        text-decoration: none;
+        font-weight: 600;
+        transition: color 0.2s ease;
+      }
+
+      .nav-link:hover {
+        color: var(--text);
+      }
+
+      .language-toggle {
+        position: fixed;
+        top: 16px;
+        right: 16px;
+        padding: 10px 14px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        background: linear-gradient(135deg, #15803d, #16a34a);
+        color: #ffffff;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        cursor: pointer;
+        box-shadow: 0 10px 26px rgba(22, 163, 74, 0.35),
+          inset 0 1px 0 rgba(255, 255, 255, 0.12);
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+      }
+
+      .language-toggle:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 14px 32px rgba(22, 163, 74, 0.45),
+          inset 0 1px 0 rgba(255, 255, 255, 0.14);
+      }
+
+      .language-toggle:active {
+        transform: translateY(0);
+        box-shadow: 0 8px 18px rgba(22, 163, 74, 0.3),
+          inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      }
+
+      main {
+        max-width: 1080px;
+        margin: 32px auto 64px;
+        padding: 0 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 32px;
+      }
+
+      .panel {
+        background: rgba(15, 33, 51, 0.85);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 20px;
+        padding: 24px;
+        box-shadow: var(--shadow);
+      }
+
+      h1,
+      h2,
+      h3 {
+        margin: 0 0 12px;
+        line-height: 1.2;
+      }
+
+      p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+
+      .cta-btn {
+        margin-top: 16px;
+        padding: 12px 18px;
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        color: #ffffff;
+        border: none;
+        border-radius: 12px;
+        font-weight: 700;
+        cursor: pointer;
+        box-shadow: 0 10px 24px rgba(37, 99, 235, 0.35);
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+      }
+
+      .cta-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 14px 30px rgba(37, 99, 235, 0.45);
+      }
+
+      .cta-btn:active {
+        transform: translateY(0);
+        box-shadow: 0 8px 16px rgba(37, 99, 235, 0.3);
+      }
+
+      .features {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 16px;
+      }
+
+      .feature-card {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 16px;
+        padding: 16px;
+      }
+
+      footer {
+        margin: 48px auto 32px;
+        max-width: 1080px;
+        padding: 12px 20px;
+        color: var(--muted);
+        text-align: center;
+      }
+
+      @media (max-width: 640px) {
+        header {
+          flex-direction: column;
+          gap: 12px;
+        }
+
+        nav {
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <button
+      id="languageToggle"
+      class="language-toggle"
+      aria-label="Toggle language"
+    >
+      BN | EN
+    </button>
+
+    <header>
+      <a href="#" class="brand" data-key="nav.brand"></a>
+      <nav>
+        <a href="#" class="nav-link" data-key="nav.home"></a>
+        <a href="#about" class="nav-link" data-key="nav.about"></a>
+        <a href="#features" class="nav-link" data-key="nav.features"></a>
+        <a href="#contact" class="nav-link" data-key="nav.contact"></a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="panel" id="hero">
+        <h1 data-key="hero.title"></h1>
+        <p data-key="hero.subtitle"></p>
+        <button class="cta-btn" data-key="hero.cta"></button>
+      </section>
+
+      <section class="panel" id="about">
+        <h2 data-key="about.title"></h2>
+        <p data-key="about.copy"></p>
+      </section>
+
+      <section class="panel" id="features">
+        <h2 data-key="features.title"></h2>
+        <div class="features">
+          <div class="feature-card">
+            <h3 data-key="features.item1.title"></h3>
+            <p data-key="features.item1.copy"></p>
+          </div>
+          <div class="feature-card">
+            <h3 data-key="features.item2.title"></h3>
+            <p data-key="features.item2.copy"></p>
+          </div>
+          <div class="feature-card">
+            <h3 data-key="features.item3.title"></h3>
+            <p data-key="features.item3.copy"></p>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" id="contact">
+        <h2 data-key="contact.title"></h2>
+        <p data-key="contact.copy"></p>
+        <button class="cta-btn" data-key="contact.cta"></button>
+      </section>
+    </main>
+
+    <footer>
+      <span data-key="footer.copy"></span>
+    </footer>
+
+    <script>
+      // Text dictionary: English and Bangla values keyed by data-key
+      const translations = {
+        "nav.brand": {
+          en: "AgriSmart",
+          bn: "অ্যাগ্রি স্মার্ট",
+        },
+        "nav.home": {
+          en: "Home",
+          bn: "হোম",
+        },
+        "nav.about": {
+          en: "About",
+          bn: "সম্পর্কে",
+        },
+        "nav.features": {
+          en: "Features",
+          bn: "বৈশিষ্ট্য",
+        },
+        "nav.contact": {
+          en: "Contact",
+          bn: "যোগাযোগ",
+        },
+        "hero.title": {
+          en: "Grow smarter with data-driven farming",
+          bn: "ডেটা-নির্ভর কৃষিতে হোক স্মার্ট অগ্রগতি",
+        },
+        "hero.subtitle": {
+          en: "Monitor soil health, automate irrigation, and get AI insights in real time.",
+          bn: "মাটি পর্যবেক্ষণ, সেচ অটোমেশন এবং তাৎক্ষণিক এআই পরামর্শ—সব এক প্ল্যাটফর্মে।",
+        },
+        "hero.cta": {
+          en: "Start Free",
+          bn: "বিনামূল্যে শুরু করুন",
+        },
+        "about.title": {
+          en: "Why AgriSmart",
+          bn: "কেন অ্যাগ্রি স্মার্ট",
+        },
+        "about.copy": {
+          en: "We combine sensors, satellite data, and automation so you can save water, boost yield, and cut manual checks.",
+          bn: "সেন্সর, স্যাটেলাইট ডেটা ও অটোমেশন একত্রে ব্যবহার করে পানি সাশ্রয়, ফলন বৃদ্ধি এবং ম্যানুয়াল পরিদর্শন কমাতে সহায়তা করি।",
+        },
+        "features.title": {
+          en: "What you get",
+          bn: "আপনি যা পাবেন",
+        },
+        "features.item1.title": {
+          en: "Live Dashboards",
+          bn: "লাইভ ড্যাশবোর্ড",
+        },
+        "features.item1.copy": {
+          en: "Track moisture, nutrients, and weather in one unified view.",
+          bn: "একই ড্যাশবোর্ডে মাটি আর্দ্রতা, পুষ্টি ও আবহাওয়া পর্যবেক্ষণ করুন।",
+        },
+        "features.item2.title": {
+          en: "Smart Automation",
+          bn: "স্মার্ট অটোমেশন",
+        },
+        "features.item2.copy": {
+          en: "Automate irrigation schedules based on soil and forecast data.",
+          bn: "মাটি ও পূর্বাভাস ডেটা অনুযায়ী সেচের সময়সূচি স্বয়ংক্রিয় করুন।",
+        },
+        "features.item3.title": {
+          en: "AI Agronomy",
+          bn: "এআই আগ্রোনমি",
+        },
+        "features.item3.copy": {
+          en: "Get tailored crop advice and disease alerts instantly.",
+          bn: "আপনার ফসলের জন্য কাস্টম পরামর্শ ও রোগ সতর্কতা পান।",
+        },
+        "contact.title": {
+          en: "Talk with our team",
+          bn: "আমাদের দলের সাথে কথা বলুন",
+        },
+        "contact.copy": {
+          en: "Share your farm goals and we will help you set up in days, not months.",
+          bn: "আপনার ফার্মের লক্ষ্য জানান, আমরা কয়েক দিনের মধ্যেই সেটআপে সহায়তা করব।",
+        },
+        "contact.cta": {
+          en: "Schedule a demo",
+          bn: "ডেমো নির্ধারণ করুন",
+        },
+        "footer.copy": {
+          en: "© 2025 AgriSmart. All rights reserved.",
+          bn: "© ২০২৫ অ্যাগ্রি স্মার্ট। সর্বস্বত্ব সংরক্ষিত।",
+        },
+      };
+
+      let currentLanguage = "en";
+
+      function updateLanguage(lang) {
+        currentLanguage = lang;
+        document.documentElement.lang = lang === "bn" ? "bn" : "en";
+
+        document.querySelectorAll("[data-key]").forEach((node) => {
+          const key = node.dataset.key;
+          const entry = translations[key];
+          if (!entry) return;
+          const value = entry[lang] || entry.en;
+          node.textContent = value;
+        });
+      }
+
+      function toggleLanguage() {
+        const next = currentLanguage === "en" ? "bn" : "en";
+        updateLanguage(next);
+      }
+
+      document
+        .getElementById("languageToggle")
+        .addEventListener("click", toggleLanguage);
+
+      // Initialize page in English on load
+      updateLanguage(currentLanguage);
+    </script>
+  </body>
+</html>
