@@ -15,11 +15,13 @@ import {
   CheckCircle,
   Sparkles,
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { useAppSettings } from "../Contexts/AppSettingsContext";
 import { translations as i18n } from "../i18n/translations";
 
 export default function Advice() {
   const { language, theme } = useAppSettings();
+  const navigate = useNavigate();
   const langKey = language === "english" ? "english" : "bangla";
   const t = useCallback((key) => i18n[langKey]?.[key] || key, [langKey]);
   const [selectedCrop, setSelectedCrop] = useState("");
@@ -497,40 +499,54 @@ export default function Advice() {
             </div>
 
             <div className="grid md:grid-cols-2 gap-4">
-              {quickFacts.map((fact, index) => (
-                <motion.div
-                  key={index}
-                  className={`p-6 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 border ${
-                    isDark
-                      ? "bg-gradient-to-br from-slate-700 to-slate-800 border-slate-600"
-                      : "bg-gradient-to-br from-white to-gray-50 border-gray-100"
-                  }`}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  whileHover={{ y: -5 }}
-                >
-                  <div className="flex items-start gap-4">
-                    <div className="text-4xl">{fact.icon}</div>
-                    <div>
-                      <h3
-                        className={`font-bold mb-2 ${
-                          isDark ? "text-slate-100" : "text-gray-800"
-                        }`}
-                      >
-                        {t(fact.titleKey)}
-                      </h3>
-                      <p
-                        className={`text-sm leading-relaxed ${
-                          isDark ? "text-slate-300" : "text-gray-600"
-                        }`}
-                      >
-                        {t(fact.descKey)}
-                      </p>
+              {quickFacts.map((fact, index) => {
+                const slugMap = {
+                  0: "soil-testing",
+                  1: "right-timing",
+                  2: "water-management",
+                  3: "organic-inputs",
+                };
+                return (
+                  <motion.div
+                    key={index}
+                    onClick={() => navigate(`/tips/${slugMap[index]}`)}
+                    className={`p-6 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 border cursor-pointer group ${
+                      isDark
+                        ? "bg-gradient-to-br from-slate-700 to-slate-800 border-slate-600 hover:border-emerald-500/50"
+                        : "bg-gradient-to-br from-white to-gray-50 border-gray-100 hover:border-emerald-400"
+                    }`}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                    whileHover={{ y: -8, scale: 1.02 }}
+                  >
+                    <div className="flex items-start gap-4">
+                      <div className="text-5xl group-hover:scale-110 transition-transform duration-300">
+                        {fact.icon}
+                      </div>
+                      <div>
+                        <h3
+                          className={`font-bold mb-2 group-hover:text-emerald-500 transition-colors ${
+                            isDark ? "text-slate-100" : "text-gray-800"
+                          }`}
+                        >
+                          {t(fact.titleKey)}
+                        </h3>
+                        <p
+                          className={`text-sm leading-relaxed ${
+                            isDark ? "text-slate-300" : "text-gray-600"
+                          }`}
+                        >
+                          {t(fact.descKey)}
+                        </p>
+                        <div className="mt-3 inline-flex items-center text-emerald-500 text-sm font-semibold group-hover:translate-x-2 transition-transform">
+                          Learn more →
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </motion.div>
-              ))}
+                  </motion.div>
+                );
+              })}
             </div>
           </motion.div>
         </motion.div>

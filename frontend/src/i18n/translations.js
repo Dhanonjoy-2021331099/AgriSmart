@@ -296,6 +296,61 @@ export const translations = {
     "profile.form.addressPlaceholder": "Address",
     "profile.form.shippingPlaceholder": "Shipping address",
     "profile.form.bioPlaceholder": "Short bio",
+    "tips.backToAdvice": "Back to Advice",
+    "tips.notFound": "Tip not found",
+    "tips.proTip": "Pro Tip",
+    "tips.soilTesting.detail":
+      "Regular soil testing is fundamental to successful farming. It helps you understand your soil composition, pH levels, and nutrient content, allowing you to make informed decisions about fertilization and crop selection.",
+    "tips.soilTesting.para1.title": "Why Soil Testing Matters",
+    "tips.soilTesting.para1.content":
+      "Soil is the foundation of agriculture. By testing your soil regularly, you can identify deficiencies before they impact crop yield. Professional soil testing provides a comprehensive analysis of nitrogen, phosphorus, potassium, and micronutrients essential for plant growth. This prevents both nutrient waste and crop failure from deficiencies.",
+    "tips.soilTesting.para2.title": "When and How to Test",
+    "tips.soilTesting.para2.content":
+      "Conduct soil tests at least once every 2-3 years, or more frequently if you've had poor harvests. Collect samples from multiple areas of your field at a depth of 6-8 inches. Send samples to a certified lab for accurate analysis, which typically takes 1-2 weeks. The results will guide your nutrient management plan.",
+    "tips.soilTesting.para3.title": "Acting on Test Results",
+    "tips.soilTesting.para3.content":
+      "Once you have the soil test report, consult with an agricultural extension officer to interpret results and create a fertilization plan. The recommendations will specify exact amounts of NPK and micronutrients needed. This targeted approach saves money on unnecessary fertilizers while optimizing crop health.",
+    "soil-testing.proTip":
+      "Test your soil in the off-season to have time to adjust nutrient levels before the next planting cycle.",
+    "tips.waterManagement.detail":
+      "Water is precious in agriculture, and efficient management is crucial for sustainability. Proper irrigation techniques ensure crops get adequate moisture while conserving water and preventing diseases caused by waterlogging.",
+    "tips.waterManagement.para1.title": "Understanding Water Needs",
+    "tips.waterManagement.para1.content":
+      "Different crops have different water requirements. Rice typically needs 40-50 inches annually, while wheat needs 15-25 inches. Factors like temperature, rainfall patterns, soil type, and crop stage affect water demands. Understanding these requirements helps avoid both drought stress and excess water that leads to root diseases.",
+    "tips.waterManagement.para2.title": "Irrigation Methods",
+    "tips.waterManagement.para2.content":
+      "Traditional flood irrigation wastes water but is inexpensive. Drip irrigation delivers water directly to plant roots, reducing waste by 40-50% and improving yields. Sprinkler systems work well for uniform field coverage. Choose based on your field topography, water availability, and crop type. Modern methods also reduce weed growth and disease pressure.",
+    "tips.waterManagement.para3.title": "Monitoring and Adjustment",
+    "tips.waterManagement.para3.content":
+      "Monitor soil moisture regularly using simple methods like the feel test or soil moisture meters. Adjust irrigation frequency based on rainfall, season, and growth stage. During vegetative growth, crops need more water than during ripening. Proper scheduling prevents water stress that reduces yields and quality.",
+    "water-management.proTip":
+      "Use mulch to retain soil moisture and reduce irrigation frequency by up to 30%.",
+    "tips.rightTiming.detail":
+      "Timing is everything in agriculture. Planting at the right season and growth stage significantly impacts yield and quality. Understanding your local climate and crop phenology ensures success.",
+    "tips.rightTiming.para1.title": "Seasonal Planting Windows",
+    "tips.rightTiming.para1.content":
+      "Each crop thrives in specific seasons. Rabi crops (November-December) like wheat and chickpea prefer cool weather. Kharif crops (June-July) like rice and maize need monsoon moisture. Zaid crops (February-March) suit hot weather. Planting outside these windows increases disease pressure, reduces germination, and lowers yields. Consult local agricultural calendars for your region.",
+    "tips.rightTiming.para2.title": "Growth Stage Monitoring",
+    "tips.rightTiming.para2.content":
+      "Crops have critical growth periods when operations like fertilizer application, pest control, and irrigation are most effective. Fertilizing at the wrong stage wastes resources. Harvesting too early or late affects quality and yield. Learn crop-specific growth stages and use visual indicators or growth models to time interventions perfectly.",
+    "tips.rightTiming.para3.title": "Weather-Based Decisions",
+    "tips.rightTiming.para3.content":
+      "Modern weather forecasting helps optimize timing. Avoid sowing before heavy rain to prevent seed rot. Time fungicide sprays for dry periods for better effectiveness. Schedule harvesting in dry weather to prevent quality loss. By aligning farm operations with weather patterns, you improve success rates significantly.",
+    "right-timing.proTip":
+      "Use weather forecasts and local agro-meteorological services to time your major farm operations.",
+    "tips.organicInputs.detail":
+      "Organic inputs build soil health and sustainability. Using compost, green manures, and bio-fertilizers reduces chemical dependency while improving long-term productivity and environmental health.",
+    "tips.organicInputs.para1.title": "Benefits of Organic Farming",
+    "tips.organicInputs.para1.content":
+      "Organic inputs improve soil structure, water retention, and microbial activity. They cost less than synthetic fertilizers in the long run and don't degrade soil quality. Organic farming also commands premium prices in markets, improving farm profitability. Additionally, reduced chemical use is safer for farm families and consumers.",
+    "tips.organicInputs.para2.title": "Types of Organic Inputs",
+    "tips.organicInputs.para2.content":
+      "Compost from crop residue and farm waste enriches soil with organic matter and nutrients. Green manuring involves growing legume crops and plowing them back. Bio-fertilizers like Azospirillum and Phosphobacteria fix atmospheric nitrogen or solubilize phosphorus. Neem-based products control pests naturally. Using these inputs in combination creates a sustainable farming system.",
+    "tips.organicInputs.para3.title": "Implementation Strategy",
+    "tips.organicInputs.para3.content":
+      "Start by composting all available farm waste. Allocate 10-15% of your field for green manure rotation. Apply compost 1-2 weeks before sowing at 5-10 tons per hectare. Use bio-fertilizers according to package directions. Over 2-3 seasons, soil health improves dramatically, reducing need for external inputs.",
+    "organic-inputs.proTip":
+      "Composting farm waste not only reduces expenses but also solves waste management challenges.",
   },
   bangla: {
     "Agri Smart": "Agri Smart",
@@ -599,5 +654,60 @@ export const translations = {
     "profile.form.addressPlaceholder": "ঠিকানা",
     "profile.form.shippingPlaceholder": "শিপিং ঠিকানা",
     "profile.form.bioPlaceholder": "সংক্ষিপ্ত জীবনবৃত্তান্ত",
+    "tips.backToAdvice": "পরামর্শে ফিরুন",
+    "tips.notFound": "পরামর্শ পাওয়া যায়নি",
+    "tips.proTip": "পেশাদার পরামর্শ",
+    "tips.soilTesting.detail":
+      "নিয়মিত মাটি পরীক্ষা সফল কৃষির ভিত্তি। এটি আপনার মাটির গঠন, পিএইচ স্তর এবং পুষ্টি সামগ্রী বুঝতে সাহায্য করে, যা সার প্রয়োগ এবং ফসল নির্বাচনে জ্ঞাত সিদ্ধান্ত নিতে দেয়।",
+    "tips.soilTesting.para1.title": "মাটি পরীক্ষা কেন গুরুত্বপূর্ণ",
+    "tips.soilTesting.para1.content":
+      "মাটি কৃষির ভিত্তি। নিয়মিত মাটি পরীক্ষা করে, আপনি ফসলের ফলন প্রভাবিত হওয়ার আগেই ঘাটতি চিহ্নিত করতে পারেন। পেশাদার মাটি পরীক্ষা নাইট্রোজেন, ফসফরাস, পটাসিয়াম এবং উদ্ভিদ বৃদ্ধির জন্য প্রয়োজনীয় মাইক্রোনিউট্রিয়েন্টের একটি ব্যাপক বিশ্লেষণ প্রদান করে।",
+    "tips.soilTesting.para2.title": "কখন এবং কীভাবে পরীক্ষা করবেন",
+    "tips.soilTesting.para2.content":
+      "কমপক্ষে প্রতি ২-৩ বছরে মাটি পরীক্ষা পরিচালনা করুন, বিশেষত খারাপ ফসলের পরে। আপনার ক্ষেতের একাধিক স্থান থেকে ৬-৮ ইঞ্চি গভীরতায় নমুনা সংগ্রহ করুন। একটি প্রত্যয়িত ল্যাবে নমুনা পাঠান যা সাধারণত ১-২ সপ্তাহ সময় নেয়।",
+    "tips.soilTesting.para3.title": "পরীক্ষার ফলাফলে পদক্ষেপ নিন",
+    "tips.soilTesting.para3.content":
+      "মাটি পরীক্ষার প্রতিবেদন পেয়ে, একজন কৃষি সম্প্রসারণ অফিসারের সাথে পরামর্শ করুন ফলাফল ব্যাখ্যা করতে এবং সার প্রয়োগের পরিকল্পনা তৈরি করতে। সুপারিশগুলি এনপিকে এবং মাইক্রোনিউট্রিয়েন্টের নির্দিষ্ট পরিমাণ উল্লেখ করবে।",
+    "soil-testing.proTip":
+      "নিষেধাজ্ঞামুক্ত মৌসুমে মাটি পরীক্ষা করুন যাতে পরবর্তী বপনের আগে পুষ্টির স্তর সামঞ্জস্য করার সময় থাকে।",
+    "tips.waterManagement.detail":
+      "কৃষিতে পানি মূল্যবান এবং দক্ষ ব্যবস্থাপনা টেকসইতার জন্য গুরুত্বপূর্ণ। যথাযথ সেচ প্রযুক্তি নিশ্চিত করে যে ফসল পর্যাপ্ত আর্দ্রতা পায় এবং পানি সংরক্ষণ করা হয়।",
+    "tips.waterManagement.para1.title": "পানির চাহিদা বোঝা",
+    "tips.waterManagement.para1.content":
+      "বিভিন্ন ফসলের বিভিন্ন পানির প্রয়োজন থাকে। ধান সাধারণত বার্ষিক ৪০-৫০ ইঞ্চি প্রয়োজন, যখন গম ১৫-২৫ ইঞ্চি প্রয়োজন। তাপমাত্রা, বৃষ্টিপাতের ধরন, মাটির ধরন এবং ফসলের পর্যায় পানির চাহিদা প্রভাবিত করে।",
+    "tips.waterManagement.para2.title": "সেচ পদ্ধতি",
+    "tips.waterManagement.para2.content":
+      "ঐতিহ্যবাহী বন্যা সেচ পানি নষ্ট করে কিন্তু সস্তা। ড্রিপ সেচ উদ্ভিদের শিকড়ে সরাসরি পানি সরবরাহ করে, বর্জ্য ৪০-৫০% হ্রাস করে এবং ফলন উন্নত করে। স্প্রিংকলার সিস্টেম একীভূত মাঠের কভারেজের জন্য ভাল কাজ করে।",
+    "tips.waterManagement.para3.title": "পর্যবেক্ষণ এবং সমন্বয়",
+    "tips.waterManagement.para3.content":
+      "নিয়মিত মাটির আর্দ্রতা পর্যবেক্ষণ করুন সাধারণ পদ্ধতি বা মাটির আর্দ্রতা মিটার ব্যবহার করে। বৃষ্টিপাত, ঋতু এবং বৃদ্ধির পর্যায়ের উপর ভিত্তি করে সেচের ফ্রিকোয়েন্সি সামঞ্জস্য করুন।",
+    "water-management.proTip":
+      "মাল্চ ব্যবহার করে মাটির আর্দ্রতা ধরে রাখুন এবং সেচের ফ্রিকোয়েন্সি ৩০% পর্যন্ত হ্রাস করুন।",
+    "tips.rightTiming.detail":
+      "কৃষিতে সময় সবকিছু। সঠিক ঋতুতে এবং বৃদ্ধির পর্যায়ে বপন উল্লেখযোগ্যভাবে ফলন এবং গুণমান প্রভাবিত করে।",
+    "tips.rightTiming.para1.title": "ঋতুভিত্তিক বপন উইন্ডো",
+    "tips.rightTiming.para1.content":
+      "প্রতিটি ফসল নির্দিষ্ট ঋতুতে সমৃদ্ধ হয়। রবি ফসল (নভেম্বর-ডিসেম্বর) শীতল আবহাওয়া পছন্দ করে। খরিফ ফসল (জুন-জুলাই) বর্ষার আর্দ্রতা প্রয়োজন। এই উইন্ডোর বাইরে বপন রোগের চাপ বৃদ্ধি করে এবং ফলন হ্রাস করে।",
+    "tips.rightTiming.para2.title": "বৃদ্ধির পর্যায় পর্যবেক্ষণ",
+    "tips.rightTiming.para2.content":
+      "ফসলের সমালোচনামূলক বৃদ্ধির সময়কাল রয়েছে যখন সার প্রয়োগ, কীটপতঙ্গ নিয়ন্ত্রণ এবং সেচ সবচেয়ে কার্যকর। ভুল পর্যায়ে সার প্রয়োগ করা সম্পদ নষ্ট করে।",
+    "tips.rightTiming.para3.title": "আবহাওয়া-ভিত্তিক সিদ্ধান্ত",
+    "tips.rightTiming.para3.content":
+      "আধুনিক আবহাওয়ার পূর্বাভাস সময়কে অপ্টিমাইজ করতে সাহায্য করে। ভারী বৃষ্টির আগে বপন এড়িয়ে চলুন বীজ পচা রোধ করতে। ফাঙ্গিসাইড স্প্রে শুষ্ক সময়কালের জন্য সময় করুন।",
+    "right-timing.proTip":
+      "আপনার প্রধান খামার অপারেশন সময়কাল নির্ধারণ করতে আবহাওয়ার পূর্বাভাস এবং স্থানীয় কৃষি আবহাওয়া পরিষেবা ব্যবহার করুন।",
+    "tips.organicInputs.detail":
+      "জৈব আদান মাটির স্বাস্থ্য এবং স্থায়িত্ব তৈরি করে। জৈব সার, সবুজ সার এবং জৈব সার ব্যবহার রাসায়নিক নির্ভরতা হ্রাস করে।",
+    "tips.organicInputs.para1.title": "জৈব কৃষির সুবিধা",
+    "tips.organicInputs.para1.content":
+      "জৈব আদান মাটির গঠন, পানি ধারণ এবং মাইক্রোবিয়াল কার্যকলাপ উন্নত করে। দীর্ঘমেয়াদী সিন্থেটিক সারের চেয়ে কম খরচ হয় এবং মাটির গুণমান হ্রাস করে না।",
+    "tips.organicInputs.para2.title": "জৈব আদানের প্রকার",
+    "tips.organicInputs.para2.content":
+      "ফসলের অবশিষ্ট এবং খামারের বর্জ্য থেকে তৈরি সার জৈব পদার্থ এবং পুষ্টিতে মাটি সমৃদ্ধ করে। সবুজ সার পালসকে বৃদ্ধি জড়িত এবং তাদের ফিরিয়ে দেয়। জৈব সার যেমন অ্যাজোস্পিরিলাম এবং ফসফোব্যাক্টেরিয়া বায়ুমণ্ডলীয় নাইট্রোজেন ফিক্স করে অথবা ফসফরাস দ্রবণীয় করে।",
+    "tips.organicInputs.para3.title": "বাস্তবায়ন কৌশল",
+    "tips.organicInputs.para3.content":
+      "সমস্ত উপলব্ধ খামারের বর্জ্য কম্পোস্ট করে শুরু করুন। আপনার ক্ষেতের ১০-১৫% সবুজ সার ঘূর্ণায়নের জন্য বরাদ্দ করুন। বপনের ১-২ সপ্তাহ আগে কম্পোস্ট প্রয়োগ করুন। ২-৩ মৌসুম সময়ে, মাটির স্বাস্থ্য নাটকীয়ভাবে উন্নত হয়।",
+    "organic-inputs.proTip":
+      "খামারের বর্জ্য কম্পোস্ট করা শুধুমাত্র খরচ হ্রাস করে না বরং বর্জ্য ব্যবস্থাপনা চ্যালেঞ্জও সমাধান করে।",
   },
 };

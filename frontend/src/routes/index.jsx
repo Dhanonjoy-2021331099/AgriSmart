@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import Home from "../pages/Home";
 import Advice from "../pages/Advice";
+import TipDetail from "../pages/TipDetail";
 import AIDetection from "../pages/AIDetection";
 import Products from "../pages/Products";
 import AddProduct from "../pages/AddProduct";
@@ -41,6 +42,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedClient>
             <Advice />
+          </ProtectedClient>
+        ),
+      },
+      {
+        path: "/tips/:slug",
+        element: (
+          <ProtectedClient>
+            <TipDetail />
           </ProtectedClient>
         ),
       },
