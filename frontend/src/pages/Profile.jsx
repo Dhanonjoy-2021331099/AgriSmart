@@ -34,6 +34,8 @@ import {
 } from "lucide-react";
 import { useAuth } from "../Contexts/AuthProvider";
 import { useAppSettings } from "../Contexts/AppSettingsContext";
+import { useCallback } from "react";
+import { translations } from "../i18n/translations";
 
 const cardHover = { whileHover: { y: -2, scale: 1.01 } };
 
@@ -63,8 +65,14 @@ export default function Profile() {
   const apiBase =
     import.meta.env.VITE_API_BASE_URL || "http://localhost:6001/api";
   const { user, userId, token, updateProfile } = useAuth();
-  const { theme } = useAppSettings();
+  const { theme, language } = useAppSettings();
   const isDark = theme === "dark";
+
+  const langKey = language === "bangla" ? "bangla" : "english";
+  const t = useCallback(
+    (key) => translations[langKey]?.[key] || key,
+    [langKey]
+  );
 
   const [stats, setStats] = useState({
     totalOrders: 0,
@@ -233,7 +241,7 @@ export default function Profile() {
 
   const statCards = [
     {
-      title: "মোট অর্ডার",
+      title: t("profile.stats.totalOrders"),
       value: stats.totalOrders,
       icon: ShoppingBag,
       color: "from-emerald-500 to-teal-500",
@@ -241,7 +249,7 @@ export default function Profile() {
         ordersSectionRef.current?.scrollIntoView({ behavior: "smooth" }),
     },
     {
-      title: "পণ্য সংখ্যা",
+      title: t("profile.stats.totalProducts"),
       value: stats.totalProducts,
       icon: Package2,
       color: "from-sky-500 to-blue-500",
@@ -251,7 +259,7 @@ export default function Profile() {
         }),
     },
     {
-      title: "মোট খরচ",
+      title: t("profile.stats.totalSpent"),
       value: `৳${formatCurrency(stats.totalSpent)}`,
       icon: DollarSign,
       color: "from-amber-500 to-orange-500",
@@ -259,7 +267,7 @@ export default function Profile() {
         spendSectionRef.current?.scrollIntoView({ behavior: "smooth" }),
     },
     {
-      title: "সর্বাধিক জনপ্রিয় পণ্য",
+      title: t("profile.stats.mostPopular"),
       value: stats.mostFrequentProduct?.name || "-",
       icon: Star,
       color: "from-purple-500 to-indigo-500",
@@ -304,16 +312,20 @@ export default function Profile() {
       }`}
     >
       <div className="max-w-7xl mx-auto space-y-8">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <p className="text-sm text-slate-400">Welcome back</p>
-            <h1 className="text-3xl font-semibold">User Profile Dashboard</h1>
+        <div className="flex flex-col gap-6 items-center justify-center text-center mb-8">
+          <div className="w-full">
+            <p className="text-base sm:text-lg text-slate-400 mb-2">
+              {t("profile.welcome")}
+            </p>
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight">
+              {t("profile.title")}
+            </h1>
           </div>
           <button
             onClick={() => setShowEdit(true)}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-lg shadow-emerald-500/30 hover:scale-[1.01] transition"
+            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-lg shadow-emerald-500/30 hover:scale-[1.02] transition"
           >
-            <Edit3 size={18} /> Edit Profile
+            <Edit3 size={18} /> {t("profile.editButton")}
           </button>
         </div>
 
@@ -348,21 +360,23 @@ export default function Profile() {
                     isDark ? "text-slate-400" : "text-slate-600"
                   }`}
                 >
-                  Profile
+                  {t("profile.section.profile")}
                 </p>
                 <h2
                   className={`text-xl font-semibold leading-tight ${
                     isDark ? "text-slate-100" : "text-slate-900"
                   }`}
                 >
-                  {user?.name || "User"}
+                  {user?.name || t("profile.defaultUser")}
                 </h2>
                 <p
                   className={`text-sm ${
                     isDark ? "text-emerald-300/80" : "text-emerald-600"
                   }`}
                 >
-                  {user?.role === "admin" ? "Administrator" : "Customer"}
+                  {user?.role === "admin"
+                    ? t("profile.role.admin")
+                    : t("profile.role.customer")}
                 </p>
               </div>
             </div>
@@ -425,15 +439,14 @@ export default function Profile() {
                   isDark ? "text-emerald-200" : "text-emerald-700"
                 }`}
               >
-                Shipping Address
+                {t("profile.shipping.title")}
               </p>
               <p
                 className={`mt-1 ${
                   isDark ? "text-slate-300" : "text-slate-600"
                 }`}
               >
-                {user?.shippingAddress ||
-                  "Add a shipping address to speed up checkout."}
+                {user?.shippingAddress || t("profile.shipping.placeholder")}
               </p>
               <button
                 onClick={() => setShowEdit(true)}
@@ -443,7 +456,7 @@ export default function Profile() {
                     : "text-emerald-600 hover:text-emerald-700"
                 }`}
               >
-                <Edit3 size={16} /> Update
+                <Edit3 size={16} /> {t("profile.updateButton")}
               </button>
             </div>
           </motion.div>
@@ -485,14 +498,14 @@ export default function Profile() {
                     isDark ? "text-slate-400" : "text-slate-600"
                   }`}
                 >
-                  Analytics
+                  {t("profile.section.analytics")}
                 </p>
                 <h3
                   className={`text-lg font-semibold ${
                     isDark ? "text-slate-100" : "text-slate-900"
                   }`}
                 >
-                  Monthly Spend
+                  {t("profile.analytics.monthlySpend")}
                 </h3>
               </div>
               {loadingStats && (
@@ -501,7 +514,7 @@ export default function Profile() {
                     isDark ? "text-slate-400" : "text-slate-600"
                   }`}
                 >
-                  Loading...
+                  {t("profile.loading")}
                 </span>
               )}
             </div>
@@ -550,14 +563,14 @@ export default function Profile() {
                     isDark ? "text-slate-400" : "text-slate-600"
                   }`}
                 >
-                  Categories
+                  {t("profile.section.categories")}
                 </p>
                 <h3
                   className={`text-lg font-semibold ${
                     isDark ? "text-slate-100" : "text-slate-900"
                   }`}
                 >
-                  Product Mix
+                  {t("profile.analytics.productMix")}
                 </h3>
               </div>
               {loadingStats && (
@@ -566,7 +579,7 @@ export default function Profile() {
                     isDark ? "text-slate-400" : "text-slate-600"
                   }`}
                 >
-                  Loading...
+                  {t("profile.loading")}
                 </span>
               )}
             </div>
@@ -618,7 +631,7 @@ export default function Profile() {
                   <span
                     className={isDark ? "text-slate-300" : "text-slate-600"}
                   >
-                    {c.total} items
+                    {c.total} {t("profile.items")}
                   </span>
                 </div>
               ))}
@@ -643,14 +656,14 @@ export default function Profile() {
                     isDark ? "text-slate-400" : "text-slate-600"
                   }`}
                 >
-                  Purchases
+                  {t("profile.section.purchases")}
                 </p>
                 <h3
                   className={`text-lg font-semibold ${
                     isDark ? "text-slate-100" : "text-slate-900"
                   }`}
                 >
-                  Product Breakdown
+                  {t("profile.analytics.productBreakdown")}
                 </h3>
               </div>
               {loadingStats && (
@@ -659,7 +672,7 @@ export default function Profile() {
                     isDark ? "text-slate-400" : "text-slate-600"
                   }`}
                 >
-                  Loading...
+                  {t("profile.loading")}
                 </span>
               )}
             </div>
@@ -708,7 +721,7 @@ export default function Profile() {
                             isDark ? "text-slate-400" : "text-slate-600"
                           }`}
                         >
-                          items
+                          {t("profile.items")}
                         </p>
                       </div>
                     </div>
@@ -741,14 +754,14 @@ export default function Profile() {
                     isDark ? "text-slate-400" : "text-slate-600"
                   }`}
                 >
-                  No purchase data available yet.
+                  {t("profile.empty.noPurchase")}
                 </p>
                 <p
                   className={`text-xs mt-1 ${
                     isDark ? "text-slate-500" : "text-slate-500"
                   }`}
                 >
-                  Start ordering to see your product breakdown here.
+                  {t("profile.empty.startOrdering")}
                 </p>
               </div>
             )}
@@ -771,14 +784,14 @@ export default function Profile() {
                     isDark ? "text-slate-400" : "text-slate-600"
                   }`}
                 >
-                  Recent
+                  {t("profile.section.recent")}
                 </p>
                 <h3
                   className={`text-lg font-semibold ${
                     isDark ? "text-slate-100" : "text-slate-900"
                   }`}
                 >
-                  Recent Orders
+                  {t("profile.orders.recentTitle")}
                 </h3>
               </div>
               <button
@@ -791,7 +804,7 @@ export default function Profile() {
                   isDark ? "text-emerald-300" : "text-emerald-600"
                 }`}
               >
-                View All <ChevronRight size={16} />
+                {t("profile.viewAll")} <ChevronRight size={16} />
               </button>
             </div>
 
@@ -811,7 +824,7 @@ export default function Profile() {
                         isDark ? "text-slate-100" : "text-slate-900"
                       }`}
                     >
-                      Order #{order._id}
+                      {t("profile.order.prefix")} {order._id}
                     </p>
                     <p
                       className={`text-xs ${
@@ -845,7 +858,7 @@ export default function Profile() {
                     isDark ? "text-slate-400" : "text-slate-600"
                   }`}
                 >
-                  No recent orders found.
+                  {t("profile.orders.noRecent")}
                 </p>
               )}
             </div>
@@ -866,14 +879,14 @@ export default function Profile() {
                     isDark ? "text-slate-400" : "text-slate-600"
                   }`}
                 >
-                  Favorite
+                  {t("profile.section.favorite")}
                 </p>
                 <h3
                   className={`text-lg font-semibold ${
                     isDark ? "text-slate-100" : "text-slate-900"
                   }`}
                 >
-                  Most Ordered Product
+                  {t("profile.orders.mostOrdered")}
                 </h3>
               </div>
             </div>
@@ -896,14 +909,15 @@ export default function Profile() {
                     isDark ? "text-slate-400" : "text-slate-600"
                   }`}
                 >
-                  Top product
+                  {t("profile.topProduct")}
                 </p>
                 <p
                   className={`text-lg font-semibold ${
                     isDark ? "text-slate-100" : "text-slate-900"
                   }`}
                 >
-                  {stats.mostFrequentProduct?.name || "Not enough data"}
+                  {stats.mostFrequentProduct?.name ||
+                    t("profile.notEnoughData")}
                 </p>
                 {stats.mostFrequentProduct?.count && (
                   <p
@@ -911,7 +925,8 @@ export default function Profile() {
                       isDark ? "text-emerald-300" : "text-emerald-700"
                     }`}
                   >
-                    {stats.mostFrequentProduct.count} items ordered
+                    {stats.mostFrequentProduct.count}{" "}
+                    {t("profile.itemsOrdered")}
                   </p>
                 )}
               </div>
@@ -937,14 +952,14 @@ export default function Profile() {
                   isDark ? "text-slate-400" : "text-slate-600"
                 }`}
               >
-                History
+                {t("profile.section.history")}
               </p>
               <h3
                 className={`text-lg font-semibold ${
                   isDark ? "text-slate-100" : "text-slate-900"
                 }`}
               >
-                All Orders
+                {t("profile.orders.allOrders")}
               </h3>
             </div>
             <div className="flex flex-wrap gap-2 text-sm">
@@ -964,7 +979,7 @@ export default function Profile() {
                   onChange={(e) =>
                     setFilters((f) => ({ ...f, search: e.target.value }))
                   }
-                  placeholder="Search by Order ID"
+                  placeholder={t("profile.filters.searchPlaceholder")}
                   className={`bg-transparent outline-none placeholder:text-slate-400 ${
                     isDark ? "text-slate-100" : "text-slate-900"
                   }`}
@@ -981,12 +996,18 @@ export default function Profile() {
                     : "bg-slate-100/50 border-slate-200 text-slate-900"
                 }`}
               >
-                <option value="">All Status</option>
-                <option value="pending">Pending</option>
-                <option value="processing">Processing</option>
-                <option value="shipped">Shipped</option>
-                <option value="delivered">Delivered</option>
-                <option value="cancelled">Cancelled</option>
+                <option value="">{t("profile.filters.allStatus")}</option>
+                <option value="pending">{t("profile.status.pending")}</option>
+                <option value="processing">
+                  {t("profile.status.processing")}
+                </option>
+                <option value="shipped">{t("profile.status.shipped")}</option>
+                <option value="delivered">
+                  {t("profile.status.delivered")}
+                </option>
+                <option value="cancelled">
+                  {t("profile.status.cancelled")}
+                </option>
               </select>
               <div
                 className={`flex items-center gap-2 rounded-xl px-3 py-2 border ${
@@ -1010,7 +1031,7 @@ export default function Profile() {
                   }`}
                 />
                 <span className={isDark ? "text-slate-500" : "text-slate-500"}>
-                  to
+                  {t("profile.filters.to")}
                 </span>
                 <input
                   type="date"
@@ -1027,7 +1048,7 @@ export default function Profile() {
                 onClick={() => fetchOrders(1)}
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white"
               >
-                <Filter size={16} /> Apply
+                <Filter size={16} /> {t("profile.filters.apply")}
               </button>
             </div>
           </div>
@@ -1046,10 +1067,18 @@ export default function Profile() {
                 }`}
               >
                 <tr>
-                  <th className="px-4 py-3 text-left">Order ID</th>
-                  <th className="px-4 py-3 text-left">Date</th>
-                  <th className="px-4 py-3 text-left">Total</th>
-                  <th className="px-4 py-3 text-left">Status</th>
+                  <th className="px-4 py-3 text-left">
+                    {t("profile.table.orderId")}
+                  </th>
+                  <th className="px-4 py-3 text-left">
+                    {t("profile.table.date")}
+                  </th>
+                  <th className="px-4 py-3 text-left">
+                    {t("profile.table.total")}
+                  </th>
+                  <th className="px-4 py-3 text-left">
+                    {t("profile.table.status")}
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -1100,7 +1129,9 @@ export default function Profile() {
                       }`}
                       colSpan={4}
                     >
-                      {loadingOrders ? "Loading..." : "No orders found"}
+                      {loadingOrders
+                        ? t("profile.loading")
+                        : t("profile.orders.noOrders")}
                     </td>
                   </tr>
                 )}
@@ -1114,7 +1145,8 @@ export default function Profile() {
             }`}
           >
             <div>
-              Page {meta.page} of {meta.pages}
+              {t("profile.pagination.page")} {meta.page}{" "}
+              {t("profile.pagination.of")} {meta.pages}
             </div>
             <div className="flex gap-2">
               <button
@@ -1122,14 +1154,14 @@ export default function Profile() {
                 onClick={() => fetchOrders(meta.page - 1)}
                 className="px-3 py-2 rounded-lg bg-white/5 border border-white/10 disabled:opacity-40"
               >
-                Prev
+                {t("profile.pagination.prev")}
               </button>
               <button
                 disabled={meta.page >= meta.pages}
                 onClick={() => fetchOrders(meta.page + 1)}
                 className="px-3 py-2 rounded-lg bg-white/5 border border-white/10 disabled:opacity-40"
               >
-                Next
+                {t("profile.pagination.next")}
               </button>
             </div>
           </div>
@@ -1141,7 +1173,9 @@ export default function Profile() {
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 px-4">
           <div className="bg-slate-900 border border-white/5 rounded-3xl p-6 w-full max-w-2xl shadow-2xl">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold">Edit Profile</h3>
+              <h3 className="text-lg font-semibold">
+                {t("profile.modal.title")}
+              </h3>
               <button
                 onClick={() => setShowEdit(false)}
                 className="text-slate-400"
@@ -1152,41 +1186,47 @@ export default function Profile() {
 
             <div className="grid md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <label className="text-sm text-slate-300">Full Name</label>
+                <label className="text-sm text-slate-300">
+                  {t("profile.form.fullName")}
+                </label>
                 <input
                   className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-slate-100"
                   value={editForm.name}
                   onChange={(e) =>
                     setEditForm((f) => ({ ...f, name: e.target.value }))
                   }
-                  placeholder="Name"
+                  placeholder={t("profile.form.namePlaceholder")}
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-sm text-slate-300">Phone</label>
+                <label className="text-sm text-slate-300">
+                  {t("profile.form.phone")}
+                </label>
                 <input
                   className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-slate-100"
                   value={editForm.phone}
                   onChange={(e) =>
                     setEditForm((f) => ({ ...f, phone: e.target.value }))
                   }
-                  placeholder="Phone"
+                  placeholder={t("profile.form.phonePlaceholder")}
                 />
               </div>
               <div className="space-y-2 md:col-span-2">
-                <label className="text-sm text-slate-300">Address</label>
+                <label className="text-sm text-slate-300">
+                  {t("profile.form.address")}
+                </label>
                 <input
                   className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-slate-100"
                   value={editForm.address}
                   onChange={(e) =>
                     setEditForm((f) => ({ ...f, address: e.target.value }))
                   }
-                  placeholder="Address"
+                  placeholder={t("profile.form.addressPlaceholder")}
                 />
               </div>
               <div className="space-y-2 md:col-span-2">
                 <label className="text-sm text-slate-300">
-                  Shipping Address
+                  {t("profile.form.shippingAddress")}
                 </label>
                 <input
                   className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-slate-100"
@@ -1197,11 +1237,13 @@ export default function Profile() {
                       shippingAddress: e.target.value,
                     }))
                   }
-                  placeholder="Shipping address"
+                  placeholder={t("profile.form.shippingPlaceholder")}
                 />
               </div>
               <div className="space-y-2 md:col-span-2">
-                <label className="text-sm text-slate-300">Bio</label>
+                <label className="text-sm text-slate-300">
+                  {t("profile.form.bio")}
+                </label>
                 <textarea
                   rows={3}
                   className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-slate-100"
@@ -1209,11 +1251,13 @@ export default function Profile() {
                   onChange={(e) =>
                     setEditForm((f) => ({ ...f, bio: e.target.value }))
                   }
-                  placeholder="Short bio"
+                  placeholder={t("profile.form.bioPlaceholder")}
                 />
               </div>
               <div className="space-y-2 md:col-span-2">
-                <label className="text-sm text-slate-300">Profile Photo</label>
+                <label className="text-sm text-slate-300">
+                  {t("profile.form.profilePhoto")}
+                </label>
                 <div className="flex items-center gap-3">
                   <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 overflow-hidden flex items-center justify-center">
                     {editForm.photoURL ? (
@@ -1240,14 +1284,16 @@ export default function Profile() {
                 onClick={() => setShowEdit(false)}
                 className="px-4 py-2 rounded-xl border border-white/10 text-slate-200"
               >
-                Cancel
+                {t("profile.modal.cancel")}
               </button>
               <button
                 onClick={handleProfileSave}
                 disabled={savingProfile}
                 className="px-5 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white disabled:opacity-60"
               >
-                {savingProfile ? "Saving..." : "Save"}
+                {savingProfile
+                  ? t("profile.modal.saving")
+                  : t("profile.modal.save")}
               </button>
             </div>
           </div>
