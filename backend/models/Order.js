@@ -35,6 +35,29 @@ const OrderSchema = new mongoose.Schema(
     },
     items: [OrderItemSchema],
     paymentMethod: { type: String, enum: ["cod", "online"], default: "cod" },
+    onlinePaymentDetails: {
+      provider: {
+        type: String,
+        enum: ["bkash", "nagad", "rocket", "upay"],
+        required: false,
+      },
+      providerName: { type: String, required: false },
+      providerNumber: { type: String, required: false },
+      transactionId: { type: String, required: false },
+      senderNumber: { type: String, required: false },
+      paymentStatus: {
+        type: String,
+        enum: ["pending", "verified", "rejected"],
+        default: "pending",
+      },
+      submittedAt: { type: Date, required: false },
+      verifiedAt: { type: Date, required: false },
+      verifiedBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: false,
+      },
+    },
     totals: {
       subtotal: { type: Number, default: 0 },
       shipping: { type: Number, default: 0 },
