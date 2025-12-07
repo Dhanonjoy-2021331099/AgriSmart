@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAppSettings } from "../Contexts/AppSettingsContext";
 import PaymentReceipt from "../components/PaymentReceipt";
+import { generateCODOrderPDF } from "../components/CODOrderPDF";
 
 const formatCurrency = (value) =>
   Number(value || 0).toLocaleString("en-US", { minimumFractionDigits: 0 });
@@ -229,6 +230,14 @@ export default function OrderSuccess() {
               className="px-6 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition transform hover:scale-105"
             >
               📄 View Payment Receipt
+            </button>
+          )}
+          {order.paymentMethod === "cod" && (
+            <button
+              onClick={() => generateCODOrderPDF(order)}
+              className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition transform hover:scale-105"
+            >
+              📥 Download Order Confirmation
             </button>
           )}
           <Link
