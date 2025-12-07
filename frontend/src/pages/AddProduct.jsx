@@ -215,7 +215,7 @@ export default function AddProductPage() {
               {[
                 { label: 'পণ্যের নাম', name: 'name', type: 'text', placeholder: 'উদাহরণ: সুনামগঞ্জ ধান' },
                 { label: 'ছবির লিংক (URL)', name: 'image', type: 'url', placeholder: 'https://example.com/rice.png' },
-                { label: 'মূল্য (USD)', name: 'price', type: 'number', placeholder: 'উদাহরণ: 1200' },
+                { label: 'মূল্য (TK)', name: 'price', type: 'number', placeholder: 'উদাহরণ: 1200' },
                 { label: 'উৎপত্তি দেশ', name: 'origin', type: 'text', placeholder: 'উদাহরণ: বাংলাদেশ' },
                 { label: 'রেটিং (১-৫)', name: 'rating', type: 'number', step: '0.1', min: '0', max: '5', placeholder: '৪.৮' },
                 { label: 'উপলব্ধ পরিমাণ (টন)', name: 'quantity', type: 'number', placeholder: 'উদাহরণ: 25' },
@@ -361,7 +361,7 @@ export default function AddProductPage() {
               <div style={{ padding: '16px', borderRadius: '16px', background: isDark ? '#065f46' : '#f0fdf4' }}>
                 <p style={{ margin: 0, color: isDark ? '#6ee7b7' : '#16a34a', fontSize: '13px', letterSpacing: '0.08em' }}>মূল্য</p>
                 <h3 style={{ margin: '8px 0 0', color: textColor }}>
-                  {formData.price ? `$${formData.price}` : '—'}
+                  {formData.price ? `৳${formData.price}` : '—'}
                 </h3>
               </div>
               <div style={{ padding: '16px', borderRadius: '16px', background: isDark ? '#1e1b4b' : '#eef2ff' }}>
@@ -450,7 +450,7 @@ export default function AddProductPage() {
                     <p style={{ margin: 0, color: textMuted }}>{product.origin}</p>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', gap: '12px', flexWrap: 'wrap', color: textSecondary, fontWeight: 600 }}>
-                    <span>${product.price}</span>
+                    <span>৳{product.price}</span>
                     <span>{product.rating} ⭐</span>
                     <span>{product.quantity} টন</span>
                   </div>
