@@ -351,6 +351,110 @@ export const translations = {
       "Start by composting all available farm waste. Allocate 10-15% of your field for green manure rotation. Apply compost 1-2 weeks before sowing at 5-10 tons per hectare. Use bio-fertilizers according to package directions. Over 2-3 seasons, soil health improves dramatically, reducing need for external inputs.",
     "organic-inputs.proTip":
       "Composting farm waste not only reduces expenses but also solves waste management challenges.",
+
+    // Service Detail Translation Keys
+    "service.organic-farming.title": "Organic Farming",
+    "service.organic-farming.short":
+      "Sustainable methods for healthy crops and soil",
+    "service.organic-farming.overview": "Our Commitment to Natural Agriculture",
+    "service.organic-farming.para1":
+      "We believe in the power of nature and sustainable farming practices. Our organic farming approach eliminates the use of synthetic fertilizers and chemical pesticides, focusing instead on building healthy soil ecosystems that naturally support crop growth.",
+    "service.organic-farming.para2":
+      "By utilizing organic manure, compost, and natural pest management techniques, we ensure that every harvest is not only healthy for consumption but also beneficial for the long-term fertility of the land. Our methods have been refined over years of experience and continuous learning.",
+    "service.organic-farming.para3":
+      "We work closely with certified agronomists who monitor soil health through regular testing and analysis. This data-driven approach allows us to optimize crop yields while maintaining the highest environmental standards.",
+    "service.organic-farming.para4":
+      "Every farm that partners with us receives comprehensive support including training on organic methods, certification assistance, and access to our network of sustainable farming resources.",
+    "service.organic-farming.benefits.title": "Key Benefits",
+    "service.organic-farming.benefit1":
+      "Increased soil fertility and microbial diversity",
+    "service.organic-farming.benefit2": "Higher nutritional value in crops",
+    "service.organic-farming.benefit3": "Reduced input costs over time",
+    "service.organic-farming.benefit4":
+      "Premium market prices for organic products",
+    "service.organic-farming.benefit5":
+      "Environmental conservation and climate resilience",
+    "service.organic-farming.benefit6": "Better long-term farm sustainability",
+
+    "service.fresh-produce.title": "Fresh Produce",
+    "service.fresh-produce.short":
+      "Farm-fresh vegetables and fruits delivered to you",
+    "service.fresh-produce.overview": "From Our Farm to Your Table",
+    "service.fresh-produce.para1":
+      "Experience the unmatched freshness of produce picked from our farms and delivered to your doorstep within hours. We eliminate middlemen and unnecessary supply chain delays, ensuring that you receive vegetables and fruits at their peak nutritional value.",
+    "service.fresh-produce.para2":
+      "Our carefully curated selection includes seasonal vegetables, leafy greens, tropical fruits, and specialty items that are grown using sustainable methods. Every item is hand-picked by our trained agricultural staff who understand quality standards.",
+    "service.fresh-produce.para3":
+      "We maintain strict hygiene standards and use food-safe handling practices throughout the harvest, sorting, and delivery process. Our cold chain management ensures that produce stays fresh and crisp until it reaches your kitchen.",
+    "service.fresh-produce.para4":
+      "With our flexible ordering system, you can customize your weekly produce box based on your family's needs and preferences. We also offer special occasion orders and bulk purchases for restaurants and institutions.",
+    "service.fresh-produce.benefits.title": "Why Choose Our Produce",
+    "service.fresh-produce.benefit1":
+      "Harvested at peak ripeness for maximum flavor and nutrition",
+    "service.fresh-produce.benefit2":
+      "Delivered same-day or next-morning within city limits",
+    "service.fresh-produce.benefit3":
+      "No pesticide residues - tested for safety",
+    "service.fresh-produce.benefit4":
+      "Competitive pricing compared to retail markets",
+    "service.fresh-produce.benefit5":
+      "Flexible ordering and customizable weekly boxes",
+    "service.fresh-produce.benefit6": "Traceable farm-to-consumer transparency",
+
+    "service.livestock-care.title": "Livestock Care",
+    "service.livestock-care.short": "Humane and modern care for livestock",
+    "service.livestock-care.overview": "Modern Farming with Ethical Practices",
+    "service.livestock-care.para1":
+      "Our livestock management philosophy centers on the wellbeing of animals and sustainable production practices. We maintain spacious open-pen environments that allow animals to express natural behaviors while remaining under professional care and supervision.",
+    "service.livestock-care.para2":
+      "All animals in our care receive comprehensive health monitoring, including regular veterinary check-ups, vaccination programs, and disease prevention protocols. We prioritize preventive health measures to minimize the need for medications and antibiotics.",
+    "service.livestock-care.para3":
+      "Nutrition is carefully planned by our expert nutritionists to ensure optimal growth and health. We use high-quality, locally-sourced feed combined with natural supplements. Water quality is continuously monitored for purity and safety.",
+    "service.livestock-care.para4":
+      "We offer consultation services to farmers looking to improve their livestock management practices, including breeding advice, feed formulation, facility design, and productivity optimization while maintaining humane standards.",
+    "service.livestock-care.benefits.title": "Our Livestock Benefits",
+    "service.livestock-care.benefit1":
+      "Reduced disease incidence through preventive care",
+    "service.livestock-care.benefit2":
+      "Improved productivity and milk/meat quality",
+    "service.livestock-care.benefit3":
+      "Lower mortality rates and better animal welfare",
+    "service.livestock-care.benefit4":
+      "Access to expert veterinary and nutritional guidance",
+    "service.livestock-care.benefit5":
+      "Natural growth without growth hormones or antibiotics",
+    "service.livestock-care.benefit6":
+      "Premium market rates for ethically-raised products",
+
+    "service.agriculture-consultation.title": "Agriculture Consultation",
+    "service.agriculture-consultation.short":
+      "Expert advice to improve yield and reduce waste",
+    "service.agriculture-consultation.overview":
+      "Expert Guidance for Modern Farming",
+    "service.agriculture-consultation.para1":
+      "Our team of experienced agronomists and agricultural engineers provides comprehensive consulting services to help you maximize yields, reduce costs, and adopt sustainable practices. We begin with a detailed assessment of your current farming operations.",
+    "service.agriculture-consultation.para2":
+      "Our consultation covers critical areas including soil testing and analysis, optimal crop selection for your region, irrigation system design and management, integrated pest management strategies, and climate-resilient farming techniques.",
+    "service.agriculture-consultation.para3":
+      "We provide customized recommendations based on your specific soil conditions, climate zone, available resources, and market opportunities. Our consultants work with you over multiple growing seasons to ensure recommendations are successfully implemented.",
+    "service.agriculture-consultation.para4":
+      "Beyond initial consulting, we offer ongoing support including regular field visits, troubleshooting assistance, training sessions for your farm team, and connections to suppliers, markets, and financing options.",
+    "service.agriculture-consultation.benefits.title":
+      "Consultation Services Include",
+    "service.agriculture-consultation.benefit1":
+      "Comprehensive soil testing and analysis",
+    "service.agriculture-consultation.benefit2":
+      "Crop selection and rotation planning",
+    "service.agriculture-consultation.benefit3":
+      "Irrigation and water management optimization",
+    "service.agriculture-consultation.benefit4":
+      "Pest management and disease control strategies",
+    "service.agriculture-consultation.benefit5":
+      "Climate adaptation and risk management",
+    "service.agriculture-consultation.benefit6":
+      "Business planning and market access support",
+
+    "back.to.services": "Back to Services",
   },
   bangla: {
     "Agri Smart": "Agri Smart",

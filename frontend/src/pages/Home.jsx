@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useAppSettings } from "../Contexts/AppSettingsContext";
+import { useCart } from "../Contexts/CartContext";
 
 export default function Home() {
   const { getText, theme } = useAppSettings();
+  const { addToCart } = useCart();
+  const navigate = useNavigate();
   const t = (bn, en) => getText(bn, en);
   const [selectedService, setSelectedService] = useState(null);
 
@@ -171,26 +174,54 @@ export default function Home() {
     },
   ];
 
+  // Slug map for services navigation
+  const serviceSlugs = [
+    "organic-farming",
+    "fresh-produce",
+    "livestock-care",
+    "agriculture-consultation",
+  ];
+
   const products = [
     {
-      name: t("জৈব টমেটো", "Organic Tomatoes"),
-      price: "৳120/kg",
-      img: "https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?auto=format&fit=crop&w=800&q=60",
+      _id: "featured-1",
+      name: "Organic Tomatoes",
+      nameBn: "জৈব টমেটো",
+      price: 120,
+      unit: "kg",
+      image:
+        "https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?auto=format&fit=crop&w=800&q=60",
+      category: "Vegetables",
     },
     {
-      name: t("সবুজ মটরশুটি", "Green Beans"),
-      price: "৳90/kg",
-      img: "https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?auto=format&fit=crop&w=800&q=60",
+      _id: "featured-2",
+      name: "Green Beans",
+      nameBn: "সবুজ মটরশুটি",
+      price: 90,
+      unit: "kg",
+      image:
+        "https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?auto=format&fit=crop&w=800&q=60",
+      category: "Vegetables",
     },
     {
-      name: t("তাজা লেটুস", "Fresh Lettuce"),
-      price: "৳60/pcs",
-      img: "https://images.unsplash.com/photo-1622205313162-be1d5712a43f?auto=format&fit=crop&w=800&q=60",
+      _id: "featured-3",
+      name: "Fresh Lettuce",
+      nameBn: "তাজা লেটুস",
+      price: 60,
+      unit: "pcs",
+      image:
+        "https://images.unsplash.com/photo-1622205313162-be1d5712a43f?auto=format&fit=crop&w=800&q=60",
+      category: "Vegetables",
     },
     {
-      name: t("জৈব ডিম", "Organic Eggs"),
-      price: "৳180/doz",
-      img: "https://images.unsplash.com/photo-1582722872445-44dc5f7e3c8f?auto=format&fit=crop&w=800&q=60",
+      _id: "featured-4",
+      name: "Organic Eggs",
+      nameBn: "জৈব ডিম",
+      price: 180,
+      unit: "doz",
+      image:
+        "https://images.unsplash.com/photo-1582722872445-44dc5f7e3c8f?auto=format&fit=crop&w=800&q=60",
+      category: "Dairy & Eggs",
     },
   ];
 
@@ -591,7 +622,7 @@ export default function Home() {
                 {s.desc}
               </p>
               <button
-                onClick={() => setSelectedService(s)}
+                onClick={() => navigate(`/services/${serviceSlugs[idx]}`)}
                 style={{
                   color: isDark ? "#4ade80" : "#15803d",
                   fontWeight: "500",
@@ -801,9 +832,15 @@ export default function Home() {
               }}
             >
               <img
-                src={p.img}
-                alt={p.name}
-                style={{ width: "100%", height: "160px", objectFit: "cover" }}
+                src={p.image}
+                alt={t(p.nameBn, p.name)}
+                style={{
+                  width: "100%",
+                  height: "160px",
+                  objectFit: "cover",
+                  cursor: "pointer",
+                }}
+                onClick={() => navigate(`/products/${p._id}`)}
               />
               <div style={{ padding: "16px" }}>
                 <h4
@@ -813,19 +850,36 @@ export default function Home() {
                     color: textColor,
                   }}
                 >
-                  {p.name}
+                  {t(p.nameBn, p.name)}
                 </h4>
-                <p style={{ color: textSecondary, marginBottom: "16px" }}>
-                  {p.price}
+                <p
+                  style={{
+                    color: textSecondary,
+                    marginBottom: "16px",
+                    fontSize: "18px",
+                    fontWeight: "600",
+                  }}
+                >
+                  ৳{p.price}/{p.unit}
                 </p>
                 <div
                   style={{
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "space-between",
+                    gap: "8px",
                   }}
                 >
                   <button
+                    onClick={() => {
+                      addToCart(p);
+                      toast.success(
+                        t(
+                          `${p.nameBn} কার্টে যুক্ত হয়েছে`,
+                          `${p.name} added to cart`
+                        )
+                      );
+                    }}
                     style={{
                       padding: "8px 16px",
                       background: "#15803d",
@@ -835,20 +889,38 @@ export default function Home() {
                       fontSize: "14px",
                       fontWeight: "600",
                       cursor: "pointer",
+                      transition: "all 0.3s",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.target.style.background = "#166534";
+                      e.target.style.transform = "translateY(-2px)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.background = "#15803d";
+                      e.target.style.transform = "translateY(0)";
                     }}
                   >
                     {t("কার্টে যোগ করুন", "Add to cart")}
                   </button>
                   <button
+                    onClick={() => navigate(`/products/${p._id}`)}
                     style={{
                       fontSize: "14px",
                       color: "#6b7280",
                       background: "none",
                       border: "none",
                       cursor: "pointer",
+                      fontWeight: "600",
+                      transition: "all 0.3s",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.target.style.color = "#15803d";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.color = "#6b7280";
                     }}
                   >
-                    {t("বিস্তারিত", "Details")}
+                    {t("বিস্তারিত", "Details")} →
                   </button>
                 </div>
               </div>
@@ -955,6 +1027,9 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Newsletter CTA Section */}
+      <NewsletterSection t={t} onReviewSubmit={addReview} />
+
       {/* Features Section */}
       <section
         style={{
@@ -1033,9 +1108,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      {/* Newsletter CTA Section */}
-      <NewsletterSection t={t} onReviewSubmit={addReview} />
 
       {/* Story Modal */}
       {showStoryModal && (
@@ -1210,108 +1282,777 @@ function NewsletterSection({ t, onReviewSubmit }) {
       id="contact"
       style={{
         width: "100%",
-        margin: "64px 0 120px",
-        padding: "0 24px",
+        margin: "64px 0 0",
+        padding: "80px 24px 120px",
         boxSizing: "border-box",
+        background:
+          "linear-gradient(135deg, #e0f2fe 0%, #dbeafe 50%, #fef3c7 100%)",
+        position: "relative",
       }}
     >
       <div
         style={{
-          background: "#15803d",
-          color: "white",
-          borderRadius: "16px",
-          padding: "48px 32px",
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gap: "48px",
-          boxShadow: "0 8px 32px rgba(21, 128, 61, 0.25)",
-          alignItems: "start",
+          maxWidth: "1200px",
+          margin: "0 auto",
+          textAlign: "center",
         }}
       >
-        {/* Left Column: Newsletter Subscription */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
-          <div>
-            <h3
-              style={{
-                fontSize: "28px",
-                fontWeight: "700",
-                marginBottom: "12px",
-                color: "white",
-                letterSpacing: "-0.5px",
-                margin: 0,
-              }}
-            >
-              {t("তাজা পণ্য সরবরাহ পান", "Get fresh produce delivered")}
-            </h3>
-            <p
-              style={{
-                color: "rgba(255, 255, 255, 0.95)",
-                fontSize: "16px",
-                lineHeight: "1.6",
-                margin: 0,
-              }}
-            >
-              {t(
-                "সাপ্তাহিক বক্স বা কাস্টম অর্ডারের জন্য সাইন আপ করুন।",
-                "Sign up for weekly boxes or custom orders."
-              )}
-            </p>
-          </div>
+        {/* Section Title */}
+        <h2
+          style={{
+            fontSize: "clamp(2rem, 5vw, 3rem)",
+            fontWeight: "800",
+            color: "#0f766e",
+            marginBottom: "16px",
+            letterSpacing: "-0.5px",
+          }}
+        >
+          {t("যোগাযোগ করুন", "Contact Us")}
+        </h2>
+        <p
+          style={{
+            fontSize: "clamp(1rem, 2vw, 1.25rem)",
+            color: "#0e7490",
+            marginBottom: "48px",
+            maxWidth: "600px",
+            margin: "0 auto 48px",
+          }}
+        >
+          {t(
+            "আমরা আপনার সেবায় সর্বদা প্রস্তুত। যেকোনো সময় যোগাযোগ করুন।",
+            "We're here to help. Reach out to us anytime."
+          )}
+        </p>
 
-          <form
-            onSubmit={handleSubscribe}
+        {/* Contact Info Cards */}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+            gap: "24px",
+            marginBottom: "48px",
+          }}
+        >
+          {/* Phone Card */}
+          <div
             style={{
-              display: "flex",
-              gap: "12px",
-              flexDirection: "column",
-              alignItems: "stretch",
+              background: "rgba(255, 255, 255, 0.9)",
+              backdropFilter: "blur(10px)",
+              borderRadius: "16px",
+              padding: "32px 24px",
+              border: "1px solid rgba(15, 118, 110, 0.2)",
+              transition: "all 0.3s ease",
+              boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = "translateY(-8px)";
+              e.currentTarget.style.boxShadow =
+                "0 8px 24px rgba(0, 0, 0, 0.12)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = "translateY(0)";
+              e.currentTarget.style.boxShadow =
+                "0 4px 12px rgba(0, 0, 0, 0.08)";
             }}
           >
             <div
               style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "8px",
+                fontSize: "48px",
+                marginBottom: "16px",
               }}
             >
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                  setError("");
+              📞
+            </div>
+            <h3
+              style={{
+                fontSize: "18px",
+                fontWeight: "600",
+                color: "#0f766e",
+                marginBottom: "8px",
+              }}
+            >
+              {t("ফোন", "Phone")}
+            </h3>
+            <p
+              style={{
+                fontSize: "16px",
+                color: "#0e7490",
+                margin: 0,
+                fontWeight: "500",
+              }}
+            >
+              +880 1234-567890
+            </p>
+          </div>
+
+          {/* Email Card */}
+          <div
+            style={{
+              background: "rgba(255, 255, 255, 0.9)",
+              backdropFilter: "blur(10px)",
+              borderRadius: "16px",
+              padding: "32px 24px",
+              border: "1px solid rgba(15, 118, 110, 0.2)",
+              transition: "all 0.3s ease",
+              boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = "translateY(-8px)";
+              e.currentTarget.style.boxShadow =
+                "0 8px 24px rgba(0, 0, 0, 0.12)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = "translateY(0)";
+              e.currentTarget.style.boxShadow =
+                "0 4px 12px rgba(0, 0, 0, 0.08)";
+            }}
+          >
+            <div
+              style={{
+                fontSize: "48px",
+                marginBottom: "16px",
+              }}
+            >
+              📧
+            </div>
+            <h3
+              style={{
+                fontSize: "18px",
+                fontWeight: "600",
+                color: "#0f766e",
+                marginBottom: "8px",
+              }}
+            >
+              {t("ইমেইল", "Email")}
+            </h3>
+            <p
+              style={{
+                fontSize: "16px",
+                color: "#0e7490",
+                margin: 0,
+                fontWeight: "500",
+              }}
+            >
+              contact@agrismart.com
+            </p>
+          </div>
+
+          {/* WhatsApp Card */}
+          <div
+            style={{
+              background: "rgba(255, 255, 255, 0.9)",
+              backdropFilter: "blur(10px)",
+              borderRadius: "16px",
+              padding: "32px 24px",
+              border: "1px solid rgba(15, 118, 110, 0.2)",
+              transition: "all 0.3s ease",
+              boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = "translateY(-8px)";
+              e.currentTarget.style.boxShadow =
+                "0 8px 24px rgba(0, 0, 0, 0.12)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = "translateY(0)";
+              e.currentTarget.style.boxShadow =
+                "0 4px 12px rgba(0, 0, 0, 0.08)";
+            }}
+          >
+            <div
+              style={{
+                fontSize: "48px",
+                marginBottom: "16px",
+              }}
+            >
+              💬
+            </div>
+            <h3
+              style={{
+                fontSize: "18px",
+                fontWeight: "600",
+                color: "#0f766e",
+                marginBottom: "8px",
+              }}
+            >
+              {t("হোয়াটসঅ্যাপ", "WhatsApp")}
+            </h3>
+            <p
+              style={{
+                fontSize: "16px",
+                color: "#0e7490",
+                margin: 0,
+                fontWeight: "500",
+              }}
+            >
+              +880 1234-567890
+            </p>
+          </div>
+
+          {/* Location Card */}
+          <div
+            style={{
+              background: "rgba(255, 255, 255, 0.9)",
+              backdropFilter: "blur(10px)",
+              borderRadius: "16px",
+              padding: "32px 24px",
+              border: "1px solid rgba(15, 118, 110, 0.2)",
+              transition: "all 0.3s ease",
+              boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = "translateY(-8px)";
+              e.currentTarget.style.boxShadow =
+                "0 8px 24px rgba(0, 0, 0, 0.12)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = "translateY(0)";
+              e.currentTarget.style.boxShadow =
+                "0 4px 12px rgba(0, 0, 0, 0.08)";
+            }}
+          >
+            <div
+              style={{
+                fontSize: "48px",
+                marginBottom: "16px",
+              }}
+            >
+              📍
+            </div>
+            <h3
+              style={{
+                fontSize: "18px",
+                fontWeight: "600",
+                color: "#0f766e",
+                marginBottom: "8px",
+              }}
+            >
+              {t("ঠিকানা", "Location")}
+            </h3>
+            <p
+              style={{
+                fontSize: "16px",
+                color: "#0e7490",
+                margin: 0,
+                fontWeight: "500",
+              }}
+            >
+              {t("সিলেট, বাংলাদেশ", "Sylhet, Bangladesh")}
+            </p>
+          </div>
+        </div>
+
+        {/* Action Buttons */}
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: "16px",
+            justifyContent: "center",
+            marginTop: "48px",
+          }}
+        >
+          {/* Call Now Button */}
+          <a
+            href="tel:+8801234567890"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "10px",
+              padding: "16px 32px",
+              background: "#22c55e",
+              color: "white",
+              textDecoration: "none",
+              borderRadius: "12px",
+              fontWeight: "700",
+              fontSize: "16px",
+              transition: "all 0.3s ease",
+              boxShadow: "0 4px 20px rgba(34, 197, 94, 0.3)",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = "translateY(-4px)";
+              e.currentTarget.style.boxShadow =
+                "0 8px 30px rgba(34, 197, 94, 0.4)";
+              e.currentTarget.style.background = "#16a34a";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = "translateY(0)";
+              e.currentTarget.style.boxShadow =
+                "0 4px 20px rgba(34, 197, 94, 0.3)";
+              e.currentTarget.style.background = "#22c55e";
+            }}
+          >
+            <span style={{ fontSize: "20px" }}>📞</span>
+            {t("এখনই কল করুন", "Call Now")}
+          </a>
+
+          {/* WhatsApp Message Button */}
+          <a
+            href="https://wa.me/8801234567890"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "10px",
+              padding: "16px 32px",
+              background: "#22c55e",
+              color: "white",
+              textDecoration: "none",
+              borderRadius: "12px",
+              fontWeight: "700",
+              fontSize: "16px",
+              transition: "all 0.3s ease",
+              boxShadow: "0 4px 20px rgba(34, 197, 94, 0.3)",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = "translateY(-4px)";
+              e.currentTarget.style.boxShadow =
+                "0 8px 30px rgba(34, 197, 94, 0.4)";
+              e.currentTarget.style.background = "#16a34a";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = "translateY(0)";
+              e.currentTarget.style.boxShadow =
+                "0 4px 20px rgba(34, 197, 94, 0.3)";
+              e.currentTarget.style.background = "#22c55e";
+            }}
+          >
+            <span style={{ fontSize: "20px" }}>💬</span>
+            {t("হোয়াটসঅ্যাপ মেসেজ", "WhatsApp Message")}
+          </a>
+
+          {/* Send Email Button */}
+          <a
+            href="mailto:contact@agrismart.com"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "10px",
+              padding: "16px 32px",
+              background: "white",
+              color: "#0f766e",
+              textDecoration: "none",
+              borderRadius: "12px",
+              fontWeight: "700",
+              fontSize: "16px",
+              transition: "all 0.3s ease",
+              boxShadow: "0 4px 20px rgba(0, 0, 0, 0.1)",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = "translateY(-4px)";
+              e.currentTarget.style.boxShadow =
+                "0 8px 30px rgba(0, 0, 0, 0.15)";
+              e.currentTarget.style.background = "#f0fdfa";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = "translateY(0)";
+              e.currentTarget.style.boxShadow = "0 4px 20px rgba(0, 0, 0, 0.1)";
+              e.currentTarget.style.background = "white";
+            }}
+          >
+            <span style={{ fontSize: "20px" }}>📧</span>
+            {t("ইমেইল পাঠান", "Send Email")}
+          </a>
+        </div>
+      </div>
+
+      {/* Newsletter and Review Section */}
+      <div
+        style={{
+          maxWidth: "1200px",
+          margin: "80px auto 0",
+          background: "rgba(255, 255, 255, 0.7)",
+          backdropFilter: "blur(10px)",
+          borderRadius: "20px",
+          padding: "48px 32px",
+          border: "1px solid rgba(15, 118, 110, 0.2)",
+          boxShadow: "0 8px 32px rgba(0, 0, 0, 0.08)",
+        }}
+      >
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+            gap: "48px",
+          }}
+        >
+          {/* Left Column: Newsletter Subscription */}
+          <div
+            style={{ display: "flex", flexDirection: "column", gap: "24px" }}
+          >
+            <div>
+              <h3
+                style={{
+                  fontSize: "28px",
+                  fontWeight: "700",
+                  marginBottom: "12px",
+                  color: "#0f766e",
+                  letterSpacing: "-0.5px",
+                  margin: 0,
                 }}
-                onBlur={() => {
-                  if (email && !isValidEmail(email)) {
-                    setError(t("বৈধ ইমেইল প্রয়োজন", "Valid email required"));
+              >
+                {t("তাজা পণ্য সরবরাহ পান", "Get fresh produce delivered")}
+              </h3>
+              <p
+                style={{
+                  color: "#0e7490",
+                  fontSize: "16px",
+                  lineHeight: "1.6",
+                  margin: 0,
+                }}
+              >
+                {t(
+                  "সাপ্তাহিক বক্স বা কাস্টম অর্ডারের জন্য সাইন আপ করুন।",
+                  "Sign up for weekly boxes or custom orders."
+                )}
+              </p>
+            </div>
+
+            <form
+              onSubmit={handleSubscribe}
+              style={{
+                display: "flex",
+                gap: "12px",
+                flexDirection: "column",
+                alignItems: "stretch",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "8px",
+                }}
+              >
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    setError("");
+                  }}
+                  onBlur={() => {
+                    if (email && !isValidEmail(email)) {
+                      setError(t("বৈধ ইমেইল প্রয়োজন", "Valid email required"));
+                    }
+                  }}
+                  placeholder={t("আপনার ইমেইল", "Your email")}
+                  disabled={isLoading}
+                  style={{
+                    padding: "14px 16px",
+                    borderRadius: "10px",
+                    border: error
+                      ? "2px solid #ef4444"
+                      : "2px solid rgba(255, 255, 255, 0.3)",
+                    fontSize: "15px",
+                    fontWeight: "500",
+                    background: "rgba(255, 255, 255, 0.95)",
+                    color: "#1f2937",
+                    boxSizing: "border-box",
+                    outline: "none",
+                    transition: "all 0.3s ease",
+                    boxShadow: error
+                      ? "0 0 0 3px rgba(239, 68, 68, 0.1)"
+                      : "0 2px 8px rgba(0, 0, 0, 0.1)",
+                  }}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = "rgba(255, 255, 255, 0.6)";
+                    e.target.style.boxShadow =
+                      "0 0 0 3px rgba(255, 255, 255, 0.15)";
+                  }}
+                />
+                {error && (
+                  <span
+                    style={{
+                      fontSize: "13px",
+                      color: "#fecaca",
+                      fontWeight: "500",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "4px",
+                    }}
+                  >
+                    ⚠️ {error}
+                  </span>
+                )}
+              </div>
+
+              <button
+                type="submit"
+                disabled={isLoading || !email}
+                style={{
+                  padding: "14px 28px",
+                  background: "white",
+                  color: "#15803d",
+                  border: "none",
+                  borderRadius: "10px",
+                  fontWeight: "700",
+                  cursor: isLoading || !email ? "not-allowed" : "pointer",
+                  fontSize: "15px",
+                  transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                  boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
+                  opacity: isLoading || !email ? 0.7 : 1,
+                  transform: isLoading ? "scale(0.98)" : "scale(1)",
+                  whiteSpace: "nowrap",
+                }}
+                onMouseEnter={(e) => {
+                  if (!isLoading && email) {
+                    e.target.style.transform = "translateY(-2px)";
+                    e.target.style.boxShadow = "0 8px 20px rgba(0, 0, 0, 0.2)";
+                    e.target.style.background = "#f5f5f5";
                   }
                 }}
-                placeholder={t("আপনার ইমেইল", "Your email")}
-                disabled={isLoading}
+                onMouseLeave={(e) => {
+                  e.target.style.transform = "translateY(0)";
+                  e.target.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.15)";
+                  e.target.style.background = "white";
+                }}
+              >
+                {isLoading
+                  ? t("সাবস্ক্রাইব করছে...", "Subscribing...")
+                  : t("সাবস্ক্রাইব করুন", "Subscribe")}
+              </button>
+            </form>
+
+            <p
+              style={{
+                fontSize: "12px",
+                color: "#64748b",
+                margin: 0,
+              }}
+            >
+              {t(
+                "আমরা আপনার ইমেইল স্প্যাম করব না।",
+                "We'll never spam your email."
+              )}
+            </p>
+          </div>
+
+          {/* Right Column: Customer Review Form */}
+          <div
+            style={{ display: "flex", flexDirection: "column", gap: "24px" }}
+          >
+            <div>
+              <h3
                 style={{
-                  padding: "14px 16px",
-                  borderRadius: "10px",
-                  border: error
-                    ? "2px solid #ef4444"
-                    : "2px solid rgba(255, 255, 255, 0.3)",
-                  fontSize: "15px",
-                  fontWeight: "500",
-                  background: "rgba(255, 255, 255, 0.95)",
-                  color: "#1f2937",
-                  boxSizing: "border-box",
-                  outline: "none",
-                  transition: "all 0.3s ease",
-                  boxShadow: error
-                    ? "0 0 0 3px rgba(239, 68, 68, 0.1)"
-                    : "0 2px 8px rgba(0, 0, 0, 0.1)",
+                  fontSize: "28px",
+                  fontWeight: "700",
+                  marginBottom: "12px",
+                  color: "#0f766e",
+                  letterSpacing: "-0.5px",
+                  margin: 0,
                 }}
-                onFocus={(e) => {
-                  e.target.style.borderColor = "rgba(255, 255, 255, 0.6)";
-                  e.target.style.boxShadow =
-                    "0 0 0 3px rgba(255, 255, 255, 0.15)";
+              >
+                {t("আপনার মতামত শেয়ার করুন", "Share Your Review")}
+              </h3>
+              <p
+                style={{
+                  color: "#0e7490",
+                  fontSize: "16px",
+                  lineHeight: "1.6",
+                  margin: 0,
                 }}
-              />
-              {error && (
+              >
+                {t(
+                  "আপনার অভিজ্ঞতা এবং প্রতিক্রিয়া আমাদের জানান।",
+                  "Tell us about your experience and feedback."
+                )}
+              </p>
+            </div>
+
+            <form
+              onSubmit={handleSubmitReview}
+              style={{
+                display: "flex",
+                gap: "16px",
+                flexDirection: "column",
+                alignItems: "stretch",
+              }}
+            >
+              {/* Name Field */}
+              <div
+                style={{ display: "flex", flexDirection: "column", gap: "8px" }}
+              >
+                <input
+                  type="text"
+                  value={reviewName}
+                  onChange={(e) => {
+                    setReviewName(e.target.value);
+                    setReviewError("");
+                  }}
+                  placeholder={t("আপনার নাম", "Your name")}
+                  disabled={reviewLoading}
+                  style={{
+                    padding: "14px 16px",
+                    borderRadius: "10px",
+                    border:
+                      reviewError && !reviewName
+                        ? "2px solid #ef4444"
+                        : "2px solid rgba(255, 255, 255, 0.3)",
+                    fontSize: "15px",
+                    fontWeight: "500",
+                    background: "rgba(255, 255, 255, 0.95)",
+                    color: "#1f2937",
+                    boxSizing: "border-box",
+                    outline: "none",
+                    transition: "all 0.3s ease",
+                    boxShadow:
+                      reviewError && !reviewName
+                        ? "0 0 0 3px rgba(239, 68, 68, 0.1)"
+                        : "0 2px 8px rgba(0, 0, 0, 0.1)",
+                  }}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = "rgba(255, 255, 255, 0.6)";
+                    e.target.style.boxShadow =
+                      "0 0 0 3px rgba(255, 255, 255, 0.15)";
+                  }}
+                />
+              </div>
+
+              {/* Email Field */}
+              <div
+                style={{ display: "flex", flexDirection: "column", gap: "8px" }}
+              >
+                <input
+                  type="email"
+                  value={reviewEmail}
+                  onChange={(e) => {
+                    setReviewEmail(e.target.value);
+                    setReviewError("");
+                  }}
+                  placeholder={t("আপনার ইমেইল", "Your email")}
+                  disabled={reviewLoading}
+                  style={{
+                    padding: "14px 16px",
+                    borderRadius: "10px",
+                    border:
+                      reviewError && !reviewEmail
+                        ? "2px solid #ef4444"
+                        : "2px solid rgba(255, 255, 255, 0.3)",
+                    fontSize: "15px",
+                    fontWeight: "500",
+                    background: "rgba(255, 255, 255, 0.95)",
+                    color: "#1f2937",
+                    boxSizing: "border-box",
+                    outline: "none",
+                    transition: "all 0.3s ease",
+                    boxShadow:
+                      reviewError && !reviewEmail
+                        ? "0 0 0 3px rgba(239, 68, 68, 0.1)"
+                        : "0 2px 8px rgba(0, 0, 0, 0.1)",
+                  }}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = "rgba(255, 255, 255, 0.6)";
+                    e.target.style.boxShadow =
+                      "0 0 0 3px rgba(255, 255, 255, 0.15)";
+                  }}
+                />
+              </div>
+
+              {/* Rating Field */}
+              <div
+                style={{ display: "flex", flexDirection: "column", gap: "8px" }}
+              >
+                <label
+                  style={{
+                    fontSize: "14px",
+                    fontWeight: "600",
+                    color: "#0f766e",
+                  }}
+                >
+                  {t("রেটিং (1-5 তারকা)", "Rating (1-5 stars)")}
+                </label>
+                <div
+                  style={{
+                    display: "flex",
+                    gap: "8px",
+                    alignItems: "center",
+                  }}
+                >
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <button
+                      key={star}
+                      type="button"
+                      onClick={() => {
+                        setReviewRating(star);
+                        setReviewError("");
+                      }}
+                      disabled={reviewLoading}
+                      style={{
+                        fontSize: "24px",
+                        background: "none",
+                        border: "none",
+                        cursor: reviewLoading ? "not-allowed" : "pointer",
+                        padding: "4px",
+                        transition: "transform 0.2s ease",
+                        opacity: star <= reviewRating ? 1 : 0.4,
+                        transform:
+                          star <= reviewRating ? "scale(1.1)" : "scale(1)",
+                      }}
+                      onMouseEnter={(e) => {
+                        if (!reviewLoading) {
+                          e.target.style.transform = "scale(1.2)";
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        e.target.style.transform =
+                          star <= reviewRating ? "scale(1.1)" : "scale(1)";
+                      }}
+                    >
+                      ⭐
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Review Message Field */}
+              <div
+                style={{ display: "flex", flexDirection: "column", gap: "8px" }}
+              >
+                <textarea
+                  value={reviewMessage}
+                  onChange={(e) => {
+                    setReviewMessage(e.target.value);
+                    setReviewError("");
+                  }}
+                  placeholder={t(
+                    "আপনার অভিজ্ঞতা শেয়ার করুন...",
+                    "Share your experience..."
+                  )}
+                  disabled={reviewLoading}
+                  rows="4"
+                  style={{
+                    padding: "14px 16px",
+                    borderRadius: "10px",
+                    border:
+                      reviewError && !reviewMessage
+                        ? "2px solid #ef4444"
+                        : "2px solid rgba(255, 255, 255, 0.3)",
+                    fontSize: "15px",
+                    fontWeight: "500",
+                    background: "rgba(255, 255, 255, 0.95)",
+                    color: "#1f2937",
+                    boxSizing: "border-box",
+                    outline: "none",
+                    transition: "all 0.3s ease",
+                    resize: "vertical",
+                    fontFamily: "inherit",
+                    boxShadow:
+                      reviewError && !reviewMessage
+                        ? "0 0 0 3px rgba(239, 68, 68, 0.1)"
+                        : "0 2px 8px rgba(0, 0, 0, 0.1)",
+                  }}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = "rgba(255, 255, 255, 0.6)";
+                    e.target.style.boxShadow =
+                      "0 0 0 3px rgba(255, 255, 255, 0.15)";
+                  }}
+                />
+              </div>
+
+              {/* Error Message */}
+              {reviewError && (
                 <span
                   style={{
                     fontSize: "13px",
@@ -1322,371 +2063,80 @@ function NewsletterSection({ t, onReviewSubmit }) {
                     gap: "4px",
                   }}
                 >
-                  ⚠️ {error}
+                  ⚠️ {reviewError}
                 </span>
               )}
-            </div>
 
-            <button
-              type="submit"
-              disabled={isLoading || !email}
-              style={{
-                padding: "14px 28px",
-                background: "white",
-                color: "#15803d",
-                border: "none",
-                borderRadius: "10px",
-                fontWeight: "700",
-                cursor: isLoading || !email ? "not-allowed" : "pointer",
-                fontSize: "15px",
-                transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-                boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
-                opacity: isLoading || !email ? 0.7 : 1,
-                transform: isLoading ? "scale(0.98)" : "scale(1)",
-                whiteSpace: "nowrap",
-              }}
-              onMouseEnter={(e) => {
-                if (!isLoading && email) {
-                  e.target.style.transform = "translateY(-2px)";
-                  e.target.style.boxShadow = "0 8px 20px rgba(0, 0, 0, 0.2)";
-                  e.target.style.background = "#f5f5f5";
+              {/* Submit Button */}
+              <button
+                type="submit"
+                disabled={
+                  reviewLoading || !reviewName || !reviewEmail || !reviewMessage
                 }
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.transform = "translateY(0)";
-                e.target.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.15)";
-                e.target.style.background = "white";
-              }}
-            >
-              {isLoading
-                ? t("সাবস্ক্রাইব করছে...", "Subscribing...")
-                : t("সাবস্ক্রাইব করুন", "Subscribe")}
-            </button>
-          </form>
+                style={{
+                  padding: "14px 28px",
+                  background: "white",
+                  color: "#15803d",
+                  border: "none",
+                  borderRadius: "10px",
+                  fontWeight: "700",
+                  cursor:
+                    reviewLoading ||
+                    !reviewName ||
+                    !reviewEmail ||
+                    !reviewMessage
+                      ? "not-allowed"
+                      : "pointer",
+                  fontSize: "15px",
+                  transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                  boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
+                  opacity:
+                    reviewLoading ||
+                    !reviewName ||
+                    !reviewEmail ||
+                    !reviewMessage
+                      ? 0.7
+                      : 1,
+                  transform: reviewLoading ? "scale(0.98)" : "scale(1)",
+                  whiteSpace: "nowrap",
+                }}
+                onMouseEnter={(e) => {
+                  if (
+                    !reviewLoading &&
+                    reviewName &&
+                    reviewEmail &&
+                    reviewMessage
+                  ) {
+                    e.target.style.transform = "translateY(-2px)";
+                    e.target.style.boxShadow = "0 8px 20px rgba(0, 0, 0, 0.2)";
+                    e.target.style.background = "#f5f5f5";
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.transform = "translateY(0)";
+                  e.target.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.15)";
+                  e.target.style.background = "white";
+                }}
+              >
+                {reviewLoading
+                  ? t("জমা দিচ্ছে...", "Submitting...")
+                  : t("পর্যালোচনা জমা দিন", "Submit Review")}
+              </button>
+            </form>
 
-          <p
-            style={{
-              fontSize: "12px",
-              color: "rgba(255, 255, 255, 0.75)",
-              margin: 0,
-            }}
-          >
-            {t(
-              "আমরা আপনার ইমেইল স্প্যাম করব না।",
-              "We'll never spam your email."
-            )}
-          </p>
-        </div>
-
-        {/* Vertical Divider */}
-        <div
-          style={{
-            display: "none",
-            width: "1px",
-            background: "rgba(255, 255, 255, 0.2)",
-            minHeight: "300px",
-          }}
-        />
-
-        {/* Right Column: Customer Review Form */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
-          <div>
-            <h3
-              style={{
-                fontSize: "28px",
-                fontWeight: "700",
-                marginBottom: "12px",
-                color: "white",
-                letterSpacing: "-0.5px",
-                margin: 0,
-              }}
-            >
-              {t("আপনার মতামত শেয়ার করুন", "Share Your Review")}
-            </h3>
             <p
               style={{
-                color: "rgba(255, 255, 255, 0.95)",
-                fontSize: "16px",
-                lineHeight: "1.6",
+                fontSize: "12px",
+                color: "#64748b",
                 margin: 0,
               }}
             >
               {t(
-                "আপনার অভিজ্ঞতা এবং প্রতিক্রিয়া আমাদের জানান।",
-                "Tell us about your experience and feedback."
+                "আপনার প্রতিক্রিয়া আমাদের উন্নতিতে সাহায্য করে।",
+                "Your feedback helps us improve."
               )}
             </p>
           </div>
-
-          <form
-            onSubmit={handleSubmitReview}
-            style={{
-              display: "flex",
-              gap: "16px",
-              flexDirection: "column",
-              alignItems: "stretch",
-            }}
-          >
-            {/* Name Field */}
-            <div
-              style={{ display: "flex", flexDirection: "column", gap: "8px" }}
-            >
-              <input
-                type="text"
-                value={reviewName}
-                onChange={(e) => {
-                  setReviewName(e.target.value);
-                  setReviewError("");
-                }}
-                placeholder={t("আপনার নাম", "Your name")}
-                disabled={reviewLoading}
-                style={{
-                  padding: "14px 16px",
-                  borderRadius: "10px",
-                  border:
-                    reviewError && !reviewName
-                      ? "2px solid #ef4444"
-                      : "2px solid rgba(255, 255, 255, 0.3)",
-                  fontSize: "15px",
-                  fontWeight: "500",
-                  background: "rgba(255, 255, 255, 0.95)",
-                  color: "#1f2937",
-                  boxSizing: "border-box",
-                  outline: "none",
-                  transition: "all 0.3s ease",
-                  boxShadow:
-                    reviewError && !reviewName
-                      ? "0 0 0 3px rgba(239, 68, 68, 0.1)"
-                      : "0 2px 8px rgba(0, 0, 0, 0.1)",
-                }}
-                onFocus={(e) => {
-                  e.target.style.borderColor = "rgba(255, 255, 255, 0.6)";
-                  e.target.style.boxShadow =
-                    "0 0 0 3px rgba(255, 255, 255, 0.15)";
-                }}
-              />
-            </div>
-
-            {/* Email Field */}
-            <div
-              style={{ display: "flex", flexDirection: "column", gap: "8px" }}
-            >
-              <input
-                type="email"
-                value={reviewEmail}
-                onChange={(e) => {
-                  setReviewEmail(e.target.value);
-                  setReviewError("");
-                }}
-                placeholder={t("আপনার ইমেইল", "Your email")}
-                disabled={reviewLoading}
-                style={{
-                  padding: "14px 16px",
-                  borderRadius: "10px",
-                  border:
-                    reviewError && !reviewEmail
-                      ? "2px solid #ef4444"
-                      : "2px solid rgba(255, 255, 255, 0.3)",
-                  fontSize: "15px",
-                  fontWeight: "500",
-                  background: "rgba(255, 255, 255, 0.95)",
-                  color: "#1f2937",
-                  boxSizing: "border-box",
-                  outline: "none",
-                  transition: "all 0.3s ease",
-                  boxShadow:
-                    reviewError && !reviewEmail
-                      ? "0 0 0 3px rgba(239, 68, 68, 0.1)"
-                      : "0 2px 8px rgba(0, 0, 0, 0.1)",
-                }}
-                onFocus={(e) => {
-                  e.target.style.borderColor = "rgba(255, 255, 255, 0.6)";
-                  e.target.style.boxShadow =
-                    "0 0 0 3px rgba(255, 255, 255, 0.15)";
-                }}
-              />
-            </div>
-
-            {/* Rating Field */}
-            <div
-              style={{ display: "flex", flexDirection: "column", gap: "8px" }}
-            >
-              <label
-                style={{
-                  fontSize: "14px",
-                  fontWeight: "600",
-                  color: "rgba(255, 255, 255, 0.95)",
-                }}
-              >
-                {t("রেটিং (1-5 তারকা)", "Rating (1-5 stars)")}
-              </label>
-              <div
-                style={{
-                  display: "flex",
-                  gap: "8px",
-                  alignItems: "center",
-                }}
-              >
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <button
-                    key={star}
-                    type="button"
-                    onClick={() => {
-                      setReviewRating(star);
-                      setReviewError("");
-                    }}
-                    disabled={reviewLoading}
-                    style={{
-                      fontSize: "24px",
-                      background: "none",
-                      border: "none",
-                      cursor: reviewLoading ? "not-allowed" : "pointer",
-                      padding: "4px",
-                      transition: "transform 0.2s ease",
-                      opacity: star <= reviewRating ? 1 : 0.4,
-                      transform:
-                        star <= reviewRating ? "scale(1.1)" : "scale(1)",
-                    }}
-                    onMouseEnter={(e) => {
-                      if (!reviewLoading) {
-                        e.target.style.transform = "scale(1.2)";
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      e.target.style.transform =
-                        star <= reviewRating ? "scale(1.1)" : "scale(1)";
-                    }}
-                  >
-                    ⭐
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Review Message Field */}
-            <div
-              style={{ display: "flex", flexDirection: "column", gap: "8px" }}
-            >
-              <textarea
-                value={reviewMessage}
-                onChange={(e) => {
-                  setReviewMessage(e.target.value);
-                  setReviewError("");
-                }}
-                placeholder={t(
-                  "আপনার অভিজ্ঞতা শেয়ার করুন...",
-                  "Share your experience..."
-                )}
-                disabled={reviewLoading}
-                rows="4"
-                style={{
-                  padding: "14px 16px",
-                  borderRadius: "10px",
-                  border:
-                    reviewError && !reviewMessage
-                      ? "2px solid #ef4444"
-                      : "2px solid rgba(255, 255, 255, 0.3)",
-                  fontSize: "15px",
-                  fontWeight: "500",
-                  background: "rgba(255, 255, 255, 0.95)",
-                  color: "#1f2937",
-                  boxSizing: "border-box",
-                  outline: "none",
-                  transition: "all 0.3s ease",
-                  resize: "vertical",
-                  fontFamily: "inherit",
-                  boxShadow:
-                    reviewError && !reviewMessage
-                      ? "0 0 0 3px rgba(239, 68, 68, 0.1)"
-                      : "0 2px 8px rgba(0, 0, 0, 0.1)",
-                }}
-                onFocus={(e) => {
-                  e.target.style.borderColor = "rgba(255, 255, 255, 0.6)";
-                  e.target.style.boxShadow =
-                    "0 0 0 3px rgba(255, 255, 255, 0.15)";
-                }}
-              />
-            </div>
-
-            {/* Error Message */}
-            {reviewError && (
-              <span
-                style={{
-                  fontSize: "13px",
-                  color: "#fecaca",
-                  fontWeight: "500",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "4px",
-                }}
-              >
-                ⚠️ {reviewError}
-              </span>
-            )}
-
-            {/* Submit Button */}
-            <button
-              type="submit"
-              disabled={
-                reviewLoading || !reviewName || !reviewEmail || !reviewMessage
-              }
-              style={{
-                padding: "14px 28px",
-                background: "white",
-                color: "#15803d",
-                border: "none",
-                borderRadius: "10px",
-                fontWeight: "700",
-                cursor:
-                  reviewLoading || !reviewName || !reviewEmail || !reviewMessage
-                    ? "not-allowed"
-                    : "pointer",
-                fontSize: "15px",
-                transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-                boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
-                opacity:
-                  reviewLoading || !reviewName || !reviewEmail || !reviewMessage
-                    ? 0.7
-                    : 1,
-                transform: reviewLoading ? "scale(0.98)" : "scale(1)",
-                whiteSpace: "nowrap",
-              }}
-              onMouseEnter={(e) => {
-                if (
-                  !reviewLoading &&
-                  reviewName &&
-                  reviewEmail &&
-                  reviewMessage
-                ) {
-                  e.target.style.transform = "translateY(-2px)";
-                  e.target.style.boxShadow = "0 8px 20px rgba(0, 0, 0, 0.2)";
-                  e.target.style.background = "#f5f5f5";
-                }
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.transform = "translateY(0)";
-                e.target.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.15)";
-                e.target.style.background = "white";
-              }}
-            >
-              {reviewLoading
-                ? t("জমা দিচ্ছে...", "Submitting...")
-                : t("পর্যালোচনা জমা দিন", "Submit Review")}
-            </button>
-          </form>
-
-          <p
-            style={{
-              fontSize: "12px",
-              color: "rgba(255, 255, 255, 0.75)",
-              margin: 0,
-            }}
-          >
-            {t(
-              "আপনার প্রতিক্রিয়া আমাদের উন্নতিতে সাহায্য করে।",
-              "Your feedback helps us improve."
-            )}
-          </p>
         </div>
       </div>
     </section>

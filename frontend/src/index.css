@@ -3,6 +3,11 @@
 @import "tailwindcss";
 @plugin "daisyui";
 
+/* Smooth scrolling for the entire document */
+html {
+  scroll-behavior: smooth;
+}
+
 :root {
   /* Footer Light Mode */
   --footer-bg: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);

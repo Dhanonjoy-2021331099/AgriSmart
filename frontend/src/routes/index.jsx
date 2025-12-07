@@ -2,6 +2,8 @@ import { createBrowserRouter } from "react-router-dom";
 import Home from "../pages/Home";
 import Advice from "../pages/Advice";
 import TipDetail from "../pages/TipDetail";
+import ServiceDetail from "../pages/ServiceDetail";
+import ProductDetail from "../pages/ProductDetail";
 import AIDetection from "../pages/AIDetection";
 import Products from "../pages/Products";
 import AddProduct from "../pages/AddProduct";
@@ -54,6 +56,14 @@ const router = createBrowserRouter([
         ),
       },
       {
+        path: "/services/:slug",
+        element: (
+          <ProtectedClient>
+            <ServiceDetail />
+          </ProtectedClient>
+        ),
+      },
+      {
         path: "/ai-detection",
         element: (
           <ProtectedClient>
@@ -66,6 +76,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedClient>
             <Products />
+          </ProtectedClient>
+        ),
+      },
+      {
+        path: "/products/:id",
+        element: (
+          <ProtectedClient>
+            <ProductDetail />
           </ProtectedClient>
         ),
       },
