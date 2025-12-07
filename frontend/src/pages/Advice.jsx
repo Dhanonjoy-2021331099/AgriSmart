@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Sprout,
@@ -16,40 +16,59 @@ import {
   Sparkles,
 } from "lucide-react";
 import { useAppSettings } from "../Contexts/AppSettingsContext";
+import { translations as i18n } from "../i18n/translations";
 
 export default function Advice() {
-  const { theme } = useAppSettings();
+  const { language, theme } = useAppSettings();
+  const langKey = language === "english" ? "english" : "bangla";
+  const t = useCallback((key) => i18n[langKey]?.[key] || key, [langKey]);
   const [selectedCrop, setSelectedCrop] = useState("");
   const [selectedSeason, setSelectedSeason] = useState("");
   const [advice, setAdvice] = useState(null);
 
   const isDark = theme === "dark";
 
-  const crops = ["ধান", "গম", "ভুট্টা", "আলু", "টমেটো", "বেগুন", "পেঁয়াজ"];
-  const seasons = ["রবি", "খরিফ", "জায়েদ"];
-
-  const quickFacts = [
-    {
-      icon: "🌱",
-      title: "মাটি পরীক্ষা",
-      content: "নিয়মিতভাবে মাটির pH এবং পুষ্টি উপাদান পরীক্ষা করুন",
-    },
-    {
-      icon: "⏰",
-      title: "সঠিক সময়",
-      content: "মৌসুম অনুযায়ী ফসল বপন করুন",
-    },
-    {
-      icon: "💧",
-      title: "পানির ব্যবস্থাপনা",
-      content: "প্রয়োজন অনুযায়ী সেচ দিন, অতিরিক্ত সেচ এড়িয়ে চলুন",
-    },
-    {
-      icon: "🌿",
-      title: "জৈব সার",
-      content: "জৈব সারের ব্যবহার বৃদ্ধি করুন",
-    },
+  const crops = [
+    { id: "rice", labelKey: "advice.crops.rice" },
+    { id: "wheat", labelKey: "advice.crops.wheat" },
+    { id: "maize", labelKey: "advice.crops.maize" },
+    { id: "potato", labelKey: "advice.crops.potato" },
+    { id: "tomato", labelKey: "advice.crops.tomato" },
+    { id: "eggplant", labelKey: "advice.crops.eggplant" },
+    { id: "onion", labelKey: "advice.crops.onion" },
   ];
+
+  const seasons = [
+    { id: "rabi", labelKey: "advice.seasons.rabi" },
+    { id: "kharif", labelKey: "advice.seasons.kharif" },
+    { id: "zaid", labelKey: "advice.seasons.zaid" },
+  ];
+
+  const quickFacts = useMemo(
+    () => [
+      {
+        icon: "🌱",
+        titleKey: "advice.quickInfo.soilTest.title",
+        descKey: "advice.quickInfo.soilTest.desc",
+      },
+      {
+        icon: "⏰",
+        titleKey: "advice.quickInfo.timing.title",
+        descKey: "advice.quickInfo.timing.desc",
+      },
+      {
+        icon: "💧",
+        titleKey: "advice.quickInfo.water.title",
+        descKey: "advice.quickInfo.water.desc",
+      },
+      {
+        icon: "🌿",
+        titleKey: "advice.quickInfo.organic.title",
+        descKey: "advice.quickInfo.organic.desc",
+      },
+    ],
+    []
+  );
 
   // Animation variants
   const containerVariants = {
@@ -86,150 +105,213 @@ export default function Advice() {
 
   // All existing crop and season data
   const cropGuides = {
-    ধান: {
-      soil: "দোঁআশ বা এঁটেল মাটি",
-      seedRate: "প্রতি বিঘায় ৮-১০ কেজি শোধিত বীজ ব্যবহার করুন",
-      spacing: "লাইন দূরত্ব ২০-২৫ সেমি ও গাছের দূরত্ব ১৫ সেমি",
-      irrigation: "মোটা করে ৫-৭ দিন অন্তর হালকা সেচ",
-      fertilizer:
-        "ইউরিয়া ৬০ কেজি, টিএসপি ৪০ কেজি, এমওপি ৩০ কেজি (প্রতি বিঘায়)",
-      pest: "পাতাঝরা/ব্লাস্ট রোগ",
-      pestTip:
-        "কপার-ভিত্তিক বা ট্রাইসাইক্লাজোল স্প্রে করুন এবং ক্ষেতে পানি জমে থাকতে দিন",
-      harvest: "ধান দুধ থেকে আঠা পর্যায়ে গেলে কাটাই শুরু করুন",
-      yield: "২২-২৫ মণ/বিঘা",
+    rice: {
+      soilKey: "advice.crops.rice.soil",
+      seedRateKey: "advice.crops.rice.seedRate",
+      spacingKey: "advice.crops.rice.spacing",
+      irrigationKey: "advice.crops.rice.irrigation",
+      fertilizerKey: "advice.crops.rice.fertilizer",
+      pestKey: "advice.crops.rice.pest",
+      pestTipKey: "advice.crops.rice.pestTip",
+      harvestKey: "advice.crops.rice.harvest",
+      yieldKey: "advice.crops.rice.yield",
     },
-    গম: {
-      soil: "অল্প দোঁআশ ও ভালো নিষ্কাশনযুক্ত মাটি",
-      seedRate: "প্রতি বিঘায় ২০-২২ কেজি বীজ",
-      spacing: "লাইন দূরত্ব ১৮ সেমি",
-      irrigation: "মাটির আর্দ্রতা অনুযায়ী ৮-১০ দিন অন্তর সেচ",
-      fertilizer: "সুষম ডিএপি ও এমওপি",
-      pest: "ঝিল্লি পোকা ও রস্ট",
-      pestTip: "রস্ট দেখা গেলে তাৎক্ষণিকভাবে টিল্ট স্প্রে করুন",
-      harvest: "শীষ হলুদ হয়ে আর্দ্রতা ২০% হলে কাটাই করুন",
-      yield: "১৮-২০ মণ/বিঘা",
+    wheat: {
+      soilKey: "advice.crops.wheat.soil",
+      seedRateKey: "advice.crops.wheat.seedRate",
+      spacingKey: "advice.crops.wheat.spacing",
+      irrigationKey: "advice.crops.wheat.irrigation",
+      fertilizerKey: "advice.crops.wheat.fertilizer",
+      pestKey: "advice.crops.wheat.pest",
+      pestTipKey: "advice.crops.wheat.pestTip",
+      harvestKey: "advice.crops.wheat.harvest",
+      yieldKey: "advice.crops.wheat.yield",
+    },
+    maize: {
+      soilKey: "advice.crops.maize.soil",
+      seedRateKey: "advice.crops.maize.seedRate",
+      spacingKey: "advice.crops.maize.spacing",
+      irrigationKey: "advice.crops.maize.irrigation",
+      fertilizerKey: "advice.crops.maize.fertilizer",
+      pestKey: "advice.crops.maize.pest",
+      pestTipKey: "advice.crops.maize.pestTip",
+      harvestKey: "advice.crops.maize.harvest",
+      yieldKey: "advice.crops.maize.yield",
+    },
+    potato: {
+      soilKey: "advice.crops.potato.soil",
+      seedRateKey: "advice.crops.potato.seedRate",
+      spacingKey: "advice.crops.potato.spacing",
+      irrigationKey: "advice.crops.potato.irrigation",
+      fertilizerKey: "advice.crops.potato.fertilizer",
+      pestKey: "advice.crops.potato.pest",
+      pestTipKey: "advice.crops.potato.pestTip",
+      harvestKey: "advice.crops.potato.harvest",
+      yieldKey: "advice.crops.potato.yield",
+    },
+    tomato: {
+      soilKey: "advice.crops.tomato.soil",
+      seedRateKey: "advice.crops.tomato.seedRate",
+      spacingKey: "advice.crops.tomato.spacing",
+      irrigationKey: "advice.crops.tomato.irrigation",
+      fertilizerKey: "advice.crops.tomato.fertilizer",
+      pestKey: "advice.crops.tomato.pest",
+      pestTipKey: "advice.crops.tomato.pestTip",
+      harvestKey: "advice.crops.tomato.harvest",
+      yieldKey: "advice.crops.tomato.yield",
+    },
+    eggplant: {
+      soilKey: "advice.crops.eggplant.soil",
+      seedRateKey: "advice.crops.eggplant.seedRate",
+      spacingKey: "advice.crops.eggplant.spacing",
+      irrigationKey: "advice.crops.eggplant.irrigation",
+      fertilizerKey: "advice.crops.eggplant.fertilizer",
+      pestKey: "advice.crops.eggplant.pest",
+      pestTipKey: "advice.crops.eggplant.pestTip",
+      harvestKey: "advice.crops.eggplant.harvest",
+      yieldKey: "advice.crops.eggplant.yield",
+    },
+    onion: {
+      soilKey: "advice.crops.onion.soil",
+      seedRateKey: "advice.crops.onion.seedRate",
+      spacingKey: "advice.crops.onion.spacing",
+      irrigationKey: "advice.crops.onion.irrigation",
+      fertilizerKey: "advice.crops.onion.fertilizer",
+      pestKey: "advice.crops.onion.pest",
+      pestTipKey: "advice.crops.onion.pestTip",
+      harvestKey: "advice.crops.onion.harvest",
+      yieldKey: "advice.crops.onion.yield",
     },
     default: {
-      soil: "ভাল নিষ্কাশন ও জৈব সমৃদ্ধ দোঁআশ",
-      seedRate: "উন্নত জাতের শোধিত বীজ ব্যবহার করুন",
-      spacing: "গাছের স্বাস্থ্য অনুযায়ী ২০ সেমি দূরত্ব",
-      irrigation: "প্রতি সপ্তাহে ২-৩ বার সেচ",
-      fertilizer: "নাইট্রোজেন, ফসফরাস ও পটাশের সুষম মিশ্রণ",
-      pest: "সাধারণ ছত্রাক/কীটপতঙ্গ",
-      pestTip: "পরিচ্ছন্ন মাঠ ও জৈব কীটনাশক ব্যবহার করুন",
-      harvest: "ফসলের ৮০% পরিপক্ব হলে কাটাই করুন",
-      yield: "উপযুক্ত পরিচর্যায় উচ্চ ফলন",
+      soilKey: "advice.crops.default.soil",
+      seedRateKey: "advice.crops.default.seedRate",
+      spacingKey: "advice.crops.default.spacing",
+      irrigationKey: "advice.crops.default.irrigation",
+      fertilizerKey: "advice.crops.default.fertilizer",
+      pestKey: "advice.crops.default.pest",
+      pestTipKey: "advice.crops.default.pestTip",
+      harvestKey: "advice.crops.default.harvest",
+      yieldKey: "advice.crops.default.yield",
     },
   };
 
   const seasonGuides = {
-    রবি: {
-      sowingWindow: "নভেম্বর - ডিসেম্বর",
-      summary:
-        "শীতল ও শুষ্ক আবহাওয়ায় রোগের চাপ কম থাকে, তাই সেচ ও তাপমাত্রা সামঞ্জস্য জরুরি।",
-      soilPrep: "মাটি শুকনো অবস্থায় চাষ দিয়ে প্রতিবার রোটাভেটর চালান।",
-      irrigationCycle: "৭ দিনে হালকা সেচ",
-      nutrition: "মাটির পরীক্ষার ভিত্তিতে প্রাথমিক ডোজ দিন",
-      proAdvice: "সকালের কুয়াশা শেষে কীট প্রতিরোধক স্প্রে কার্যকর।",
+    rabi: {
+      sowingWindowKey: "advice.seasons.rabi.window",
+      summaryKey: "advice.seasons.rabi.summary",
+      soilPrepKey: "advice.seasons.rabi.soilPrep",
+      irrigationCycleKey: "advice.seasons.rabi.irrigation",
+      nutritionKey: "advice.seasons.rabi.nutrition",
+      proAdviceKey: "advice.seasons.rabi.proAdvice",
     },
-    খরিফ: {
-      sowingWindow: "জুন - জুলাই",
-      summary:
-        "বর্ষায় অতিরিক্ত আর্দ্রতা থাকায় জল নিষ্কাশন ও রোগব্যবস্থাপনায় সতর্ক থাকুন।",
-      soilPrep: "জমি উঁচু করে নালা রাখুন যাতে পানি দ্রুত বের হয়।",
-      irrigationCycle: "প্রয়োজনে বৃষ্টির ফাঁকে সেচ",
-      nutrition: "জৈব পদার্থ ও জিপসাম প্রয়োগ করুন",
-      proAdvice: "ঘন বৃষ্টির পর সিস্টেমিক ফাঙ্গিসাইড প্রয়োগে রোগ কমে।",
+    kharif: {
+      sowingWindowKey: "advice.seasons.kharif.window",
+      summaryKey: "advice.seasons.kharif.summary",
+      soilPrepKey: "advice.seasons.kharif.soilPrep",
+      irrigationCycleKey: "advice.seasons.kharif.irrigation",
+      nutritionKey: "advice.seasons.kharif.nutrition",
+      proAdviceKey: "advice.seasons.kharif.proAdvice",
     },
-    জায়েদ: {
-      sowingWindow: "ফেব্রুয়ারি - মার্চ",
-      summary:
-        "উষ্ণ ও শুষ্ক হাওয়ায় বাষ্পীভবন বেশি, ড্রিপ বা স্প্রিঙ্কলার সেচ উপযোগী।",
-      soilPrep: "হালকা সেচ দিয়ে চাষ দিন ও মালচ ব্যবহার করুন।",
-      irrigationCycle: "৪-৫ দিনে সেচ",
-      nutrition: "ফোলিয়ার স্প্রে করে মাইক্রো নিউট্রিয়েন্ট দিন",
-      proAdvice: "গরম বাতাসে সকালে সেচ দিলে পানি সাশ্রয় হয়।",
+    zaid: {
+      sowingWindowKey: "advice.seasons.zaid.window",
+      summaryKey: "advice.seasons.zaid.summary",
+      soilPrepKey: "advice.seasons.zaid.soilPrep",
+      irrigationCycleKey: "advice.seasons.zaid.irrigation",
+      nutritionKey: "advice.seasons.zaid.nutrition",
+      proAdviceKey: "advice.seasons.zaid.proAdvice",
     },
     default: {
-      sowingWindow: "মৌসুম অনুযায়ী",
-      summary: "স্থানীয় কৃষি অফিসের সুপারিশ অনুসরণ করুন।",
-      soilPrep: "জৈব সার মিশিয়ে জমি ফাইন টিল্থে আনুন।",
-      irrigationCycle: "সপ্তাহে ২ বার",
-      nutrition: "সমন্বিত সারের ব্যবহার",
-      proAdvice: "নিয়মিত রোগবালাই পর্যবেক্ষণ করুন।",
+      sowingWindowKey: "advice.seasons.default.window",
+      summaryKey: "advice.seasons.default.summary",
+      soilPrepKey: "advice.seasons.default.soilPrep",
+      irrigationCycleKey: "advice.seasons.default.irrigation",
+      nutritionKey: "advice.seasons.default.nutrition",
+      proAdviceKey: "advice.seasons.default.proAdvice",
     },
   };
 
   const getAdvice = () => {
     if (!selectedCrop || !selectedSeason) {
-      alert("অনুগ্রহ করে ফসল এবং মৌসুম নির্বাচন করুন");
+      alert(t("advice.form.validation"));
       return;
     }
 
     const cropInfo = cropGuides[selectedCrop] || cropGuides.default;
     const seasonInfo = seasonGuides[selectedSeason] || seasonGuides.default;
+    const cropLabelKey = crops.find((c) => c.id === selectedCrop)?.labelKey;
+    const seasonLabelKey = seasons.find(
+      (s) => s.id === selectedSeason
+    )?.labelKey;
 
     const adviceData = {
-      crop: selectedCrop,
-      season: selectedSeason,
-      plantingTime: seasonInfo.sowingWindow,
-      summary: `${selectedSeason} মৌসুমে ${selectedCrop} চাষে ${seasonInfo.summary} ${cropInfo.soil}`,
+      cropLabelKey,
+      seasonLabelKey,
+      plantingTimeKey: seasonInfo.sowingWindowKey,
+      summaryParts: [seasonInfo.summaryKey, cropInfo.soilKey],
       quickFacts: [
-        { label: "বপন সময়", value: seasonInfo.sowingWindow },
         {
-          label: "সেচ রুটিন",
-          value: seasonInfo.irrigationCycle || cropInfo.irrigation,
+          labelKey: "advice.quickFacts.sowing",
+          valueKey: seasonInfo.sowingWindowKey,
         },
-        { label: "মাটির ধরন", value: cropInfo.soil },
-        { label: "লক্ষ্য ফলন", value: cropInfo.yield },
+        {
+          labelKey: "advice.quickFacts.irrigation",
+          valueKey: seasonInfo.irrigationCycleKey || cropInfo.irrigationKey,
+        },
+        { labelKey: "advice.quickFacts.soil", valueKey: cropInfo.soilKey },
+        { labelKey: "advice.quickFacts.yield", valueKey: cropInfo.yieldKey },
       ],
       blocks: [
         {
-          title: "বীজ বপন ও জমি প্রস্তুতি",
+          titleKey: "advice.blocks.prep.title",
           icon: "🌱",
-          badge: seasonInfo.sowingWindow,
-          items: [cropInfo.seedRate, seasonInfo.soilPrep, cropInfo.spacing],
+          badgeKey: seasonInfo.sowingWindowKey,
+          itemKeys: [
+            cropInfo.seedRateKey,
+            seasonInfo.soilPrepKey,
+            cropInfo.spacingKey,
+          ],
         },
         {
-          title: "সেচ ও পুষ্টি ব্যবস্থাপনা",
+          titleKey: "advice.blocks.irrigation.title",
           icon: "💧",
-          badge: seasonInfo.irrigationCycle || cropInfo.irrigation,
-          items: [
-            cropInfo.irrigation,
-            cropInfo.fertilizer,
-            seasonInfo.nutrition,
+          badgeKey: seasonInfo.irrigationCycleKey || cropInfo.irrigationKey,
+          itemKeys: [
+            cropInfo.irrigationKey,
+            cropInfo.fertilizerKey,
+            seasonInfo.nutritionKey,
           ],
         },
         {
-          title: "কীটপতঙ্গ ও রোগ নিয়ন্ত্রণ",
+          titleKey: "advice.blocks.pest.title",
           icon: "🛡️",
-          badge: cropInfo.pest,
-          items: [
-            `প্রধান রোগ: ${cropInfo.pest}`,
-            cropInfo.pestTip,
-            "সাপ্তাহিক পর্যবেক্ষণ করে আক্রান্ত পাতা সরান",
+          badgeKey: cropInfo.pestKey,
+          itemKeys: [
+            "advice.blocks.pest.primary",
+            cropInfo.pestTipKey,
+            "advice.blocks.pest.monitor",
           ],
+          badgeValueKey: cropInfo.pestKey,
+          primaryPestKey: cropInfo.pestKey,
         },
         {
-          title: "ফসল তোলা ও সংরক্ষণ",
+          titleKey: "advice.blocks.harvest.title",
           icon: "🧺",
-          badge: cropInfo.harvest,
-          items: [
-            cropInfo.harvest,
-            "কাটার পর ২-৩ দিন ছায়ায় শুকান",
-            "শুকনো ও বাতাস চলাচলকারী ঘরে সংরক্ষণ করুন",
+          badgeKey: cropInfo.harvestKey,
+          itemKeys: [
+            cropInfo.harvestKey,
+            "advice.blocks.harvest.dry",
+            "advice.blocks.harvest.store",
           ],
         },
       ],
       alerts: [
         {
-          title: "বিশেষ সতর্কতা",
-          content: cropInfo.pestTip,
+          titleKey: "advice.alerts.caution.title",
+          contentKey: cropInfo.pestTipKey,
         },
         {
-          title: "বিশেষজ্ঞের নোট",
-          content: seasonInfo.proAdvice,
+          titleKey: "advice.alerts.expert.title",
+          contentKey: seasonInfo.proAdviceKey,
         },
       ],
     };
@@ -269,19 +351,19 @@ export default function Advice() {
                 isDark ? "text-emerald-300" : "text-emerald-700"
               }`}
             >
-              বিশেষজ্ঞ পরামর্শ
+              {t("advice.tag")}
             </span>
           </div>
 
           <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 bg-clip-text text-transparent mb-4">
-            কৃষি পরামর্শ
+            {t("advice.title")}
           </h1>
           <p
             className={`text-xl max-w-2xl mx-auto ${
               isDark ? "text-slate-300" : "text-gray-600"
             }`}
           >
-            আপনার ফসলের জন্য বিশেষজ্ঞ পরামর্শ পান 🌾
+            {t("advice.subtitle")}
           </p>
         </motion.div>
 
@@ -308,7 +390,7 @@ export default function Advice() {
                   isDark ? "text-slate-100" : "text-gray-800"
                 }`}
               >
-                পরামর্শ চাইতে
+                {t("advice.form.title")}
               </h2>
             </div>
 
@@ -324,7 +406,7 @@ export default function Advice() {
                       isDark ? "text-emerald-400" : "text-emerald-600"
                     }`}
                   />
-                  ফসল নির্বাচন করুন
+                  {t("advice.form.selectCrop")}
                 </label>
                 <select
                   value={selectedCrop}
@@ -335,10 +417,12 @@ export default function Advice() {
                       : "bg-white border-gray-200 text-gray-800 focus:border-emerald-500 focus:ring-emerald-500/20 hover:border-emerald-300"
                   }`}
                 >
-                  <option value="">ফসল নির্বাচন করুন</option>
+                  <option value="">
+                    {t("advice.form.selectCrop.placeholder")}
+                  </option>
                   {crops.map((crop) => (
-                    <option key={crop} value={crop}>
-                      {crop}
+                    <option key={crop.id} value={crop.id}>
+                      {t(crop.labelKey)}
                     </option>
                   ))}
                 </select>
@@ -355,7 +439,7 @@ export default function Advice() {
                       isDark ? "text-teal-400" : "text-teal-600"
                     }`}
                   />
-                  মৌসুম নির্বাচন করুন
+                  {t("advice.form.selectSeason")}
                 </label>
                 <select
                   value={selectedSeason}
@@ -366,10 +450,12 @@ export default function Advice() {
                       : "bg-white border-gray-200 text-gray-800 focus:border-teal-500 focus:ring-teal-500/20 hover:border-teal-300"
                   }`}
                 >
-                  <option value="">মৌসুম নির্বাচন করুন</option>
+                  <option value="">
+                    {t("advice.form.selectSeason.placeholder")}
+                  </option>
                   {seasons.map((season) => (
-                    <option key={season} value={season}>
-                      {season}
+                    <option key={season.id} value={season.id}>
+                      {t(season.labelKey)}
                     </option>
                   ))}
                 </select>
@@ -382,7 +468,7 @@ export default function Advice() {
                 whileTap={{ scale: 0.98 }}
               >
                 <Lightbulb className="w-5 h-5 group-hover:rotate-12 transition-transform" />
-                পরামর্শ পান
+                {t("advice.form.submit")}
               </motion.button>
             </div>
           </motion.div>
@@ -406,7 +492,7 @@ export default function Advice() {
                   isDark ? "text-slate-100" : "text-gray-800"
                 }`}
               >
-                দ্রুত তথ্য
+                {t("advice.quickInfo.title")}
               </h2>
             </div>
 
@@ -432,14 +518,14 @@ export default function Advice() {
                           isDark ? "text-slate-100" : "text-gray-800"
                         }`}
                       >
-                        {fact.title}
+                        {t(fact.titleKey)}
                       </h3>
                       <p
                         className={`text-sm leading-relaxed ${
                           isDark ? "text-slate-300" : "text-gray-600"
                         }`}
                       >
-                        {fact.content}
+                        {t(fact.descKey)}
                       </p>
                     </div>
                   </div>
@@ -469,9 +555,11 @@ export default function Advice() {
                     <Package className="w-8 h-8" />
                   </div>
                   <div>
-                    <h2 className="text-4xl font-bold">{advice.crop}</h2>
+                    <h2 className="text-4xl font-bold">
+                      {t(advice.cropLabelKey)}
+                    </h2>
                     <p className="text-emerald-100 text-lg">
-                      পরামর্শ প্রতিবেদন
+                      {t("advice.report.title")}
                     </p>
                   </div>
                 </div>
@@ -481,20 +569,24 @@ export default function Advice() {
                     <div className="flex items-center gap-3 mb-2">
                       <Sun className="w-5 h-5" />
                       <span className="text-sm font-semibold uppercase tracking-wide">
-                        মৌসুম
+                        {t("advice.report.season")}
                       </span>
                     </div>
-                    <p className="text-2xl font-bold">{advice.season}</p>
+                    <p className="text-2xl font-bold">
+                      {t(advice.seasonLabelKey)}
+                    </p>
                   </div>
 
                   <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6">
                     <div className="flex items-center gap-3 mb-2">
                       <Calendar className="w-5 h-5" />
                       <span className="text-sm font-semibold uppercase tracking-wide">
-                        রোপণ সময়
+                        {t("advice.report.plantingTime")}
                       </span>
                     </div>
-                    <p className="text-2xl font-bold">{advice.plantingTime}</p>
+                    <p className="text-2xl font-bold">
+                      {t(advice.plantingTimeKey)}
+                    </p>
                   </div>
                 </div>
               </motion.div>
@@ -543,7 +635,7 @@ export default function Advice() {
                               isDark ? "text-slate-100" : "text-gray-800"
                             }`}
                           >
-                            {block.title}
+                            {t(block.titleKey)}
                           </h3>
                           <span
                             className={`inline-block mt-2 px-4 py-1 text-sm font-semibold rounded-full ${
@@ -552,13 +644,13 @@ export default function Advice() {
                                 : "bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700"
                             }`}
                           >
-                            {block.badge}
+                            {t(block.badgeKey)}
                           </span>
                         </div>
                       </div>
 
                       <ul className="space-y-3">
-                        {block.items.map((item, i) => (
+                        {block.itemKeys.map((itemKey, i) => (
                           <motion.li
                             key={i}
                             className={`flex items-start gap-3 ${
@@ -569,7 +661,13 @@ export default function Advice() {
                             transition={{ delay: index * 0.1 + i * 0.05 }}
                           >
                             <CheckCircle className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" />
-                            <span className="leading-relaxed">{item}</span>
+                            <span className="leading-relaxed">
+                              {itemKey === "advice.blocks.pest.primary"
+                                ? `${t("advice.blocks.pest.primary")}: ${t(
+                                    block.primaryPestKey || ""
+                                  )}`
+                                : t(itemKey)}
+                            </span>
                           </motion.li>
                         ))}
                       </ul>
@@ -603,14 +701,14 @@ export default function Advice() {
                             isDark ? "text-amber-200" : "text-amber-900"
                           }`}
                         >
-                          {alert.title}
+                          {t(alert.titleKey)}
                         </h3>
                         <p
                           className={`leading-relaxed ${
                             isDark ? "text-amber-100" : "text-amber-800"
                           }`}
                         >
-                          {alert.content}
+                          {t(alert.contentKey)}
                         </p>
                       </div>
                     </div>
@@ -633,11 +731,10 @@ export default function Advice() {
               <Cloud className="w-16 h-16 text-emerald-600" />
             </div>
             <h3 className="text-2xl font-bold text-gray-800 mb-3">
-              ফসল এবং মৌসুম নির্বাচন করুন
+              {t("advice.empty.title")}
             </h3>
             <p className="text-gray-600 max-w-md mx-auto">
-              আপনার ফসলের জন্য বিস্তারিত কৃষি পরামর্শ পেতে উপরের ফর্মটি পূরণ
-              করুন
+              {t("advice.empty.subtitle")}
             </p>
           </motion.div>
         )}
