@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <linearGradient id="leafGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#10B981;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#059669;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background circle (optional, remove if you want transparent) -->
+  <circle cx="128" cy="128" r="120" fill="#F0FDF4" opacity="0.3"/>
+  
+  <!-- Main leaf shape -->
+  <path d="M 128 60 
+           Q 160 80, 170 110
+           Q 175 130, 170 150
+           Q 165 170, 150 185
+           Q 135 195, 128 200
+           Q 121 195, 106 185
+           Q 91 170, 86 150
+           Q 81 130, 86 110
+           Q 96 80, 128 60 Z" 
+        fill="url(#leafGradient)" 
+        stroke="#047857" 
+        stroke-width="2"/>
+  
+  <!-- Leaf vein -->
+  <path d="M 128 65 L 128 195" 
+        stroke="#047857" 
+        stroke-width="3" 
+        stroke-linecap="round"/>
+  
+  <!-- Left side veins -->
+  <path d="M 128 90 Q 110 100, 105 115" 
+        stroke="#047857" 
+        stroke-width="2" 
+        stroke-linecap="round" 
+        fill="none" 
+        opacity="0.6"/>
+  <path d="M 128 120 Q 110 130, 105 145" 
+        stroke="#047857" 
+        stroke-width="2" 
+        stroke-linecap="round" 
+        fill="none" 
+        opacity="0.6"/>
+  <path d="M 128 150 Q 115 160, 110 170" 
+        stroke="#047857" 
+        stroke-width="2" 
+        stroke-linecap="round" 
+        fill="none" 
+        opacity="0.6"/>
+  
+  <!-- Right side veins -->
+  <path d="M 128 90 Q 146 100, 151 115" 
+        stroke="#047857" 
+        stroke-width="2" 
+        stroke-linecap="round" 
+        fill="none" 
+        opacity="0.6"/>
+  <path d="M 128 120 Q 146 130, 151 145" 
+        stroke="#047857" 
+        stroke-width="2" 
+        stroke-linecap="round" 
+        fill="none" 
+        opacity="0.6"/>
+  <path d="M 128 150 Q 141 160, 146 170" 
+        stroke="#047857" 
+        stroke-width="2" 
+        stroke-linecap="round" 
+        fill="none" 
+        opacity="0.6"/>
+  
+  <!-- Small sprout at top -->
+  <ellipse cx="128" cy="55" rx="6" ry="8" fill="#10B981"/>
+</svg>
