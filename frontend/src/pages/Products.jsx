@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 import { useAppSettings } from "../Contexts/AppSettingsContext";
 import { useCart } from "../Contexts/CartContext";
 import ContactModal from "../components/ContactModal";
+import SearchBarFixed from "../components/SearchBarFixed";
 
 export default function Products() {
   const apiBase =
     import.meta.env.VITE_API_BASE_URL || "http://localhost:6001/api";
   const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
@@ -89,6 +91,7 @@ export default function Products() {
           };
         });
         setProducts(normalized);
+        setFilteredProducts(normalized); // Initialize filtered products
         setError(null);
       } catch (err) {
         console.error("Failed to fetch products:", err);
@@ -106,6 +109,11 @@ export default function Products() {
 
     fetchProducts();
   }, [apiBase, t]);
+
+  // Handle filter change from SearchBar
+  const handleFilterChange = (filtered) => {
+    setFilteredProducts(filtered);
+  };
 
   return (
     <div
@@ -139,6 +147,14 @@ export default function Products() {
             "All the essentials for modern farming"
           )}
         </p>
+
+        {/* Search Bar Component - ✅ FIXED VERSION */}
+        {!isLoading && !error && products.length > 0 && (
+          <SearchBarFixed
+            products={products}
+            onFilterChange={handleFilterChange}
+          />
+        )}
 
         <div
           style={{
@@ -182,7 +198,7 @@ export default function Products() {
               }}
             >
               {t(
-                "এখনও কোনো পণ্য যোগ করা হয়নি। অনুগ্রহ করে “পণ্য যুক্ত করুন” পাতায় গিয়ে নতুন পণ্য যোগ করুন।",
+                'এখনও কোনো পণ্য যোগ করা হয়নি। অনুগ্রহ করে "পণ্য যুক্ত করুন" পাতায় গিয়ে নতুন পণ্য যোগ করুন।',
                 'No products have been added yet. Please use "Add Product" to create one.'
               )}
             </p>
@@ -190,7 +206,27 @@ export default function Products() {
 
           {!isLoading &&
             !error &&
-            products.map((product) => (
+            filteredProducts.length === 0 &&
+            products.length > 0 && (
+              <p
+                style={{
+                  gridColumn: "1 / -1",
+                  textAlign: "center",
+                  color: "#475569",
+                  fontSize: "18px",
+                  marginTop: "40px",
+                }}
+              >
+                {t(
+                  "আপনার খোঁজার সাথে মিলে এমন কোনো পণ্য পাওয়া যায়নি।",
+                  "No products match your search."
+                )}
+              </p>
+            )}
+
+          {!isLoading &&
+            !error &&
+            filteredProducts.map((product) => (
               <div
                 key={product._id}
                 className="card"

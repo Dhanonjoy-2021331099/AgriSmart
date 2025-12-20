@@ -3,7 +3,9 @@ import Home from "../pages/Home";
 import Advice from "../pages/Advice";
 import TipDetail from "../pages/TipDetail";
 import ServiceDetail from "../pages/ServiceDetail";
-import ProductDetail from "../pages/ProductDetail";
+import ProductDetail from "../pages/ProductDetailNew";
+import ProductBenefits from "../pages/ProductBenefits";
+import ProductDescription from "../pages/ProductDescription";
 import AIDetection from "../pages/AIDetection";
 import Products from "../pages/Products";
 import AddProduct from "../pages/AddProduct";
@@ -17,6 +19,7 @@ import Login from "../pages/Login";
 import Register from "../pages/Register";
 import Signup from "../pages/Signup";
 import Profile from "../pages/Profile";
+import ProductNotFound from "../pages/ProductNotFound";
 import MainLayout from "../layouts/MainLayout";
 import AppProviders from "../providers/AppProviders";
 import ProtectedClient from "../components/ProtectedClient";
@@ -84,6 +87,33 @@ const router = createBrowserRouter([
         element: (
           <ProtectedClient>
             <ProductDetail />
+          </ProtectedClient>
+        ),
+      },
+      // ✅ NEW: Product benefits page
+      {
+        path: "/products/:id/benefits",
+        element: (
+          <ProtectedClient>
+            <ProductBenefits />
+          </ProtectedClient>
+        ),
+      },
+      // ✅ Product description page
+      {
+        path: "/products/:id/description",
+        element: (
+          <ProtectedClient>
+            <ProductDescription />
+          </ProtectedClient>
+        ),
+      },
+      // ✅ Product not found page for search results
+      {
+        path: "/products/not-found",
+        element: (
+          <ProtectedClient>
+            <ProductNotFound />
           </ProtectedClient>
         ),
       },
